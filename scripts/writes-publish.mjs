@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
- * Publish an Obsidian/markdown note to nitishchauhan.com/writes/<slug>/
- * then run the existing deploy (OG screenshot + rsync).
+ * Publish a markdown note to nitishchauhan.com/writes/<slug>/.
+ * First image in the file is the share preview (og.png). The rest is the article.
+ * Title comes from frontmatter, first # heading, or the filename.
  *
  *   npm run writes:publish -- "/path/to/note.md"
+ *   npm run writes:share -- "/path/to/note.md"     # same, then git push
  *   npm run writes:publish -- note.md --slug my-slug --no-deploy
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -21,18 +23,23 @@ function usage() {
 
 Usage:
   node scripts/writes-publish.mjs <note.md> [--slug slug] [--kicker "text"] [--date "12 Sep 2026"]
-                                  [--description "text"] [--force] [--no-deploy]
+                                  [--description "text"] [--force] [--no-deploy] [--push]
+
+First image in the note becomes og.png (share preview). Remaining markdown is the article.
+--push commits only Writes files and git-pushes (GitHub Actions deploys).
+--no-deploy writes files only. Default without --push is local rsync deploy.
 
 Does not publish to library.nitishchauhan.com. Does not change homepage OG.
 `);
 }
 
 function parseArgs(argv) {
-  const out = { _: [], force: false, deploy: true };
+  const out = { _: [], force: false, deploy: true, push: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--force") out.force = true;
     else if (a === "--no-deploy") out.deploy = false;
+    else if (a === "--push") out.push = true;
     else if (a === "--slug") out.slug = argv[++i];
     else if (a === "--kicker") out.kicker = argv[++i];
     else if (a === "--date") out.date = argv[++i];
@@ -168,6 +175,61 @@ function mdToHtml(md, title) {
   return out.join("\n");
 }
 
+function peelFirstImage(md, noteDir) {
+  const patterns = [
+    { re: /!\[[^\]]*\]\(([^)]+)\)/, group: 1 },
+    { re: /!\[\[([^\]|#]+)\]\]/, group: 1 },
+    { re: /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*\/?>/i, group: 1 },
+  ];
+  for (const p of patterns) {
+    const m = md.match(p.re);
+    if (!m) continue;
+    const rawSrc = m[p.group].trim().replace(/^<|>$/g, "");
+    const body = (md.slice(0, m.index) + md.slice(m.index + m[0].length)).replace(/^\n+/, "");
+    if (/^https?:\/\//i.test(rawSrc)) {
+      return { body, src: null, warn: `preview image is a URL (not copied): ${rawSrc}` };
+    }
+    const src = path.resolve(noteDir, rawSrc.replace(/^file:\/\//, ""));
+    return { body, src, warn: existsSync(src) ? null : `preview image not found: ${src}` };
+  }
+  return { body: md, src: null, warn: "no image in the note; share preview will be missing until you add one" };
+}
+
+function writeOgPng(src, destPng) {
+  mkdirSync(path.dirname(destPng), { recursive: true });
+  const ext = path.extname(src).toLowerCase();
+  if (ext === ".png") {
+    copyFileSync(src, destPng);
+    return;
+  }
+  try {
+    execFileSync("sips", ["-s", "format", "png", src, "--out", destPng], { stdio: "pipe" });
+  } catch {
+    copyFileSync(src, destPng);
+  }
+}
+
+function gitPushWrites(slug, title) {
+  const paths = [
+    path.join("public", "writes", slug),
+    path.join("public", "writes", "index.html"),
+  ];
+  execFileSync("git", ["add", "--", ...paths], { cwd: ROOT, stdio: "inherit" });
+  const staged = execFileSync("git", ["diff", "--cached", "--name-only"], {
+    cwd: ROOT,
+    encoding: "utf8",
+  }).trim();
+  if (!staged) {
+    console.log("git: nothing new to commit");
+    return;
+  }
+  execFileSync("git", ["commit", "-m", `Publish writes/${slug}: ${title}`], {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
+  execFileSync("git", ["push", "origin", "HEAD"], { cwd: ROOT, stdio: "inherit" });
+}
+
 function firstParagraph(md) {
   const text = md
     .replace(/^#+\s+.*/gm, "")
@@ -225,10 +287,10 @@ function main() {
   }
 
   const raw = readFileSync(notePath, "utf8");
-  const { fm, body } = parseFrontmatter(raw);
+  const { fm, body: rawBody } = parseFrontmatter(raw);
   const title =
     (fm.title || "").trim() ||
-    (body.match(/^#\s+(.+)$/m) || [])[1]?.replace(/[*_]/g, "").trim() ||
+    (rawBody.match(/^#\s+(.+)$/m) || [])[1]?.replace(/[*_]/g, "").trim() ||
     path.basename(notePath, path.extname(notePath));
   const slug = slugify(args.slug || title);
   if (!slug) {
@@ -241,6 +303,15 @@ function main() {
     console.error(`Exists: ${path.relative(ROOT, dest)}  (pass --force to overwrite)`);
     process.exit(1);
   }
+
+  const coverFm = (fm.image || fm.cover || fm.og || "").trim();
+  let peeled = peelFirstImage(rawBody, path.dirname(notePath));
+  if (coverFm && !/^https?:\/\//i.test(coverFm)) {
+    const coverPath = path.resolve(path.dirname(notePath), coverFm);
+    if (existsSync(coverPath)) peeled = { body: peeled.body, src: coverPath, warn: null };
+  }
+  const body = peeled.body;
+  if (peeled.warn) console.warn("writes:publish:", peeled.warn);
 
   const dateLabel = args.date || (fm.date ? formatDate(fm.date) : formatDate(new Date()));
   const description = (args.description || fm.description || firstParagraph(body) || title).trim();
@@ -260,10 +331,19 @@ function main() {
     path.join(dest, "og.json"),
     JSON.stringify({ title, kicker }, null, 2) + "\n",
   );
+  if (peeled.src) {
+    writeOgPng(peeled.src, path.join(dest, "og.png"));
+    console.log(`preview og.png from ${path.relative(path.dirname(notePath), peeled.src) || path.basename(peeled.src)}`);
+  }
   upsertHub(slug, title, dateLabel);
 
   console.log(`wrote public/writes/${slug}/`);
   console.log(`url    https://www.nitishchauhan.com/writes/${slug}/`);
+
+  if (args.push) {
+    gitPushWrites(slug, title);
+    return;
+  }
 
   if (!args.deploy) {
     console.log("skipping deploy (--no-deploy)");

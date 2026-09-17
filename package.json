@@ -21,7 +21,8 @@
     "n2d:scaffold": "node scripts/note-to-dashboard/cli.mjs scaffold",
     "n2d:verify": "node scripts/note-to-dashboard/cli.mjs verify",
     "writes:og": "node scripts/writes-og.mjs",
-    "writes:publish": "node scripts/writes-publish.mjs"
+    "writes:publish": "node scripts/writes-publish.mjs",
+    "writes:share": "node scripts/writes-publish.mjs --push --force"
   },
   "dependencies": {
     "js-yaml": "^5.4.0",
