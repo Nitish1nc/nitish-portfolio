@@ -1,0 +1,1031 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Models: Cognitive Rewiring</title>
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@4.5.0/index.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@4.5.0/index.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style>
+:root {
+/* Dark Theme Palette based on reference */
+--bg-dark: #09090b;       /* Zinc 950 */
+--bg-card: #18181b;       /* Zinc 900 */
+--bg-input: #27272a;      /* Zinc 800 */
+--border: #27272a;        /* Zinc 800 */
+--border-light: #3f3f46;  /* Zinc 700 */
+--text-main: #fafafa;     /* Zinc 50 */
+--text-muted: #a1a1aa;    /* Zinc 400 */
+--text-dim: #52525b;      /* Zinc 600 */
+--primary: #818cf8;       /* Indigo 400 */
+--primary-glow: rgba(129, 140, 248, 0.15);
+--accent: #2dd4bf;        /* Teal 400 */
+--danger: #f87171;        /* Red 400 */
+--warning: #fbbf24;       /* Amber 400 */
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--bg-dark);
+color: var(--text-main);
+line-height: 1.6;
+min-height: 100vh;
+overflow-x: hidden;
+}
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+width: 6px;
+height: 6px;
+}
+::-webkit-scrollbar-track {
+background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+background: var(--border-light);
+border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--text-muted);
+}
+
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 1.5rem;
+position: relative;
+z-index: 1;
+}
+
+/* --- Header & Hero --- */
+.app-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 3rem;
+padding-bottom: 1.5rem;
+border-bottom: 1px solid var(--border);
+}
+
+.logo-box {
+width: 48px;
+height: 48px;
+background: linear-gradient(135deg, rgba(129, 140, 248, 0.2), rgba(45, 212, 191, 0.1));
+border: 1px solid var(--border-light);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: 'Space Grotesk', sans-serif;
+font-size: 1.5rem;
+color: var(--primary);
+font-weight: 700;
+}
+
+.logo-text h1 {
+font-family: 'Space Grotesk', sans-serif;
+font-size: 1.25rem;
+font-weight: 700;
+color: var(--text-main);
+line-height: 1;
+}
+.logo-text span {
+font-size: 0.85rem;
+color: var(--text-muted);
+font-weight: 400;
+}
+
+.hero-section {
+text-align: center;
+max-width: 800px;
+margin: 0 auto 4rem;
+}
+
+.hero-title {
+font-family: 'Space Grotesk', sans-serif;
+font-size: clamp(2.5rem, 5vw, 4rem);
+font-weight: 700;
+margin-bottom: 1.5rem;
+line-height: 1.1;
+}
+
+.hero-title span {
+color: var(--primary);
+}
+
+.hero-desc {
+font-size: 1.125rem;
+color: var(--text-muted);
+margin-bottom: 1rem;
+}
+
+.hero-highlight {
+color: var(--text-main);
+font-weight: 500;
+}
+
+/* --- Layout Grid --- */
+.main-layout {
+display: grid;
+grid-template-columns: 300px 1fr;
+gap: 2rem;
+align-items: start;
+}
+
+/* --- Sidebar Navigation (Desktop) --- */
+.sidebar {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 1.5rem;
+position: sticky;
+top: 2rem;
+/* Fix for visibility issue: Ensure scrollable area */
+max-height: calc(100vh - 4rem);
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+}
+
+.sidebar-label {
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+color: var(--text-dim);
+font-weight: 600;
+margin-bottom: 1rem;
+padding-left: 0.5rem;
+}
+
+.model-nav-item {
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0.75rem 1rem;
+border-radius: 10px;
+cursor: pointer;
+transition: var(--transition);
+border: 1px solid transparent;
+color: var(--text-muted);
+font-size: 0.95rem;
+}
+
+.model-nav-item:hover {
+background: rgba(255, 255, 255, 0.03);
+color: var(--text-main);
+}
+
+.model-nav-item.active {
+background: rgba(129, 140, 248, 0.1);
+border-color: rgba(129, 140, 248, 0.2);
+color: var(--primary);
+font-weight: 600;
+}
+
+.nav-number {
+width: 28px;
+height: 28px;
+border-radius: 50%;
+background: var(--bg-input);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.8rem;
+font-weight: 700;
+flex-shrink: 0;
+}
+
+.model-nav-item.active .nav-number {
+background: var(--primary);
+color: #000;
+}
+
+/* --- Mobile Navigation (Horizontal Scroll) --- */
+.mobile-nav-container {
+display: none; /* Hidden on desktop */
+margin-bottom: 2rem;
+overflow-x: auto;
+padding-bottom: 0.5rem;
+-webkit-overflow-scrolling: touch;
+}
+.mobile-nav-list {
+display: flex;
+gap: 0.75rem;
+padding: 0 0.5rem;
+}
+
+.mobile-nav-item {
+flex: 0 0 auto;
+padding: 0.6rem 1.2rem;
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 50px;
+color: var(--text-muted);
+font-size: 0.9rem;
+font-weight: 500;
+white-space: nowrap;
+cursor: pointer;
+transition: var(--transition);
+}
+
+.mobile-nav-item.active {
+background: var(--primary);
+color: #000;
+border-color: var(--primary);
+}
+
+/* --- Content Area --- */
+.content-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 20px;
+overflow: hidden;
+box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+}
+
+.card-header {
+padding: 2.5rem;
+border-bottom: 1px solid var(--border);
+background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+}
+
+.model-title-lg {
+font-family: 'Space Grotesk', sans-serif;
+font-size: 2rem;
+font-weight: 700;
+color: var(--text-main);
+margin-bottom: 0.5rem;
+}
+
+.model-subtitle-lg {
+color: var(--primary);
+font-size: 1rem;
+font-weight: 500;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+}
+
+.card-body {
+padding: 2.5rem;
+}
+
+/* --- Controls --- */
+.control-group {
+display: flex;
+gap: 0.5rem;
+margin-bottom: 2rem;
+background: var(--bg-input);
+padding: 0.25rem;
+border-radius: 12px;
+width: fit-content;
+}
+
+.control-btn {
+background: transparent;
+border: none;
+color: var(--text-muted);
+padding: 0.5rem 1.25rem;
+border-radius: 8px;
+font-size: 0.9rem;
+font-weight: 500;
+cursor: pointer;
+transition: var(--transition);
+}
+
+.control-btn:hover {
+color: var(--text-main);
+}
+
+.control-btn.active {
+background: var(--bg-card);
+color: var(--text-main);
+box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* --- Viz Grid --- */
+.viz-grid {
+display: grid;
+grid-template-columns: 1.2fr 1fr;
+gap: 2rem;
+margin-bottom: 2rem;
+}
+
+.canvas-wrapper {
+background: #000;
+border-radius: 16px;
+border: 1px solid var(--border);
+overflow: hidden;
+position: relative;
+min-height: 350px;
+}
+
+.info-stack {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+/* --- Data Cards --- */
+.data-block {
+background: rgba(255, 255, 255, 0.02);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1.5rem;
+transition: var(--transition);
+}
+
+.data-block:hover {
+border-color: var(--border-light);
+background: rgba(255, 255, 255, 0.03);
+}
+
+.data-header {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+margin-bottom: 1rem;
+}
+
+.data-icon {
+width: 32px;
+height: 32px;
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1rem;
+}
+
+.icon-reality { background: rgba(45, 212, 191, 0.15); color: var(--accent); }
+.icon-mistake { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+.icon-truth { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+
+.data-title {
+font-size: 0.95rem;
+font-weight: 600;
+color: var(--text-main);
+}
+
+.data-text {
+font-size: 0.95rem;
+color: var(--text-muted);
+line-height: 1.7;
+}
+
+.formula-display {
+margin-top: 1rem;
+background: #000;
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 1rem;
+font-family: 'Courier New', monospace;
+color: var(--warning);
+font-weight: 700;
+text-align: center;
+font-size: 1.1rem;
+}
+
+/* --- Slider --- */
+.slider-container {
+background: var(--bg-input);
+border-radius: 14px;
+padding: 1.5rem;
+margin-top: 1rem;
+}
+
+.slider-header {
+display: flex;
+justify-content: space-between;
+margin-bottom: 1rem;
+font-size: 0.9rem;
+font-weight: 600;
+color: var(--text-main);
+}
+
+.slider-val-badge {
+background: var(--primary);
+color: #000;
+padding: 0.1rem 0.6rem;
+border-radius: 4px;
+font-size: 0.8rem;
+}
+
+input[type=range] {
+width: 100%;
+-webkit-appearance: none;
+background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+-webkit-appearance: none;
+height: 20px;
+width: 20px;
+border-radius: 50%;
+background: var(--text-main);
+cursor: pointer;
+margin-top: -8px;
+box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+width: 100%;
+height: 4px;
+cursor: pointer;
+background: var(--border-light);
+border-radius: 2px;
+}
+
+/* --- Comparison Section --- */
+.comparison-grid {
+display: none;
+grid-template-columns: 1fr 1fr;
+gap: 1.5rem;
+margin-top: 2rem;
+animation: fadeIn 0.4s ease;
+}
+.comparison-grid.active {
+display: grid;
+}
+
+.comp-card {
+padding: 1.5rem;
+border-radius: 12px;
+border: 1px solid var(--border);
+background: rgba(0,0,0,0.2);
+}
+
+.comp-card h4 {
+margin-bottom: 0.5rem;
+font-size: 1rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.comp-linear h4 { color: var(--danger); }
+.comp-geo h4 { color: var(--accent); }
+.comp-card p {
+font-size: 0.9rem;
+color: var(--text-muted);
+}
+
+/* --- Footer --- */
+footer {
+margin-top: 4rem;
+padding: 2rem;
+text-align: center;
+border-top: 1px solid var(--border);
+color: var(--text-dim);
+font-size: 0.9rem;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive Fixes --- */
+    @media (max-width: 1024px) {
+      .main-layout {
+grid-template-columns: 1fr;
+}
+.sidebar {
+display: none; /* Hide sidebar on tablet/mobile */
+}
+.mobile-nav-container {
+display: block; /* Show horizontal nav */
+}
+.viz-grid {
+grid-template-columns: 1fr;
+}
+.card-header, .card-body {
+padding: 1.5rem;
+}
+.hero-title {
+font-size: 2.5rem;
+}
+    }
+
+    @media (max-width: 640px) {
+      .container {
+padding: 1rem;
+}
+.comparison-grid {
+grid-template-columns: 1fr;
+}
+.control-group {
+width: 100%;
+justify-content: space-between;
+}
+.control-btn {
+flex: 1;
+text-align: center;
+padding: 0.5rem;
+font-size: 0.8rem;
+}
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+<!-- Header -->
+<header class="app-header">
+<div class="logo-box">Σ</div>
+<div class="logo-text">
+<h1>Mental Models</h1>
+<span>Cognitive Rewiring</span>
+</div>
+</header>
+
+<!-- Hero -->
+<section class="hero-section">
+<h2 class="hero-title">Your intuition is <span>flawed.</span></h2>
+<p class="hero-desc">
+        Human brains are wired for a linear world. We naturally add instead of multiply.
+<br>
+<span class="hero-highlight">But reality operates on exponential curves and power laws.</span>
+</p>
+</section>
+
+<!-- Mobile Navigation (Visible only on small screens) -->
+<div class="mobile-nav-container">
+<div class="mobile-nav-list" id="mobileNavList">
+<!-- Generated by JS -->
+</div>
+</div>
+
+<div class="main-layout">
+<!-- Desktop Sidebar -->
+<aside class="sidebar" id="desktopSidebar">
+<div class="sidebar-label">Select Model</div>
+<nav class="model-list" id="modelList">
+<!-- Generated by JS -->
+</nav>
+</aside>
+
+<!-- Main Content -->
+<main class="content-area">
+<article class="content-card fade-in" id="modelCard">
+<div class="card-header">
+<div class="model-subtitle-lg" id="modelSubtitle">Deconstruct to fundamentals</div>
+<h2 class="model-title-lg" id="modelTitle">First Principles Thinking</h2>
+</div>
+<div class="card-body">
+<!-- Controls -->
+<div class="control-group">
+<button class="control-btn active" data-mode="visual">Visual</button>
+<button class="control-btn" data-mode="math">Math</button>
+<button class="control-btn" data-mode="compare">Compare</button>
+</div>
+<div class="viz-grid">
+<!-- Canvas -->
+<div class="canvas-wrapper" id="canvasContainer"></div>
+<!-- Info Panel -->
+<div class="info-stack">
+<!-- Reality -->
+<div class="data-block">
+<div class="data-header">
+<div class="data-icon icon-reality">📊</div>
+<h3 class="data-title">The Cold Reality</h3>
+</div>
+<p class="data-text" id="dataReality">
+                    If an argument relies on 5 sequential assumptions at 90% confidence each, your actual probability of being right is not 90%—it's 59%.
+</p>
+<div class="formula-display" id="formulaDisplay">0.90⁵ = 59%</div>
+</div>
+<!-- Mistake -->
+<div class="data-block">
+<div class="data-header">
+<div class="data-icon icon-mistake">⚠️</div>
+<h3 class="data-title">Common Mistake</h3>
+</div>
+<p class="data-text" id="mistakePattern">
+                    Reasoning by Analogy - Looking at existing market rates and adding linear adjustments.
+</p>
+</div>
+<!-- Truth -->
+<div class="data-block">
+<div class="data-header">
+<div class="data-icon icon-truth">✓</div>
+<h3 class="data-title">The Better Substitute</h3>
+</div>
+<p class="data-text" id="betterSubstitute">
+                    Deconstructive Reductionism - Strip systems to independent variables. Calculate raw physics first.
+</p>
+</div>
+
+<!-- Slider -->
+<div class="slider-container">
+<div class="slider-header">
+<span id="sliderLabel">Number of Assumptions</span>
+<span class="slider-val-badge" id="sliderValue">5</span>
+</div>
+<input type="range" id="mainSlider" min="1" max="10" value="5">
+</div>
+</div>
+</div>
+<!-- Comparison Section -->
+<div class="comparison-grid" id="comparisonSection">
+<div class="comp-card comp-linear">
+<h4>🧠 Linear Thinking</h4>
+<p>What your brain naturally does: 1 + 1 + 1 = 3</p>
+<p style="color: var(--danger); margin-top: 0.5rem; font-size: 0.85rem;">Result: Sub-optimal decisions</p>
+</div>
+<div class="comp-card comp-geo">
+<h4>📊 Geometric Reality</h4>
+<p>How the world actually works: 1.01³⁶⁵ = 37.78</p>
+<p style="color: var(--accent); margin-top: 0.5rem; font-size: 0.85rem;">Result: Exponential gains</p>
+</div>
+</div>
+</div>
+</article>
+
+<footer>
+<p>Based on statistical evidence from decision science research</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+const mentalModels = [
+{
+        id: 1,
+        title: "First Principles",
+        subtitle: "Deconstruct to fundamentals",
+        dataReality: "If an argument relies on 5 sequential assumptions at 90% confidence each, your actual probability of being right is not 90%—it's 59%. At 10 assumptions, it drops to 34.8%.",
+        formula: "0.90⁵ = 59% | 0.90¹⁰ = 34.8%",
+        mistake: "Reasoning by Analogy - Looking at existing market rates and adding linear adjustments.",
+        substitute: "Deconstructive Reductionism - Strip systems to independent variables.",
+        sliderMin: 1, sliderMax: 10, sliderLabel: "Assumptions",
+        viz: 'assumption'
+},
+{
+        id: 2,
+        title: "Pareto Principle",
+        subtitle: "Power law distributions",
+        dataReality: "In complex systems, the top √N elements yield 50% of total output. A 100-chapter textbook? Just 10 chapters dictate half your grade.",
+        formula: "√100 = 10 chapters = 50% output",
+        mistake: "Completionist Fallacy - Spending identical time on page 1 and page 200.",
+        substitute: "Asymmetric Resource Allocation - Ruthlessly audit inputs by expected value.",
+        sliderMin: 10, sliderMax: 1000, sliderLabel: "Total Elements (N)",
+        viz: 'pareto'
+},
+{
+        id: 3,
+        title: "Opportunity Cost",
+        subtitle: "Zero-sum time accounting",
+        dataReality: "8,760 hours per year. 2 hours daily scrolling = 730 hours/year = 18 full 40-hour work weeks deleted from your compounding timeline.",
+        formula: "730 hours = 18 work weeks",
+        mistake: "Only counting explicit out-of-pocket costs.",
+        substitute: "Alternative-Yield Baseline - Write down exactly what high-value asset you're saying 'no' to.",
+        sliderMin: 1, sliderMax: 24, sliderLabel: "Hours Wasted/Day",
+        viz: 'opportunity'
+},
+{
+        id: 4,
+        title: "Compound Effect",
+        subtitle: "Geometric progression",
+        dataReality: "Brains think linearly. World operates geometrically. 1% daily improvement = 3,778% better annually. 1% daily decline = 0.03 of original capacity.",
+        formula: "1.01³⁶⁵ = 37.78×",
+        mistake: "Horizon Deficit - Quitting when visual difference is statistically invisible.",
+        substitute: "Process-Driven Calculus - Shift metrics from outcome to iteration count.",
+        sliderMin: 0.90, sliderMax: 1.10, sliderLabel: "Daily Multiplier",
+        viz: 'compound'
+},
+{
+        id: 5,
+        title: "Inversion Thinking",
+        subtitle: "Via Negativa",
+        dataReality: "Avoiding catastrophe preserves 100% capital. A single -100% event zeros all prior wins: 100 × 1.5 × 1.5 × 0 = 0.",
+        formula: "100 × 1.5ⁿ × 0 = 0",
+        mistake: "Forward-Only Planning - Ignoring lifestyle bottlenecks that sabotage efforts.",
+        substitute: "Via Negativa - List how to guarantee failure, then make those triggers impossible.",
+        sliderMin: 1, sliderMax: 5, sliderLabel: "Failure Points",
+        viz: 'inversion'
+},
+{
+        id: 6,
+        title: "Feedback Loops",
+        subtitle: "High-frequency calibration",
+        dataReality: "Without measuring error variance, you practice blind. Delayed feedback destroys statistical correlation between mistake and correction.",
+        formula: "Δt → 0 = Max Learning",
+        mistake: "Delayed Testing - Checking answers 3 days later destroys correlation.",
+        substitute: "High-Frequency Calibration - One problem, immediate check, next problem.",
+        sliderMin: 1, sliderMax: 100, sliderLabel: "Delay (Hours)",
+        viz: 'feedback'
+},
+{
+        id: 7,
+        title: "2nd Order Thinking",
+        subtitle: "Ripple mapping protocol",
+        dataReality: "90% first-order success × 80% second-order failure = 18% net probability. Most decisions fail at stage 2+, not stage 1.",
+        formula: "0.90 × 0.80 = 18%",
+        mistake: "'And Then What?' Blindspot - Ignoring tertiary outcomes.",
+        substitute: "Ripple Mapping - Trace domino effect to 3rd & 4th stage outcomes.",
+        sliderMin: 1, sliderMax: 5, sliderLabel: "Order Depth",
+        viz: 'secondorder'
+},
+{
+        id: 8,
+        title: "Focus Model",
+        subtitle: "Cognitive vacuum",
+        dataReality: "Micro-distractions cost 40% of daily productive capacity due to cognitive switching costs. Phone next to textbook = emergency brake pulled.",
+        formula: "1 switch = 23 min recovery",
+        mistake: "Simulated Multitasking - 'I only glance when it buzzes.'",
+        substitute: "Monolithic Time-Blocking - Phone in another room.",
+        sliderMin: 0, sliderMax: 20, sliderLabel: "Interruptions",
+        viz: 'focus'
+},
+{
+        id: 9,
+        title: "Model Stacking",
+        subtitle: "Bayesian multimodal priors",
+        dataReality: "Single lens bounds predictive accuracy. Stacking independent models creates orthogonal datasets, exponentially reducing margin of error.",
+        formula: "P(correct|n) = 1 - (1-p)ⁿ",
+        mistake: "Man with a Hammer Syndrome - Using same framework for every problem.",
+        substitute: "Latticework Integration - Cross-examine through 3+ unrelated disciplines.",
+        sliderMin: 1, sliderMax: 10, sliderLabel: "Models Stacked",
+        viz: 'stacking'
+},
+{
+        id: 10,
+        title: "Growth Mindset",
+        subtitle: "Stochastic optimization",
+        dataReality: "Fixed capability = constant C, growth rate = 0. Variable function f(t) with tiny coefficient has boundless limit as t→∞.",
+        formula: "lim(t→∞) f(t) = ∞",
+        mistake: "Ego-Protection Filter - Avoiding hard projects to protect GPA/identity.",
+        substitute: "Stochastic Volatility Optimization - Seek high-variance environments.",
+        sliderMin: 0, sliderMax: 1, sliderLabel: "Growth Coeff",
+        viz: 'growth'
+}
+];
+
+let currentModel = mentalModels[0];
+let p5Instance = null;
+let sliderValue = 5;
+
+function initNav() {
+const desktopList = document.getElementById('modelList');
+const mobileList = document.getElementById('mobileNavList');
+      desktopList.innerHTML = '';
+      mobileList.innerHTML = '';
+
+      mentalModels.forEach((model, index) => {
+// Desktop Item
+const dItem = document.createElement('div');
+        dItem.className = `model-nav-item ${model.id === currentModel.id ? 'active' : ''}`;
+        dItem.innerHTML = `<div class="nav-number">${model.id}</div><div>${model.title}</div>`;
+        dItem.onclick = () => loadModel(model);
+        desktopList.appendChild(dItem);
+
+// Mobile Item
+const mItem = document.createElement('div');
+        mItem.className = `mobile-nav-item ${model.id === currentModel.id ? 'active' : ''}`;
+        mItem.innerText = `${model.id}. ${model.title}`;
+        mItem.onclick = () => loadModel(model);
+        mobileList.appendChild(mItem);
+});
+}
+
+function loadModel(model) {
+      currentModel = model;
+      initNav(); // Update active states
+// Update Text
+      document.getElementById('modelTitle').textContent = model.title;
+      document.getElementById('modelSubtitle').textContent = model.subtitle;
+      document.getElementById('dataReality').textContent = model.dataReality;
+      document.getElementById('formulaDisplay').textContent = model.formula;
+      document.getElementById('mistakePattern').textContent = model.mistake;
+      document.getElementById('betterSubstitute').textContent = model.substitute;
+// Setup Slider
+const slider = document.getElementById('mainSlider');
+      slider.min = model.sliderMin;
+      slider.max = model.sliderMax;
+      slider.step = model.sliderMax <= 10 ? 1 : 10;
+      slider.value = model.sliderMin;
+      sliderValue = model.sliderMin;
+      document.getElementById('sliderValue').textContent = sliderValue;
+      document.getElementById('sliderLabel').textContent = model.sliderLabel;
+// Reset Toggles
+      document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-mode="visual"]').classList.add('active');
+      document.getElementById('comparisonSection').classList.remove('active');
+// Init Viz
+      initVisualization(model.viz);
+// Animation
+const card = document.getElementById('modelCard');
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        card.style.transition = 'all 0.4s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+}, 10);
+}
+
+    document.getElementById('mainSlider').addEventListener('input', (e) => {
+      sliderValue = parseFloat(e.target.value);
+      document.getElementById('sliderValue').textContent = sliderValue;
+if(window.updateVizParams) window.updateVizParams(sliderValue);
+});
+
+    document.querySelectorAll('.control-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+const mode = btn.getAttribute('data-mode');
+const compSec = document.getElementById('comparisonSection');
+if(mode === 'compare') compSec.classList.add('active');
+else compSec.classList.remove('active');
+});
+});
+
+function initVisualization(type) {
+const container = document.getElementById('canvasContainer');
+      container.innerHTML = '';
+if(p5Instance) p5Instance.remove();
+const sketch = (p) => {
+let params = { value: sliderValue };
+        window.updateVizParams = (v) => params.value = v;
+        p.setup = () => {
+const canvas = p.createCanvas(container.offsetWidth, 350);
+          p.frameRate(30);
+          p.smooth();
+};
+        p.draw = () => {
+          p.background(0); // Black background for canvas
+// Common styles
+          p.textFont('Inter');
+if(type === 'assumption') drawAssumption(p, params);
+else if(type === 'pareto') drawPareto(p, params);
+else if(type === 'opportunity') drawOpportunity(p, params);
+else if(type === 'compound') drawCompound(p, params);
+else if(type === 'inversion') drawInversion(p, params);
+else if(type === 'feedback') drawFeedback(p, params);
+else if(type === 'secondorder') drawSecondOrder(p, params);
+else if(type === 'focus') drawFocus(p, params);
+else if(type === 'stacking') drawStacking(p, params);
+else if(type === 'growth') drawGrowth(p, params);
+};
+        p.windowResized = () => p.resizeCanvas(container.offsetWidth, 350);
+};
+      p5Instance = new p5(sketch, container);
+}
+
+// --- Simplified Viz Functions (Dark Theme Adapted) ---
+function drawAssumption(p, params) {
+const count = params.value;
+const baseW = p.width - 100;
+for(let i=0; i<count; i++) {
+const prob = Math.pow(0.9, i+1);
+        p.fill(45, 212, 191, 200 - i*15); // Teal
+        p.noStroke();
+        p.rect(50, 40 + i*30, baseW * prob, 20, 4);
+        p.fill(255);
+        p.textSize(12);
+        p.text(`#${i+1}: ${(prob*100).toFixed(0)}%`, 60 + baseW*prob, 55 + i*30);
+}
+}
+function drawPareto(p, params) {
+      p.noFill();
+      p.stroke(129, 140, 248); // Indigo
+      p.strokeWeight(3);
+      p.beginShape();
+for(let x=0; x<=p.width; x+=10) {
+let nx = x/p.width;
+let y = p.height - 50 - Math.pow(nx, 0.5)*(p.height-100);
+        p.vertex(x, y);
+}
+      p.endShape();
+      p.fill(251, 191, 36); // Amber
+      p.textAlign(p.CENTER);
+      p.text("Top √N = 50% Output", p.width/2, 30);
+}
+
+function drawOpportunity(p, params) {
+const hrs = params.value;
+const weeks = (hrs * 365) / 40;
+      p.noFill();
+      p.stroke(248, 113, 113); // Red
+      p.strokeWeight(4);
+      p.arc(p.width/2, p.height/2, 200, 200, -p.HALF_PI, -p.HALF_PI + (hrs/24)*p.TWO_PI);
+      p.fill(255);
+      p.textAlign(p.CENTER);
+      p.textSize(20);
+      p.text(`${weeks.toFixed(1)} Weeks Lost`, p.width/2, p.height/2);
+}
+
+function drawCompound(p, params) {
+const mult = params.value;
+      p.noFill();
+      p.stroke(45, 212, 191);
+      p.strokeWeight(3);
+      p.beginShape();
+for(let d=0; d<=365; d+=10) {
+let val = Math.pow(mult, d);
+let x = 50 + (d/365)*(p.width-100);
+let y = p.height - 50 - (val/40)*(p.height-100); // Scale approx
+        p.vertex(x, Math.max(50, y));
+}
+      p.endShape();
+}
+
+function drawInversion(p, params) {
+const n = params.value;
+const step = (p.width - 100) / (n + 2);
+for(let i=0; i<=n; i++) {
+        p.fill(i===n ? 248 : 129, i===n ? 113 : 140, i===n ? 113 : 248);
+        p.ellipse(50 + i*step, p.height/2, 40, 40);
+        p.fill(255);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.text(i===n ? "0" : "×1.5", 50 + i*step, p.height/2);
+}
+      p.fill(255);
+      p.text("100", 50, p.height/2);
+}
+
+function drawFeedback(p, params) {
+const delay = params.value;
+const corr = Math.max(0, 1 - delay/72);
+      p.stroke(129, 140, 248);
+      p.line(50, p.height/2, p.width-50, p.height/2);
+      p.fill(45, 212, 191);
+      p.ellipse(100, p.height/2, 20, 20);
+      p.fill(248, 113, 113);
+      p.ellipse(100 + (delay/100)*(p.width-200), p.height/2, 20, 20);
+      p.fill(255);
+      p.textAlign(p.CENTER);
+      p.text(`Correlation: ${(corr*100).toFixed(0)}%`, p.width/2, 100);
+}
+
+function drawSecondOrder(p, params) {
+const order = params.value;
+let prob = 0.9;
+      p.fill(45, 212, 191);
+      p.ellipse(p.width/2, 50, 60, 60);
+      p.fill(255); p.text("1st", p.width/2, 45); p.text("90%", p.width/2, 65);
+for(let i=2; i<=order; i++) {
+        prob *= 0.8;
+        p.fill(251, 191, 36);
+        p.ellipse(p.width/2, 50 + (i-1)*60, 50, 50);
+        p.fill(255);
+        p.text(`${i}nd`, p.width/2, 45 + (i-1)*60);
+        p.text(`${(prob*100).toFixed(0)}%`, p.width/2, 65 + (i-1)*60);
+}
+}
+
+function drawFocus(p, params) {
+const int = params.value;
+const lost = Math.min(40, int*2);
+      p.noFill(); p.stroke(129, 140, 248); p.strokeWeight(3);
+      p.ellipse(p.width/2, 150, 150, 120);
+      p.fill(100); p.rect(p.width/2 - 100, 220, 200, 30);
+      p.fill(45, 212, 191); p.rect(p.width/2 - 100, 220, 200*(1-lost/100), 30);
+      p.fill(255); p.textAlign(p.CENTER, p.CENTER);
+      p.text(`${100-lost}% Capacity`, p.width/2, 235);
+}
+
+function drawStacking(p, params) {
+const n = params.value;
+const acc = 1 - Math.pow(0.3, n);
+      p.fill(129, 140, 248, 150);
+for(let i=0; i<Math.min(n,5); i++) {
+        p.ellipse(p.width/2 + Math.cos(i)*20, p.height/2 + Math.sin(i)*20, 100, 100);
+}
+      p.fill(0,0,0,200); p.ellipse(p.width/2, p.height/2, 80, 80);
+      p.fill(255); p.textAlign(p.CENTER, p.CENTER);
+      p.text(`${(acc*100).toFixed(0)}% Accuracy`, p.width/2, p.height/2);
+}
+
+function drawGrowth(p, params) {
+const c = params.value;
+      p.noFill();
+      p.stroke(248, 113, 113); p.line(50, p.height-50, p.width-50, p.height-50); // Fixed
+      p.stroke(45, 212, 191); p.strokeWeight(3);
+      p.beginShape();
+for(let t=0; t<100; t++) {
+let x = 50 + t*(p.width-100)/100;
+let y = p.height - 50 - Math.pow(c+0.01, t/10)*100;
+        p.vertex(x, y);
+}
+      p.endShape();
+}
+
+// Initialize
+    initNav();
+    loadModel(mentalModels[0]);
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nitishchauhan.com/schemas/dashboard-v1.json",
+  "title": "DashboardSchema",
+  "description": "Versioned schema for note-to-dashboard scaffolds (NitishLabs / portfolio).",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "archetype",
+    "slug",
+    "title",
+    "excerpt",
+    "date",
+    "author",
+    "category",
+    "host",
+    "hook"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "archetype": {
+      "type": "string",
+      "enum": [
+        "stepper-lab",
+        "scroll-explainer",
+        "ideas-essay",
+        "contrast-toggle",
+        "map-first"
+      ]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 64
+    },
+    "title": { "type": "string", "minLength": 3, "maxLength": 120 },
+    "eyebrow": { "type": "string", "maxLength": 80 },
+    "hook": { "type": "string", "minLength": 8, "maxLength": 400 },
+    "excerpt": { "type": "string", "minLength": 8, "maxLength": 280 },
+    "lede": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "maxItems": 6
+    },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "dateDisplay": { "type": "string" },
+    "author": { "type": "string", "const": "Nitish Chauhan" },
+    "category": {
+      "type": "string",
+      "enum": ["Ideas", "Experiments", "Models"]
+    },
+    "host": {
+      "type": "string",
+      "enum": ["labs", "portfolio", "essay", "both"]
+    },
+    "canonicalUrl": { "type": "string", "format": "uri" },
+    "howThisWorks": { "type": "string" },
+    "contrast": {
+      "type": "object",
+      "required": ["left", "right"],
+      "additionalProperties": false,
+      "properties": {
+        "left": {
+          "type": "object",
+          "required": ["label", "body"],
+          "properties": {
+            "label": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        },
+        "right": {
+          "type": "object",
+          "required": ["label", "body"],
+          "properties": {
+            "label": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/module" }
+    },
+    "sections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/section" }
+    },
+    "takeaway": { "type": "string" },
+    "takeawayTitle": { "type": "string" },
+    "foundations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/foundation" }
+    },
+    "terms": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "maxItems": 16
+    },
+    "caveat": { "type": "string" },
+    "ogMetaphor": { "type": "string" },
+    "ogAlt": { "type": "string" },
+    "shape": {
+      "type": "string",
+      "description": "Classifier rhetorical shape label"
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "$defs": {
+    "module": {
+      "type": "object",
+      "required": ["id", "num", "scienceName", "plainName", "intro", "whatToDo", "writerRule", "widgets"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "num": { "type": "string", "pattern": "^0[1-6]$" },
+        "scienceName": { "type": "string" },
+        "plainName": { "type": "string" },
+        "intro": { "type": "string" },
+        "whatToDo": { "type": "string" },
+        "writerRule": { "type": "string" },
+        "soFar": { "type": "string" },
+        "widgets": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/widget" }
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["heading", "body"],
+      "additionalProperties": false,
+      "properties": {
+        "heading": { "type": "string" },
+        "body": { "type": "string" },
+        "widget": { "$ref": "#/$defs/widget" }
+      }
+    },
+    "foundation": {
+      "type": "object",
+      "required": ["badge", "title", "cite", "body"],
+      "additionalProperties": false,
+      "properties": {
+        "badge": { "type": "string", "maxLength": 8 },
+        "title": { "type": "string" },
+        "cite": { "type": "string" },
+        "body": { "type": "string" }
+      }
+    },
+    "widget": {
+      "type": "object",
+      "required": ["type", "data"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "shelf-toggle",
+            "breath-contour",
+            "arc-stepper",
+            "predict-choice",
+            "numbered-steps",
+            "prose-card",
+            "compare-pair",
+            "hierarchy-stack",
+            "checklist"
+          ]
+        },
+        "data": { "type": "object" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "archetype": { "const": "stepper-lab" } } },
+      "then": { "required": ["modules"] }
+    },
+    {
+      "if": { "properties": { "archetype": { "const": "scroll-explainer" } } },
+      "then": { "required": ["sections"] }
+    },
+    {
+      "if": { "properties": { "archetype": { "const": "contrast-toggle" } } },
+      "then": { "required": ["contrast"] }
+    }
+  ]
+}

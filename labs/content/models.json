@@ -1,0 +1,78 @@
+{
+ "brand": "NitishLabs",
+ "updated": "2026-07-22",
+ "models": [
+ {
+ "id": "signature-pipeline",
+ "name": "Signature Pipeline",
+ "oneLiner": "Raw signal → witness stance → layered simulation → hidden-variable extraction → practical framework → usable protocol.",
+ "blurb": "Nitish Chauhan's default conversion engine for messy cognition: don't jump to tips; witness the signal, simulate the layers, pull the hidden variable, then ship a protocol someone can actually run. Works for client sessions, content pieces, and pitches alike - same spine, different skins.",
+ "icon": "fa-route",
+ "sourceNote": "NitishLife/frameworks.md - Signature pipeline"
+ },
+ {
+ "id": "mechanism-first",
+ "name": "Mechanism-First Explainer",
+ "oneLiner": "Objects → engine → bottleneck → intervention. Fight complexity leakage.",
+ "blurb": "Teaching order that refuses \"7 tips for X.\" Put the objects on the table, explain how the engine works, name where it breaks, then prescribe the intervention. Content design follows the sibling pattern: problem → hidden mechanism → stages → bottlenecks → intervention → practical use.",
+ "icon": "fa-gears",
+ "sourceNote": "NitishLife/frameworks.md - Mechanism-first explainer order; Content design signature"
+ },
+ {
+ "id": "understanding-vs-encoding",
+ "name": "Understanding ≠ Encoding",
+ "oneLiner": "You can \"get it\" in working memory and still fail to install it long-term.",
+ "blurb": "A recurring NitishLabs diagnosis: comprehension feels like learning, but conversion into durable memory is a separate system. Deeper connections (level-of-processing), mixed contexts, and reinforcement cues matter more than another pass of \"I already understand.\" Study and recovery protocols should target encoding, not vibes.",
+ "icon": "fa-brain",
+ "sourceNote": "NitishLife/frameworks.md - Encoding failure distinction; memory/brief/xai-encoding-failure.md"
+ },
+ {
+ "id": "capture-first-decode-later",
+ "name": "Capture First, Decode Later",
+ "oneLiner": "When energy is low, save the signal. Expand it when capacity returns.",
+ "blurb": "Low-energy communication is not silence and not a full essay under load. Packet the raw signal while depleted; decode, layer, and share when regulation returns. Built for depression-era comms, async journaling, and any system that otherwise loses insight to bandwidth collapse.",
+ "icon": "fa-inbox",
+ "sourceNote": "NitishLife/frameworks.md - Capture first, decode later; memory/brief/low-energy-comms.md"
+ },
+ {
+ "id": "rd-vs-shipping",
+ "name": "R&D / Shipping Separation",
+ "oneLiner": "If the insight-maker must also execute, the engine throttles ideas before they're born.",
+ "blurb": "Separate exploration from packaging or cognition never goes all the way. Nitish Chauhan's operating pattern: explore freely first, compile later (often via agents). Push packaging too early and the system looks \"flaky\"; get the order right and output becomes almost unfair.",
+ "icon": "fa-split",
+ "sourceNote": "NitishLife/frameworks.md - Collaboration / execution separation; Cognitive-OS-Checkpoint notes/🤔-Whats-Nitish-Up-To-2026-06-23.md"
+ },
+ {
+ "id": "flow-disruption-lens",
+ "name": "Flow-Disruption Lens",
+ "oneLiner": "Map the flow → find transition points → hunt friction → remove ruthlessly.",
+ "blurb": "Product innovation as friction surgery, not feature theater. Tiny persistent frictions at transition points compound into abandonment; remove them and the \"wow\" appears without a marketing paragraph. Origin: EchoText / Wispr Flow analysis.",
+ "icon": "fa-water",
+ "sourceNote": "NitishLife/frameworks.md - Flow-disruption lens (product)"
+ },
+ {
+ "id": "capability-vs-process-learning",
+ "name": "Capability-First Tool Learning",
+ "oneLiner": "Learn what a tool can do (nodes + affordances) before locking to one canned process.",
+ "blurb": "Process courses and random Reddit recipes both create blinders: you inherit someone else's chain of thought. Capability-first learning maps features as possibility nodes, then samples many processes that share that node - deliberate structure for diving into the unknown without inefficient wander. Connect each feature back to the human problem it actually improves.",
+ "icon": "fa-screwdriver-wrench",
+ "sourceNote": "Downloads/ChatGPT-20.2 Process vs Capability Learning.txt"
+ },
+ {
+ "id": "verbal-architecture-clusters",
+ "name": "Four Verbal Architecture Clusters",
+ "oneLiner": "Architecture, Dynamics, Epistemology, Teleology - 60 structural primitives for systems talk.",
+ "blurb": "A calibrated vocabulary for high-level systems thinking: topology and modularity (structure), hysteresis and entropy (forces), heuristics and metacognition (knowing), leverage points and antifragility (purpose). Not fluff words - mental levers for diagnosing corporate, psychological, and market systems in the same language.",
+ "icon": "fa-atom",
+ "sourceNote": "Downloads/4 core Verbal Architecture Cluster.md; Downloads/Verbal Clusters to learn copy.markdown"
+ },
+ {
+ "id": "identity-anchor-vs-fluency",
+ "name": "Identity Anchor ≠ Fluency",
+ "oneLiner": "Self-worth must not be fused to verbal performance.",
+ "blurb": "Fluency can decay after mood episodes; treating it as identity turns every silence into a verdict. Warm the verbal/cognitive engine as a protocol (practice across mood states), keep identity anchored elsewhere, and use structured reignition templates after wipeouts instead of starting from existential zero.",
+ "icon": "fa-anchor",
+ "sourceNote": "NitishLife/frameworks.md - Identity Anchor ≠ Fluency; Warm Engine Protocol; Mood-resilient practice protocol"
+ }
+ ]
+}

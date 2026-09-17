@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "archetype": "contrast-toggle",
+  "slug": "tool-vs-thought",
+  "title": "Match the Tool to the Thought",
+  "eyebrow": "Interface as instrument",
+  "hook": "Chat is not the only shape. Hire the interface that fits the cognitive job.",
+  "excerpt": "A one-screen contrast: linear chat vs spatial workspace when thoughts need to branch.",
+  "lede": [
+    "Most AI clients are messaging apps. Some thinking jobs need cards, parks, and forks instead of one scrolling transcript."
+  ],
+  "date": "2026-09-08",
+  "dateDisplay": "Sep 8, 2026",
+  "author": "Nitish Chauhan",
+  "category": "Ideas",
+  "host": "portfolio",
+  "contrast": {
+    "left": {
+      "label": "Linear chat",
+      "body": "One thread. Good for bounded Q and A. Bad when three thoughts want the floor at once."
+    },
+    "right": {
+      "label": "Spatial desk",
+      "body": "Sessions, bubbles, park and pin. You keep the narrative without forcing parallel ideas into a queue."
+    }
+  },
+  "modules": [
+    {
+      "id": "hire",
+      "num": "01",
+      "scienceName": "Interface fit",
+      "plainName": "Hire the shape",
+      "intro": "Flip between two modes. Notice which job each one is actually good at.",
+      "whatToDo": "<strong>1.</strong> Toggle the mode. <strong>2.</strong> Read the signal that changes.",
+      "writerRule": "So on the page, name the cognitive job before you pick the tool.",
+      "soFar": "Interface shape is a hiring decision, not a brand loyalty test.",
+      "widgets": [
+        {
+          "type": "compare-pair",
+          "data": {
+            "leftLabel": "Chat job",
+            "leftBody": "Clarify, fetch, implement a bounded task.",
+            "rightLabel": "Desk job",
+            "rightBody": "Branch, park, compare, then compress."
+          }
+        }
+      ]
+    }
+  ],
+  "takeaway": "Stop asking which AI is best. Ask which interface fits the thought you are having.",
+  "terms": [
+    "interface fit",
+    "spatial workspace"
+  ],
+  "caveat": "Illustrative contrast, not a product review.",
+  "ogMetaphor": "chat bubble vs desk cards",
+  "ogAlt": "Match the Tool to the Thought",
+  "shape": "contrast-vs",
+  "confidence": 0.85
+}

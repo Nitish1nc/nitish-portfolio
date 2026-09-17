@@ -6,18 +6,36 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:labs": "bash scripts/deploy-labs.sh",
+    "vps:check": "bash scripts/vps-check.sh",
+    "labs:watch": "node scripts/labs-inbox/watch-and-publish.mjs",
+    "labs:watch:once": "node scripts/labs-inbox/watch-and-publish.mjs --once",
+    "labs:publish": "node scripts/labs-inbox/watch-and-publish.mjs --file",
+    "labs:watch:install": "bash scripts/labs-inbox/install-watcher.sh",
+    "labs:watch:pause": "bash scripts/labs-inbox/pause-watcher.sh",
+    "labs:css": "tailwindcss -c labs/tailwind.config.cjs -i labs/assets/tailwind.input.css -o labs/assets/tailwind.css --minify",
+    "n2d": "node scripts/note-to-dashboard/cli.mjs",
+    "n2d:validate": "node scripts/note-to-dashboard/cli.mjs validate",
+    "n2d:scaffold": "node scripts/note-to-dashboard/cli.mjs scaffold",
+    "n2d:verify": "node scripts/note-to-dashboard/cli.mjs verify",
+    "writes:og": "node scripts/writes-og.mjs",
+    "writes:publish": "node scripts/writes-publish.mjs"
   },
   "dependencies": {
+    "js-yaml": "^5.4.0",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "playwright": "^1.63.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",

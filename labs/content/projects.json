@@ -1,0 +1,197 @@
+[
+ {
+ "id": "relief-valve",
+ "slug": "relief-valve",
+ "title": "Relief Valve",
+ "subtitle": "A quiet smash toy",
+ "status": "Active",
+ "tagline": "A quiet smash toy. Soft light, one thumb, no scores.",
+ "summary": "Tap Crush and watch the press come down. No timer, no combo, no homework. A low-stimulation loop for when you just want something gentle to press. Play it on your phone.",
+ "why": "Some nights a smash loop is a kinder door than a to-do list. Crush it as many times as you want.",
+ "stack": ["React", "Vite", "Tailwind", "motion"],
+ "tags": ["play", "relief", "cozy", "mobile"],
+ "href": "relief-valve/",
+ "sourceFiles": [
+ "apps/hydraulic-crumble"
+ ]
+ },
+ {
+ "id": "inner-voice",
+ "slug": "inner-voice",
+ "title": "Why Some Writing Sounds Like Talking",
+ "subtitle": "Prosodic Cognitive Simulation",
+ "status": "Active",
+ "tagline": "Same scene, four stops vs one held sentence. Feel why silent reading sounds like a voice.",
+ "summary": "Four interactive labs on the mechanisms that keep an inner ear mid-breath: buffer resets, prosodic rhythm, delayed closure, and predictive syntax. Nitish Chauhan built this as a playful writing science toy, not a textbook.",
+ "why": "Good prose is not just meaning. It is cadence. These labs make the phonological loop tangible so writers can stop accidentally resetting the reader every sentence.",
+ "stack": ["Vanilla JS", "Labs shell", "static HTML"],
+ "tags": ["cognitive-science", "writing", "interactive", "reading"],
+ "href": "inner-voice/",
+ "sourceFiles": [
+ "labs/inner-voice",
+ "canvases/prosodic-cognitive-simulation.canvas.tsx"
+ ]
+ },
+ {
+ "id": "mental-models-reality-engine",
+ "slug": "mental-models-reality-engine",
+ "title": "Mental Models Reality Engine",
+ "subtitle": "Visceral math for intuition failures",
+ "status": "Active",
+ "tagline": "Flip what the brain expects against what the math says, until the gap is hard to unsee.",
+ "summary": "Nitish Chauhan's current priority interactive: Assumption Stacks, Compound Effect, and Pareto Gravity as a Labs Reality Engine. Companion write-up and ten-model Cognitive Rewiring sim live in the Library.",
+ "why": "Self-help phrasing hides geometric reality. Cold statistical flips make mental models useful instead of decorative.",
+ "stack": ["React", "Vite", "Tailwind", "motion"],
+ "tags": ["mental-models", "interactive", "compounding", "first-principles"],
+ "href": "reality-engine/",
+ "sourceFiles": [
+ "apps/mental-models-reality-engine",
+ "Library: Final - Mental Models Visceral Math.md"
+ ]
+ },
+ {
+ "id": "bubble-chat",
+ "slug": "bubble-chat",
+ "title": "Atlas / Bubble Chat",
+ "subtitle": "A thinking workspace, not another AI messenger",
+ "status": "Prototype",
+ "tagline": "Sessions, floating bubbles, and compression that makes knowledge denser - not longer.",
+ "summary": "Atlas (working product name in the specs; Bubble Chat in the feature notes) rejects the single scrolling transcript. Conversation Mode keeps structured branches; Workspace Mode is a Figma-like canvas of Objects - chat, PDF, browser, notes, whiteboard - inside a Session. Closing Primary closes the Session; Replay restores layout like walking back into your desk. MVP roadmap: fork OpenMLC/HF Chat UI → canvas + spawn → bubble polish → cross-bubble drag → export/search. Core constraint from every Cursor brief: responsiveness over feature count; feel like index cards, not heavyweight windows.",
+ "why": "Most AI clients are messaging apps. Nitish Chauhan's ADHD-shaped workflow needs parallel thoughts without losing the session narrative - spawn, park, pin-to-main, then compress.",
+ "principles": [
+ "Conversation is non-linear",
+ "Capture never interrupts thinking",
+ "The computer organizes; the human thinks"
+ ],
+ "modules": [
+ "Sessions + Workspace Replay",
+ "Bubble / Object engine (multi-model, status, importance)",
+ "Spatial gestures (throw, dock, park, minimap)",
+ "AI workers (Historian, Scout, Compression) isolated from chat UI",
+ "Export: folder of .md + session.json + questions archive",
+ "Compression pipeline: daily → weekly → monthly → yearly"
+ ],
+ "mvpPhases": [
+ "Architecture: Session → Workspace → Objects",
+ "Canvas: drag, zoom, 60 FPS, Cmd+N spawn, layout persistence",
+ "Bubble polish: colors, titles, scroll memory, minimap",
+ "Interactions: shared clipboard, Pin-to-Main, Opt+Enter spawn",
+ "Output: Markdown/JSON export + universal search"
+ ],
+ "stack": ["OpenMLC / HF Chat UI fork", "OpenRouter + local models", "Session/Object data model", "local-first"],
+ "tags": ["workspace", "spatial-ui", "sessions", "compression"],
+ "href": "atlas/",
+ "sourceFiles": [
+ "1 Feature intro - Bubble Chats.md",
+ "Few More Feature Add-ons.md",
+ "3 Final - Bubble Chat MVP RoadMap.md",
+ "Cursor-Extension-Technical-Specification---Google-Gemini---httpsgemini.google.comapp80f5cea89d2a9005.md",
+ "Cursor-Extension-Technical-Specification---Google-Gemini---httpsgemini.google.comapp80f5cea89d2a9005 (1).md"
+ ]
+ },
+ {
+ "id": "vault",
+ "slug": "vault",
+ "title": "Vault",
+ "subtitle": "Universal conversation capture that closes the mental loop",
+ "status": "Active",
+ "tagline": "Capture everything accurately. Interpretation is optional. Capture is mandatory.",
+ "summary": "Vault is an export-first Chrome extension (PRD + Engineering Spec V1). Finish a conversation on ChatGPT, Claude, Gemini, Grok, Perplexity, Cursor, or a generic page → Add to Queue → multi-select → export Markdown, JSON, HTML, plain text, or ZIP with assets. Sidebar is a temporary workspace, not permanent storage. No AI summaries, embeddings, RAG, or auto-tagging in V1 - those belong later, and never block capture. Guiding test: does this help capture and close the loop, or turn Vault into another knowledge management system?",
+ "why": "Tabs stay open because people fear losing ideas. Manual copy-paste is slow and lossy. Vault's job is cognitive closure, not becoming a second brain.",
+ "principles": [
+ "Capture first - never summarize or rewrite on the way out",
+ "User control - the extension never decides what matters",
+ "Low cognitive load - minimal clicks, no unnecessary prompts",
+ "Universal support - modular extractors + generic webpage fallback",
+ "Modular architecture - site-specific logic stays in extractors/"
+ ],
+ "modules": [
+ "Extractor layer (canHandle / extract / normalize)",
+ "Normalizer → shared Conversation model",
+ "Sidebar queue (rename, multi-select, search, reorder)",
+ "Export engine (pluggable formats)",
+ "IndexedDB persistence across restarts",
+ "Optional V1.5: 48-hour temporary cloud vault"
+ ],
+ "successCriteria": [
+ "Reliable capture from supported AI sites",
+ "Formatting preserved with minimal loss",
+ "Multi-queue export in one action",
+ "Generic webpage capture works",
+ "New user understands UI within ~one minute",
+ "Fewer tabs left open out of fear"
+ ],
+ "stack": ["Chrome Manifest V3", "TypeScript", "React", "Tailwind", "IndexedDB", "JSZip", "Turndown", "DOMPurify"],
+ "tags": ["extension", "capture", "export", "local-first"],
+ "href": "projects/vault.html",
+ "sourceFiles": [
+ "Project Requirements Document - Vault.pdf",
+ "Engineering Specification V1.pdf"
+ ]
+ },
+ {
+ "id": "cursor-extension",
+ "slug": "cursor-extension",
+ "title": "Memory Capture Extension",
+ "subtitle": "Phase 1 zero-friction Markdown capture for Cursor execution",
+ "status": "Prototype",
+ "tagline": "A perfect screwdriver - not a Swiss Army knife. Capture is immediate, headless, and silent.",
+ "summary": "Implementation guide optimized for Cursor: Manifest V3 background worker + content scripts + Turndown. Three modes (entire page, selection, link); silent chrome.downloads to Memory/Inbox/YYYY/MM/DD/title.md; fixed metadata template; duplicate detection via URL+content hash; Friction Counter (Ctrl/Cmd+Shift+F) logging friction notes to Memory/Friction/log.csv. ChatGPT/Claude DOM heuristics with Readability-style generic fallback. Offline-first - no cloud APIs in Phase 1. Coded under NitishLabs active-projects/memory-capture-extension; sits upstream of the fuller Vault product.",
+ "why": "Organize later. At the moment of discovery, any decision (folder, tag, rename) is friction. Inbox-first is the whole point.",
+ "principles": [
+ "Never ask questions during capture",
+ "If removing a feature doesn't make the product worse, it is not MVP",
+ "Capture First, Organize Later",
+ "Offline-first guarantee"
+ ],
+ "mvpIn": [
+ "Full page / selection / link capture",
+ "Clean Markdown + automatic metadata",
+ "Direct local Memory/Inbox routing",
+ "Zero questions; background queue",
+ "Duplicate detection; offline-first"
+ ],
+ "mvpOut": [
+ "OCR / voice memos",
+ "AI summaries / auto-tags",
+ "Cloud sync / Notion / folder pickers",
+ "Rename prompts / tagging menus",
+ "Semantic search / collaboration"
+ ],
+ "stack": ["Chrome MV3", "background.js", "content.js", "Turndown.js", "chrome.downloads", "chrome.storage"],
+ "tags": ["extension", "mvp", "markdown", "cursor"],
+ "href": "projects/cursor-extension.html",
+ "sourceFiles": [
+ "Cursor_MVP_Implementation_Guide.pdf",
+ "Desktop/NitishLabs/1) active-projects/memory-capture-extension"
+ ]
+ },
+ {
+ "id": "hermes",
+ "slug": "hermes",
+ "title": "Hermes Agent Stack",
+ "subtitle": "Middleware brain on the VPS; Telegram + WebUI as faces",
+ "status": "Running",
+ "tagline": "Open WebUI is an interface. Hermes is the middleware. Pick the face; keep the brain.",
+ "summary": "Self-hosted Hermes on the Nitish Chauhan VPS: systemd gateway, Telegram bot (@OGHermes_1bot) via webhook, WebUI at chat.nitishchauhan.com. Stack thinking from the lab notes: Hermes owns the agentic loop, tools, and memory; a ChatGPT-style WebUI (or Telegram) is just how you talk to it. Related design work: Historian-style day narrative, question-preserving compression, ADHD \"collect the toys\" capture agents - all plug into the same middleware once the runtime is solid.",
+ "why": "Phone-first control without giving up a real agent (tools, memory, persistence). Portfolio stays on the main domain; cloud and chat live on their own subdomains.",
+ "architecture": {
+ "brain": "Hermes - agent loop, tools, memory, OpenAI-compatible API",
+ "faces": ["Telegram (fast mobile)", "Hermes WebUI / chat.nitishchauhan.com (deep work)"],
+ "adjacent": ["Nextcloud at cloud.nitishchauhan.com", "Optional Open WebUI as alternate face"]
+ },
+ "liveNotes": [
+ "Webhook preferred over long polling on the VPS",
+ "Key-only SSH; no password auth",
+ "WebUI service on loopback; nginx terminates TLS"
+ ],
+ "stack": ["Hermes", "Telegram webhook", "systemd", "nginx", "VPS", "Nextcloud (files)"],
+ "tags": ["agents", "self-host", "middleware", "telegram", "webui"],
+ "href": "projects/hermes.html",
+ "sourceFiles": [
+ "ChatGPT-20.4 WebUI and AI Agents.md",
+ "GoogleSearchAI-So_does_OpenWeb_UI...-_Google_Search.md",
+ "So_does_OpenWeb_UI...-_Google_Search.md"
+ ]
+ }
+]

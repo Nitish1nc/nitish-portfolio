@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Run Your Own Mind Tools: Focus, Memory, and Automation You Control - NitishLabs</title>
+ <meta name="description" content="Drawing apps are easy to host. The real win is a sharp open-source stack for attention, memory, and automation - not another canvas graveyard." />
+ <meta name="theme-color" content="#09090b" />
+ <link rel="canonical" href="https://labs.nitishchauhan.com/posts/self-hosted-cognitive-stack.html" />
+ <meta property="og:title" content="Run Your Own Mind Tools: Focus, Memory, and Automation You Control" />
+ <meta property="og:description" content="Drawing apps are easy to host. The real win is a sharp open-source stack for attention, memory, and automation - not another canvas graveyard." />
+ <meta property="og:url" content="https://labs.nitishchauhan.com/posts/self-hosted-cognitive-stack.html" />
+ <meta property="og:type" content="article" />
+ <meta property="og:image" content="https://labs.nitishchauhan.com/posts/self-hosted-cognitive-stack/carousel/cover.png" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="Run Your Own Mind Tools: Focus, Memory, and Automation You Control" />
+ <meta name="twitter:description" content="Drawing apps are easy to host. The real win is a sharp open-source stack for attention, memory, and automation - not another canvas graveyard." />
+ <meta name="twitter:image" content="https://labs.nitishchauhan.com/posts/self-hosted-cognitive-stack/carousel/cover.png" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../assets/tailwind.css?v=20260807p" />
+ <link rel="stylesheet" href="../assets/labs.css?v=20260807p" />
+</head>
+<body class="antialiased">
+ <div data-labs-nav data-labs-variant="article"></div>
+
+ 
+
+ <main class="pt-24 pb-24">
+ <article class="max-w-3xl mx-auto px-6">
+ <header class="article-header">
+ <div class="meta-row">
+ <span class="meta-chip">Experiments</span>
+ <span>Jul 20, 2026</span>
+ <span class="meta-sep">·</span>
+ <span>Nitish Chauhan</span>
+ </div>
+ <h1 class="heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-5 leading-[1.15]">
+ Run Your Own Mind Tools: Focus, Memory, and Automation You Control
+ </h1>
+ <p class="text-lg text-zinc-400 leading-relaxed">
+ Excalidraw is not heavy to host. The harder question is which open-source tools earn a permanent slot because they solve one friction point extremely well.
+ </p>
+ </header>
+
+ <figure class="post-cover" data-labs-cover="self-hosted-cognitive-stack/carousel" data-labs-cover-alt="Run Your Own Mind Tools: Focus, Memory, and Automation You Control" data-labs-loading="eager" aria-label="Post cover"></figure>
+
+
+
+ <div class="prose-labs">
+ <p>
+ Short answer first: personally hosting Excalidraw is light. The static client-side app is enough for solo drawing. Real-time collaboration needs a small WebSocket room service, a reverse proxy, and HTTPS - still tiny by VPS standards. Think roughly a modest vCPU and under a gig of RAM for personal use, usually via Docker Compose.
+ </p>
+ <blockquote>
+ Do not build a museum of canvases. Build a stack that protects attention, memory, and execution.
+ </blockquote>
+
+ <h2>Selection rule</h2>
+ <p>
+ Nitish Chauhan's filter for open-source tools is intentionally narrow: not “is it popular,” but “does this solve one specific friction with applause from people who actually use it?” Prefer sharp small tools over bloated suites. Prefer local ownership when the data is cognitive, not decorative.
+ </p>
+
+ <h2>A practical personal stack</h2>
+ <h3>Executive function</h3>
+ <ul>
+ <li><strong class="text-zinc-300">Goblin Tools:</strong> decompose vague tasks into steps when initiation is the bottleneck.</li>
+ <li><strong class="text-zinc-300">Super Productivity / Vikunja:</strong> task surfaces that do not require a second PhD to start.</li>
+ <li><strong class="text-zinc-300">ActivityWatch:</strong> automatic local time truth instead of optimistic journaling.</li>
+ </ul>
+ <h3>Knowledge and recall</h3>
+ <ul>
+ <li><strong class="text-zinc-300">Logseq / Trilium / TiddlyWiki:</strong> different shapes of second brain - outliner, hierarchy, or single-file wiki.</li>
+ <li><strong class="text-zinc-300">Anki / Mnemosyne:</strong> spaced repetition when upskilling must stick.</li>
+ <li><strong class="text-zinc-300">Zotero:</strong> research capture that does not dissolve into browser tabs.</li>
+ <li><strong class="text-zinc-300">Memos / Silverbullet:</strong> fast capture without ceremony.</li>
+ </ul>
+ <h3>Automation and infra glue</h3>
+ <ul>
+ <li><strong class="text-zinc-300">n8n:</strong> self-hosted workflows when Zapier rent gets silly.</li>
+ <li><strong class="text-zinc-300">Vaultwarden:</strong> credentials you actually control.</li>
+ <li><strong class="text-zinc-300">Gitea + Coolify:</strong> lightweight code hosting and deploy control on a small VPS.</li>
+ <li><strong class="text-zinc-300">Uptime Kuma:</strong> so your personal stack does not silently die.</li>
+ </ul>
+ <h3>Underrated terminal gems</h3>
+ <ul>
+ <li><strong class="text-zinc-300">Espanso:</strong> text expansion as cognitive offload.</li>
+ <li><strong class="text-zinc-300">Lazygit / Zoxide / Broot / cheat.sh:</strong> navigation and recall speed for people who live in the shell.</li>
+ </ul>
+
+ <h2>Excalidraw's real role</h2>
+ <p>
+ Put Excalidraw (or tldraw / draw.io) in the stack as a thinking surface, not the whole operating system. Use it to externalize system maps, then park the durable decisions elsewhere - notes, Anki, experiments log, agent memory. Canvas without capture is entertainment.
+ </p>
+ <pre>Friction → one sharp tool
+Map → Excalidraw
+Memory → notes + spaced repetition
+Automation → n8n
+Agent door → Hermes / WebUI
+Files → Nextcloud</pre>
+
+ <h2>NitishLabs rule of thumb</h2>
+ <p>
+ Host what compounds your cognition and ownership. Skip what only looks powerful in a screenshot. A VPS is not a personality. It is a workshop. Stock it with tools that remove one real failure mode at a time.
+ </p>
+ </div>
+
+ 
+ </article>
+ </main>
+ <div data-labs-footer data-labs-variant="article"></div>
+
+ <script src="../assets/covers.js?v=20260807p"></script>
+ <script src="../assets/shell.js?v=20260807p"></script>
+</body>
+</html>

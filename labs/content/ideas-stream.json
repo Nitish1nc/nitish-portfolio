@@ -1,0 +1,331 @@
+[
+  {
+    "title": "Relief Valve",
+    "excerpt": "A quiet smash toy. Soft light, one thumb, no scores.",
+    "category": "Experiments",
+    "date": "Sep 16",
+    "group": "Experiments",
+    "href": "relief-valve/",
+    "cover": "relief-valve/preview.png"
+  },
+  {
+    "title": "Why Some Writing Sounds Like Talking",
+    "excerpt": "Four tiny labs on prosodic cognitive simulation. Same scene, four stops vs one held sentence.",
+    "category": "Experiments",
+    "date": "Sep 8",
+    "group": "Experiments",
+    "href": "inner-voice/"
+  },
+  {
+    "title": "Mental Models Reality Engine",
+    "excerpt": "Nitish Chauhan's current priority: flip linear intuition against statistical reality with Assumption Stacks, Compound Effect, and Pareto Gravity.",
+    "category": "Experiments",
+    "date": "Aug 7",
+    "group": "Experiments",
+    "href": "reality-engine/"
+  },
+  {
+    "title": "Build the Kitchen First",
+    "excerpt": "When everyone can ship apps with agents, the moat is personal cognitive infrastructure - not another generic product.",
+    "category": "Models",
+    "date": "Jul 22",
+    "group": "Models",
+    "href": "posts/build-the-kitchen-first.html",
+    "cover": "posts/build-the-kitchen-first/carousel/cover.png"
+  },
+  {
+    "title": "Design the Room, Not Just Your Willpower",
+    "excerpt": "Friction is the universal currency - how hard defaults, proximity, salience, time anchors, and ambient conditions quietly steer behavior.",
+    "category": "Models",
+    "date": "Jul 22",
+    "group": "Models",
+    "href": "posts/the-hierarchy-of-environmental-design.html",
+    "cover": "posts/the-hierarchy-of-environmental-design/carousel/cover.png"
+  },
+  {
+    "title": "Match the Tool to the Thought",
+    "excerpt": "Interfaces are cognitive instruments. Hire the shape that fits the thinking job - chat, forms, vault, or mobile.",
+    "category": "Ideas",
+    "date": "Jul 22",
+    "group": "Ideas",
+    "href": "posts/match-tool-to-thought.html",
+    "cover": "posts/match-tool-to-thought/carousel/cover.png"
+  },
+  {
+    "title": "Mirror Before the Agent",
+    "excerpt": "The highest-leverage use of AI is watching how you think - bias, framing, strategy - not only finishing the task.",
+    "category": "Models",
+    "date": "Jul 22",
+    "group": "Models",
+    "href": "posts/mirror-before-the-agent.html",
+    "cover": "posts/mirror-before-the-agent/carousel/cover.png"
+  },
+  {
+    "title": "Money as Truth Serum",
+    "excerpt": "Treat cash as an experiment instrument - the cleanest signal that your insight helps someone else, not that greed won.",
+    "category": "Experiments",
+    "date": "Jul 22",
+    "group": "Experiments",
+    "href": "posts/money-as-truth-serum.html",
+    "cover": "posts/money-as-truth-serum/carousel/cover.png"
+  },
+  {
+    "title": "Once You See the Pattern",
+    "excerpt": "Map the crowd, study the outliers, find the void. Pattern literacy is how you transcend other people\u2019s impulses.",
+    "category": "Models",
+    "date": "Jul 22",
+    "group": "Models",
+    "href": "posts/once-you-see-the-pattern.html",
+    "cover": "posts/once-you-see-the-pattern/carousel/cover.png"
+  },
+  {
+    "title": "One Picture That Holds a Whole Subject",
+    "excerpt": "Compressed visuals work when they store structure - then you retrieve from a whole neighborhood, not one lonely cue.",
+    "category": "Models",
+    "date": "Jul 21",
+    "group": "Models",
+    "href": "posts/visual-compression-for-learning.html",
+    "cover": "posts/visual-compression-for-learning/carousel/cover.png"
+  },
+  {
+    "title": "Become the Person First - Then Learn Into It",
+    "excerpt": "Identity expansion organizes attention better than another skill list. Adopt responsibility, then let learning catch up.",
+    "category": "Ideas",
+    "date": "Jul 19",
+    "group": "Ideas",
+    "href": "posts/identity-before-the-syllabus.html",
+    "cover": "posts/identity-before-the-syllabus/carousel/cover.png"
+  },
+  {
+    "title": "Run Your Own Mind Tools: Focus, Memory, and Automation You Control",
+    "excerpt": "Drawing apps are easy to host. The real win is a sharp open-source stack for attention, memory, and automation - not another canvas graveyard.",
+    "category": "Experiments",
+    "date": "Jul 19",
+    "group": "Experiments",
+    "href": "posts/self-hosted-cognitive-stack.html",
+    "cover": "posts/self-hosted-cognitive-stack/carousel/cover.png"
+  },
+  {
+    "title": "Save the Questions That Wake Your Brain Up",
+    "excerpt": "Answers go stale. A short stack of sharp questions regenerates thinking faster than another vault of notes.",
+    "category": "Ideas",
+    "date": "Jul 19",
+    "group": "Ideas",
+    "href": "posts/save-the-questions.html",
+    "cover": "posts/save-the-questions/carousel/cover.png"
+  },
+  {
+    "title": "Stop Memorizing Steps - Learn What Tools Can Actually Do",
+    "excerpt": "Following someone else's recipe gets you moving. Mapping what a tool can do unlocks creative combinations.",
+    "category": "Models",
+    "date": "Jul 19",
+    "group": "Models",
+    "href": "posts/process-vs-capability-learning.html",
+    "cover": "posts/process-vs-capability-learning/carousel/cover.png"
+  },
+  {
+    "title": "Talk First, Build Later: Three Brains for Clear Work",
+    "excerpt": "If you figure things out by talking, stop using your coding agent as a thinking partner. Split thinking, planning, and building.",
+    "category": "Experiments",
+    "date": "Jul 19",
+    "group": "Experiments",
+    "href": "posts/speech-first-three-brains.html",
+    "cover": "posts/speech-first-three-brains/carousel/cover.png"
+  },
+  {
+    "title": "The Chat Window Isn't the Brain: Face vs Engine in AI Tools",
+    "excerpt": "The chat app is the face. The agent layer is the engine. Keep messaging. Architecture beats tool tribalism.",
+    "category": "Experiments",
+    "date": "Jul 19",
+    "group": "Experiments",
+    "href": "posts/hermes-openwebui-middleware.html",
+    "cover": "posts/hermes-openwebui-middleware/carousel/cover.png"
+  },
+  {
+    "title": "The Zero-Upfront Upskilling Trap",
+    "excerpt": "Train first, get paid later: how outcome-based skills programs shift the burden, add delays, and hide better leverage points.",
+    "category": "Models",
+    "date": "Jul 19",
+    "group": "Models",
+    "href": "posts/zero-upfront-upskilling-trap.html",
+    "cover": "posts/zero-upfront-upskilling-trap/carousel/cover.png"
+  },
+  {
+    "title": "When Everything Looks Learnable",
+    "excerpt": "When learning speed outruns choice, the bottleneck is an unbounded option set - not ambition.",
+    "category": "Ideas",
+    "date": "Jul 19",
+    "group": "Ideas",
+    "href": "posts/whats-on-the-menu.html",
+    "cover": "posts/whats-on-the-menu/carousel/cover.png"
+  },
+  {
+    "title": "Why Your Best Insights Vanish in Three Days",
+    "excerpt": "You are not drowning in information - you are drowning in collapsed contexts. Build regenerators, not bigger vaults.",
+    "category": "Models",
+    "date": "Jul 19",
+    "group": "Models",
+    "href": "posts/regenerators-not-archives.html",
+    "cover": "posts/regenerators-not-archives/carousel/cover.png"
+  },
+  {
+    "title": "Hermes VPS Agent Stack",
+    "excerpt": "Telegram + WebUI face on a self-hosted agent middleware brain",
+    "category": "Running",
+    "date": "",
+    "group": "Experiments",
+    "href": "projects/hermes.html"
+  },
+  {
+    "title": "Vault - Capture & Close the Loop",
+    "excerpt": "Export-first conversation capture; deliberately not a second brain",
+    "category": "Active",
+    "date": "",
+    "group": "Experiments",
+    "href": "projects/vault.html"
+  },
+  {
+    "title": "Memory Capture Extension (Phase 1)",
+    "excerpt": "Zero-friction highlight \u2192 silent Markdown download to Memory/Inbox",
+    "category": "Prototype",
+    "date": "",
+    "group": "Experiments",
+    "href": "projects/cursor-extension.html"
+  },
+  {
+    "title": "Atlas / Bubble Chat",
+    "excerpt": "Thinking workspace: sessions, floating bubbles, compression - not another chat client",
+    "category": "Prototype",
+    "date": "",
+    "group": "Experiments",
+    "href": "atlas/"
+  },
+  {
+    "title": "Nitish AI Chat Capture",
+    "excerpt": "v1.1.0 source done; rebuild + Grok export reload still pending",
+    "category": "Active",
+    "date": "",
+    "group": "Experiments",
+    "href": null
+  },
+  {
+    "title": "Self-Compressing Knowledge Vault",
+    "excerpt": "Preserve questions first; distill knowledge denser over time - not a dump that only grows",
+    "category": "Prototype",
+    "date": "",
+    "group": "Experiments",
+    "href": null
+  },
+  {
+    "title": "Cognitive Output Exceeds Execution Capacity",
+    "excerpt": "Names the real bottleneck for high-agency thinkers - not \"more motivation,\" but closed-loop architecture so exploration can land without killing the generator.",
+    "category": "Systems",
+    "date": "",
+    "group": "Ideas",
+    "href": null
+  },
+  {
+    "title": "Human Systems Strategist (Not Consultancy Theatre)",
+    "excerpt": "Clarifies what NitishLabs is building toward: spatial/systems-based facilitation with psychology + AI tooling, high-intensity sprints over slow linear advice.",
+    "category": "Positioning",
+    "date": "",
+    "group": "Ideas",
+    "href": null
+  },
+  {
+    "title": "Exploration First, Packaging Second",
+    "excerpt": "Wrong order looks like inconsistency; right order is a production advantage. Design tools and calendars around that wiring.",
+    "category": "Workflow",
+    "date": "",
+    "group": "Ideas",
+    "href": null
+  },
+  {
+    "title": "Deliberate Structure for Diving Into the Unknown",
+    "excerpt": "A portable method for tool mastery and creative transfer without inefficient wander or process-course tunnel vision.",
+    "category": "Learning",
+    "date": "",
+    "group": "Ideas",
+    "href": null
+  },
+  {
+    "title": "Integrity Skills \u2260 Attraction Skills",
+    "excerpt": "Keeps relationship / masculinity content professional and falsifiable: document principles while growing expression, instead of equating moral clarity with social proof.",
+    "category": "Mental models",
+    "date": "",
+    "group": "Ideas",
+    "href": null
+  },
+  {
+    "title": "Signature Pipeline",
+    "excerpt": "Raw signal \u2192 witness stance \u2192 layered simulation \u2192 hidden-variable extraction \u2192 practical framework \u2192 usable protocol.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Mechanism-First Explainer",
+    "excerpt": "Objects \u2192 engine \u2192 bottleneck \u2192 intervention. Fight complexity leakage.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Understanding \u2260 Encoding",
+    "excerpt": "You can \"get it\" in working memory and still fail to install it long-term.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Capture First, Decode Later",
+    "excerpt": "When energy is low, save the signal. Expand it when capacity returns.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "R&D / Shipping Separation",
+    "excerpt": "If the insight-maker must also execute, the engine throttles ideas before they're born.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Flow-Disruption Lens",
+    "excerpt": "Map the flow \u2192 find transition points \u2192 hunt friction \u2192 remove ruthlessly.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Capability-First Tool Learning",
+    "excerpt": "Learn what a tool can do (nodes + affordances) before locking to one canned process.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Four Verbal Architecture Clusters",
+    "excerpt": "Architecture, Dynamics, Epistemology, Teleology - 60 structural primitives for systems talk.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  },
+  {
+    "title": "Identity Anchor \u2260 Fluency",
+    "excerpt": "Self-worth must not be fused to verbal performance.",
+    "category": "Model",
+    "date": "",
+    "group": "Models",
+    "href": null
+  }
+]

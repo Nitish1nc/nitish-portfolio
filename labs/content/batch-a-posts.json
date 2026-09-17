@@ -1,0 +1,44 @@
+[
+ {
+ "slug": "the-hierarchy-of-environmental-design",
+ "title": "Design the Room, Not Just Your Willpower",
+ "cover": "posts/the-hierarchy-of-environmental-design/carousel/cover.png",
+ "carousel": "posts/the-hierarchy-of-environmental-design/carousel/"
+ },
+ {
+ "slug": "whats-on-the-menu",
+ "title": "When Everything Looks Learnable",
+ "cover": "posts/whats-on-the-menu/carousel/cover.png",
+ "carousel": "posts/whats-on-the-menu/carousel/"
+ },
+ {
+ "slug": "process-vs-capability-learning",
+ "title": "Stop Memorizing Steps - Learn What Tools Can Actually Do",
+ "cover": "posts/process-vs-capability-learning/carousel/cover.png",
+ "carousel": "posts/process-vs-capability-learning/carousel/"
+ },
+ {
+ "slug": "speech-first-three-brains",
+ "title": "Talk First, Build Later: Three Brains for Clear Work",
+ "cover": "posts/speech-first-three-brains/carousel/cover.png",
+ "carousel": "posts/speech-first-three-brains/carousel/"
+ },
+ {
+ "slug": "hermes-openwebui-middleware",
+ "title": "The Chat Window Isn't the Brain: Face vs Engine in AI Tools",
+ "cover": "posts/hermes-openwebui-middleware/carousel/cover.png",
+ "carousel": "posts/hermes-openwebui-middleware/carousel/"
+ },
+ {
+ "slug": "zero-upfront-upskilling-trap",
+ "title": "The Zero-Upfront Upskilling Trap",
+ "cover": "posts/zero-upfront-upskilling-trap/carousel/cover.png",
+ "carousel": "posts/zero-upfront-upskilling-trap/carousel/"
+ },
+ {
+ "slug": "self-hosted-cognitive-stack",
+ "title": "Run Your Own Mind Tools: Focus, Memory, and Automation You Control",
+ "cover": "posts/self-hosted-cognitive-stack/carousel/cover.png",
+ "carousel": "posts/self-hosted-cognitive-stack/carousel/"
+ }
+]

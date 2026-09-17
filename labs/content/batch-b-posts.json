@@ -1,0 +1,47 @@
+[
+ {
+ "slug": "build-the-kitchen-first",
+ "title": "Build the Kitchen First",
+ "excerpt": "When everyone can ship apps with agents, the moat is personal cognitive infrastructure - not another generic product.",
+ "category": "Models",
+ "date": "2026-07-22",
+ "href": "posts/build-the-kitchen-first.html",
+ "carousel": "posts/build-the-kitchen-first/carousel/"
+ },
+ {
+ "slug": "once-you-see-the-pattern",
+ "title": "Once You See the Pattern",
+ "excerpt": "Map the crowd, study the outliers, find the void. Pattern literacy is how you transcend other people’s impulses.",
+ "category": "Models",
+ "date": "2026-07-22",
+ "href": "posts/once-you-see-the-pattern.html",
+ "carousel": "posts/once-you-see-the-pattern/carousel/"
+ },
+ {
+ "slug": "money-as-truth-serum",
+ "title": "Money as Truth Serum",
+ "excerpt": "Treat cash as an experiment instrument - the cleanest signal that your insight helps someone else, not that greed won.",
+ "category": "Experiments",
+ "date": "2026-07-22",
+ "href": "posts/money-as-truth-serum.html",
+ "carousel": "posts/money-as-truth-serum/carousel/"
+ },
+ {
+ "slug": "mirror-before-the-agent",
+ "title": "Mirror Before the Agent",
+ "excerpt": "The highest-leverage use of AI is watching how you think - bias, framing, strategy - not only finishing the task.",
+ "category": "Models",
+ "date": "2026-07-22",
+ "href": "posts/mirror-before-the-agent.html",
+ "carousel": "posts/mirror-before-the-agent/carousel/"
+ },
+ {
+ "slug": "match-tool-to-thought",
+ "title": "Match the Tool to the Thought",
+ "excerpt": "Interfaces are cognitive instruments. Hire the shape that fits the thinking job - chat, forms, vault, or mobile.",
+ "category": "Ideas",
+ "date": "2026-07-22",
+ "href": "posts/match-tool-to-thought.html",
+ "carousel": "posts/match-tool-to-thought/carousel/"
+ }
+]

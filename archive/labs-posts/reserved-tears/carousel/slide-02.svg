@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img">
+ <rect width="1080" height="1350" fill="#f7f5f1"/>
+ <rect x="40" y="40" width="1000" height="1270" rx="36" fill="none" stroke="#d6d3d1" stroke-width="2"/>
+
+ <text x="72" y="160" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#14213d">Two Scales of Pain</text>
+ <text x="72" y="230" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#4a5568">Same room. Different nervous systems.</text>
+ <g transform="translate(72, 320)">
+ <rect width="900" height="280" rx="22" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+ <rect x="0" y="0" width="14" height="280" fill="#e07a5f"/>
+ <text x="48" y="70" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#14213d">Fresh scale</text>
+ <text x="48" y="130" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#4a5568">
+ <tspan x="48" dy="0">A sharp comment lands as collapse.</tspan>
+ <tspan x="48" dy="38">Tears are available. Relief is available.</tspan>
+ <tspan x="48" dy="38">The body still treats this as a crisis.</tspan>
+ </text>
+ </g>
+ <g transform="translate(72, 640)">
+ <rect width="900" height="280" rx="22" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+ <rect x="0" y="0" width="14" height="280" fill="#0f766e"/>
+ <text x="48" y="70" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#14213d">Recalibrated scale</text>
+ <text x="48" y="130" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#4a5568">
+ <tspan x="48" dy="0">The same moment barely registers.</tspan>
+ <tspan x="48" dy="38">Not because feelings are fake - </tspan>
+ <tspan x="48" dy="38">because the bar for collapse moved.</tspan>
+ </text>
+ </g>
+
+ <text x="72" y="1260" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#4a5568">NitishLabs · Visual Wiki Map · 2/5</text>
+</svg>

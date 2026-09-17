@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "archetype": "scroll-explainer",
+  "slug": "encoding-is-not-understanding",
+  "title": "Encoding Is Not Understanding",
+  "eyebrow": "One-line model",
+  "hook": "Saving a note is not the same as being able to use it under load.",
+  "excerpt": "A thin definition page: encoding stores the packet; understanding is retrieval that still works when you are tired.",
+  "lede": [
+    "Archives grow. Fluency does not, unless you practice retrieval."
+  ],
+  "date": "2026-09-08",
+  "dateDisplay": "Sep 8, 2026",
+  "author": "Nitish Chauhan",
+  "category": "Models",
+  "host": "labs",
+  "sections": [
+    {
+      "heading": "Encoding",
+      "body": "You captured the words. The file exists. That is necessary and nowhere near sufficient."
+    },
+    {
+      "heading": "Understanding",
+      "body": "You can restate the lever, apply it to a new case, and teach it without opening the note.",
+      "widget": {
+        "type": "prose-card",
+        "data": {
+          "title": "Smell test",
+          "body": "If you need the original chat to explain the idea, you encoded it. You have not metabolized it."
+        }
+      }
+    }
+  ],
+  "takeaway": "Measure understanding by use under load, not by folder size.",
+  "terms": ["encoding", "understanding", "retrieval"],
+  "caveat": "Definition sketch for systems design, not educational psychology coursework.",
+  "ogMetaphor": "archive shelf vs working tool",
+  "ogAlt": "Encoding Is Not Understanding",
+  "shape": "definition-examples",
+  "confidence": 0.8
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0.0",
+  "archetype": "scroll-explainer",
+  "slug": "capture-first-decode-later",
+  "title": "Capture First, Decode Later",
+  "eyebrow": "Closed-loop protocol",
+  "hook": "When load is high, do not force insight. Capture the packet. Decode when capacity returns.",
+  "excerpt": "A three-step protocol for keeping cognitive throughput without pretending every day is a deep-work day.",
+  "lede": [
+    "High-output days and wipeout days are both real. The mistake is using the same workflow for both."
+  ],
+  "date": "2026-09-08",
+  "dateDisplay": "Sep 8, 2026",
+  "author": "Nitish Chauhan",
+  "category": "Models",
+  "host": "labs",
+  "sections": [
+    {
+      "heading": "1. Capture under load",
+      "body": "Dump the raw packet with almost zero formatting. Voice note, chat export, or a single markdown dump is enough.",
+      "widget": {
+        "type": "checklist",
+        "data": {
+          "items": [
+            "One inbox only",
+            "No summarizing in the moment",
+            "Timestamp + source tag"
+          ]
+        }
+      }
+    },
+    {
+      "heading": "2. Park, do not polish",
+      "body": "Polishing under load burns the capacity you need to recover. Parking is the skill."
+    },
+    {
+      "heading": "3. Decode on a high day",
+      "body": "When fluency returns, compile: extract levers, decisions, and next actions. That is when agents earn their keep.",
+      "widget": {
+        "type": "numbered-steps",
+        "data": {
+          "steps": [
+            {
+              "label": "Scan",
+              "body": "Skim for decisions and open loops."
+            },
+            {
+              "label": "Cluster",
+              "body": "Group related packets into one arc."
+            },
+            {
+              "label": "Compile",
+              "body": "Ship a note, lab, or task list."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "takeaway": "Treat mood-state as system state. Capture protocols must survive wipeouts, or the loop leaks.",
+  "terms": [
+    "capture packet",
+    "decode later",
+    "closed loop"
+  ],
+  "caveat": "Protocol sketch for personal systems design, not clinical advice.",
+  "ogMetaphor": "inbox tray to compiled map",
+  "ogAlt": "Capture First, Decode Later",
+  "shape": "checklist-protocol",
+  "confidence": 0.9
+}

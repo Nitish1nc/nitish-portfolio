@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dwell | Select is copy. Stay is paste.</title>
+  <meta name="description" content="Dwell is a Mac mini-app that latches text when you select it and pastes when you click-hold for 1.5 seconds. Kill the Cmd+C / Cmd+V homing tax." />
+  <meta name="theme-color" content="#090611" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Dwell | Select is copy. Stay is paste." />
+  <meta property="og:description" content="A dwell-paste layer for people who already live on the trackpad." />
+  <meta property="og:url" content="https://www.nitishchauhan.com/dwell/" />
+  <meta property="og:image" content="https://www.nitishchauhan.com/dwell/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dwell | Select is copy. Stay is paste." />
+  <meta name="twitter:description" content="Highlight. Go. Hold. The keyboard is optional." />
+  <meta name="twitter:image" content="https://www.nitishchauhan.com/dwell/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,600;1,6..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <nav>
+    <a class="brand" href="#top"><img src="apple-touch-icon.png" alt="" width="38" height="38" />DWELL</a>
+    <div class="nav-links">
+      <a href="#sim">Simulator</a>
+      <a href="#science">Science</a>
+      <a href="#future">What's sealed</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div>
+      <p class="eyebrow">A Mac mini-app by Nitish Chauhan</p>
+      <h1>Select is copy.<br /><em>Stay</em> is paste.</h1>
+      <p class="lede">You already highlighted the line. Dwell assumes that was the copy. You already moved to the field. A 1.5 second still-hold is the paste. Keys only show up when you want an older slot. Or never: open the stack with the pointer and stay on the pad the whole time.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#sim">Feel it in 20 seconds</a>
+        <a class="btn btn-ghost" href="#science">The homing tax</a>
+      </div>
+      <div class="pills">
+        <span>No extra app pile</span>
+        <span>Hammerspoon + Karabiner + Raycast</span>
+        <span>1.5s dwell paste</span>
+        <span>Numbered stack, optional keys</span>
+      </div>
+    </div>
+    <div class="app-orb">
+      <img class="hero-og" src="og-image.png" alt="Dwell ring filling over a glass trackpad" />
+      <img class="float-icon" src="apple-touch-icon.png" alt="Dwell app icon" />
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b>0.4s</b><span>KLM homing, each hand trip between pad and keys (Card, Moran, Newell)</span></div>
+    <div class="stat"><b>~360ms</b><span>Measured homing in modern logs, still a tax every chord (Burns et al. style field data)</span></div>
+    <div class="stat"><b>4.51s</b><span>Keyboard cut-and-paste as a composite action in KLM-style tables</span></div>
+    <div class="stat"><b>1.5s</b><span>First-trial dwell. Slow on purpose so a normal click never fires</span></div>
+  </div>
+
+  <section>
+    <p class="kicker">The problem</p>
+    <h2>Copy-paste is not typing. It is a context fracture.</h2>
+    <p>Highlighting is already the decision. ⌘C and ⌘V are leftover logistics: home the hand, find two keys, home back, hope the clipboard is still what you think it is. That is not a shortcut. That is a tiny interruption you pay dozens of times a day until flow is sandpaper.</p>
+    <div class="tax-grid">
+      <article class="tax"><small>TAX 01</small><h3>Homing</h3><p>Hand leaves the pad, finds modifiers, returns. Classic KLM puts that trip at 0.4 seconds. You do it twice per transfer.</p></article>
+      <article class="tax"><small>TAX 02</small><h3>Mental prepare</h3><p>The M operator in KLM is ~1.35s: "now I copy." You already decided when you selected. The chord is a second decision.</p></article>
+      <article class="tax"><small>TAX 03</small><h3>Attention residue</h3><p>Leroy (2009): part of you stays on the last unfinished move. A copy chord is a micro unfinished task inside reading.</p></article>
+      <article class="tax"><small>TAX 04</small><h3>Trust check</h3><p>Did it copy? Is the clipboard still that URL? You glance, you hesitate, you recopy. Residue, again.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The reflex</p>
+    <h2>Three beats. Keyboard is a guest, not the host.</h2>
+    <div class="loop">
+      <article><div class="n">1</div><h3>Highlight</h3><p>The selection lands on a stack. Identical re-select pops it. Tiny twitch-selects never enter. Password fields stay silent.</p></article>
+      <article><div class="n">2</div><h3>Move</h3><p>You were going to the other pane anyway. Live clipboard is already the latest kept item. Most pastes need no keys.</p></article>
+      <article><div class="n">3</div><h3>Dwell 1.5s</h3><p>Still click-hold. If the pointer moves, it cancels. If you need slot 3, arm it from the stack or with Ctrl+Shift+3, then dwell the same way.</p></article>
+    </div>
+  </section>
+
+  <section id="sim">
+    <p class="kicker">Live simulator</p>
+    <h2>Latch a sentence. Hold to drop it.</h2>
+    <p>This is the product in your browser. Highlight in the source. Watch the stack. Click-hold 1.5 seconds on the drop pane. Click a stack chip (or Ctrl+Shift+1-9) to change what is live. Drag and the dwell dies.</p>
+    <div class="sim-wrap">
+      <div class="sim-chrome">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="sim-title">Dwell · trial 01</div>
+        <div class="sim-meta">Live: <strong id="live-label">empty</strong></div>
+      </div>
+      <div class="sim-grid">
+        <div class="pane">
+          <header><span>SOURCE · highlight anything</span><span>select = copy</span></header>
+          <div class="material" id="material">
+            <p>Every knowledge worker already knows the twitch. A sentence is useful. The hand leaves the trackpad, two keys fire, the hand comes back, the eyes leave the paragraph to confirm the clipboard, then the whole ritual repeats at the destination.</p>
+            <p>Card, Moran and Newell priced that hand trip. They called it homing and gave it four tenths of a second. Field logs decades later still see a few hundred milliseconds. It is not the milliseconds that ruin you. It is the mode switch: reader becomes clerk, then reader again.</p>
+            <p>Sophie Leroy named the hangover attention residue. You do not fully arrive at the next sentence because a fragment of you is still holding the last chord. Gloria Mark's interruption work shows the stress of being yanked, even when you finish faster by sprinting.</p>
+            <p>Dwell's bet is rude and simple. Selection is the copy. A long still-hold is the paste. The clipboard is a stack you can see. Keys are how you arm an older slot, not how you perform the act. The pad never loses you.</p>
+            <p>Highlight this line if you want a clean demo payload. Then move right, and stay.</p>
+          </div>
+        </div>
+        <div class="pane">
+          <header><span>STACK</span><span>click to arm</span></header>
+          <div class="stack-body" id="stack"></div>
+        </div>
+        <div class="pane">
+          <header><span>DROP · hold 1.5s</span><span>stay still</span></header>
+          <div class="dropzone" id="dropzone">
+            <p style="color:#b7adc8;margin-top:0">Click here and hold without moving. The ring fills. The live slot lands.</p>
+            <div class="paste-log" id="paste-log"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hud">
+        <span>Latched <strong id="stat-copy">0</strong></span>
+        <span>Pasted <strong id="stat-paste">0</strong></span>
+        <span>Homing trips skipped <strong id="stat-homing">0</strong></span>
+        <span>Rough motor saved <strong id="stat-saved">0s</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="science">
+    <p class="kicker">The science, used honestly</p>
+    <h2>We are not claiming a new brain region. We are deleting a known operator.</h2>
+    <p>Dwell sits on three literatures: motor time (KLM + Fitts), attention residue, and dwell-selection in accessibility HCI. The 1.5s hold is a trial constant from the dwell-time range reported in gaze and touch work (often 150ms to 1500ms). We picked the slow end so the first version almost never false-fires.</p>
+    <table class="science-table">
+      <thead>
+        <tr><th>What you feel</th><th>What we are using</th><th>What we are not pretending</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hand jumping to ⌘C</td>
+          <td>KLM H operator, 0.4s; later field homing ~0.36s</td>
+          <td>That every paste is 0.4s faster. Dwell itself costs 1.5s. The win is skipped chords, skipped homing, skipped "did it copy?"</td>
+        </tr>
+        <tr>
+          <td>Flow that feels sanded down</td>
+          <td>Leroy 2009, attention residue after unfinished micro-tasks</td>
+          <td>That we measured your IQ dropping. Residue is the mechanism, not a trophy number.</td>
+        </tr>
+        <tr>
+          <td>Hold until it takes</td>
+          <td>Dwell-click in HCI: slow, low error, used when accuracy beats speed</td>
+          <td>That 1.5s is optimal. It is conservative. Later builds can learn your hold.</td>
+        </tr>
+        <tr>
+          <td>Ring filling, then a hit</td>
+          <td>Sense of agency work: predictable delayed action still feels owned if the state is visible</td>
+          <td>That a progress ring is dopamine science. It is feedback. The fun is the ritual becoming cheap.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:18px;color:#b7adc8">Sources worth opening: Card, Moran, Newell, <em>The Psychology of Human-Computer Interaction</em> (KLM); Fitts's law for pointing; Leroy, OBHDP 2009; Mark, Gudith, Klocke, CHI 2008 on interruption stress; dwell-time surveys in gaze HCI (typical windows 150-1500ms).</p>
+  </section>
+
+  <section>
+    <p class="kicker">Why it can feel good</p>
+    <h2>The serious part is the tax. The playful part is the ring.</h2>
+    <div class="dopamine">
+      <article class="card">
+        <h3>Visible latch</h3>
+        <p>The stack chips are the ACK. You never wonder if the copy happened. Peripheral confirmation is how Limbic Notes treats capture. Dwell does the same for the system clipboard.</p>
+      </article>
+      <article class="card">
+        <h3>Variable older slots</h3>
+        <p>Most transfers are slot 1. Sometimes you want slot 4. Numbered arming, or pointing at the stack, is a tiny loot-select. Same paste gesture after.</p>
+      </article>
+      <article class="card">
+        <h3>Re-select as undo</h3>
+        <p>Highlight the same line again and it leaves the stack. Accidents become a joke you can reverse without a settings panel.</p>
+      </article>
+      <article class="card">
+        <h3>Hold as commitment</h3>
+        <p>1.5 seconds is long enough that you only do it when you mean paste. That is why it is the first trial. Fast later. Safe now.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="future" id="future">
+    <span class="sealed">SEALED · NOT THIS BUILD</span>
+    <h2>Something larger is sitting under the ring.</h2>
+    <p>Dwell is the first verb: move text without leaving the pad. The next verbs are not "more clipboard settings." They are a motor layer for the whole machine. The page stops here. The product does not.</p>
+    <div class="future-list">
+      <div><b>02</b><span>Adaptive dwell. The ring learns how long you actually mean it, per app, the way gaze keyboards shrank thresholds after a few phrases.</span></div>
+      <div><b>03</b><span>Spatial stack. Slots live around the pointer, not in a palette. Pick with a flick. Paste with the same hold.</span></div>
+      <div><b>04</b><span>Cross-surface latch. Phone highlight, desktop dwell. The stack is the same object.</span></div>
+      <div><b>05</b><span>The unnamed layer. If select can mean copy, other still-gestures can mean send, file, or speak. That release is not named on this page on purpose.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Built by Nitish Chauhan · Dwell is a live prototype, not vapor.</span>
+    <span>
+      <a href="https://www.nitishchauhan.com">Portfolio</a> ·
+      <a href="https://labs.nitishchauhan.com">Labs</a> ·
+      <a href="https://library.nitishchauhan.com">Library</a>
+    </span>
+  </footer>
+
+  <div class="hold-ring" id="hold-ring" aria-hidden="true">
+    <svg viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="26" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/>
+      <circle id="ring-arc" cx="36" cy="36" r="26" fill="none" stroke="#5dffc8" stroke-width="6" stroke-linecap="round"
+        stroke-dasharray="163.36" stroke-dashoffset="163.36" transform="rotate(-90 36 36)"/>
+    </svg>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="sim.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img">
+ <rect width="1080" height="1350" fill="#f7f5f1"/>
+ <rect x="40" y="40" width="1000" height="1270" rx="36" fill="none" stroke="#d6d3d1" stroke-width="2"/>
+ 
+ <rect x="72" y="180" width="936" height="780" rx="28" fill="#1d3557"/>
+ <text x="120" y="280" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#c9a227" letter-spacing="2">TAKEAWAY</text>
+ <text x="120" y="360" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="700" fill="#fff">
+ <tspan x="120" dy="0">Strategy Lock</tspan>
+ </text>
+ <text x="120" y="560" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#e5e7eb">
+ <tspan x="120" dy="0">An agent that only executes makes you</tspan><tspan x="120" dy="40">faster. An agent that mirrors makes</tspan><tspan x="120" dy="40">you harder to fool - including by</tspan><tspan x="120" dy="40">yourself.</tspan>
+ </text>
+ <text x="72" y="1260" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#4a5568">NitishLabs · Visual Wiki Map · 5/5</text>
+ 
+</svg>

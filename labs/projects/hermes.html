@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Hermes Agent Stack - NitishLabs</title>
+ <meta name="description" content="Hermes on the VPS: agent middleware with Telegram and WebUI faces. Interface vs brains, deliberately." />
+ <meta name="theme-color" content="#09090b" />
+ <link rel="canonical" href="https://labs.nitishchauhan.com/projects/hermes.html" />
+ <meta property="og:title" content="Hermes Agent Stack" />
+ <meta property="og:description" content="Open WebUI is an interface. Hermes is the middleware. Pick the face; keep the brain." />
+ <meta property="og:url" content="https://labs.nitishchauhan.com/projects/hermes.html" />
+ <meta property="og:type" content="website" />
+ <meta property="og:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="Hermes Agent Stack" />
+ <meta name="twitter:description" content="Open WebUI is an interface. Hermes is the middleware. Pick the face; keep the brain." />
+ <meta name="twitter:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../assets/tailwind.css?v=20260807p" />
+ <link rel="stylesheet" href="../assets/labs.css?v=20260807p" />
+</head>
+<body class="antialiased">
+ <div data-labs-nav data-labs-variant="article" data-labs-active="Experiments"></div>
+
+ 
+
+ <main class="pt-24 pb-24">
+ <article class="max-w-3xl mx-auto px-6">
+ <header class="article-header">
+ <div class="meta-row">
+ <span class="meta-chip">Running</span>
+ <span>Self-hosted middleware</span>
+ </div>
+ <h1 class="heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-4 leading-tight">
+ Hermes Agent Stack
+ </h1>
+ <p class="text-lg text-zinc-400 leading-relaxed max-w-2xl">
+ Open WebUI is a face. Hermes is the brain. Pick the interface you like - keep the agent loop, tools, and memory on the VPS.
+ </p>
+ </header>
+
+ <section class="project-section">
+ <h2 class="heading text-xl font-semibold text-white">What</h2>
+ <p class="text-zinc-400 leading-relaxed">
+ Hermes runs as systemd on Nitish Chauhan's VPS with Telegram webhook access (@OGHermes_1bot) and a WebUI at <a href="https://chat.nitishchauhan.com" class="accent-text hover:text-white transition-colors">chat.nitishchauhan.com</a>. OpenAI-compatible API means alternate faces (Open WebUI, mobile PWA, etc.) can plug in without replacing middleware. Nextcloud stays on <span class="text-zinc-300">cloud.</span> for files; portfolio stays on the main domain.
+ </p>
+ </section>
+
+ <section class="project-section">
+ <h2 class="heading text-xl font-semibold text-white">Why</h2>
+ <p class="text-zinc-400 leading-relaxed">
+ Phone-first control without pretending Telegram is a full IDE. Lab notes sketch Historian-style day narratives and question-preserving compression - those are workers that need a durable agent runtime, not another disposable chatbot tab. End of day, people tool-out what they like; the stack should survive that.
+ </p>
+ </section>
+
+ <section class="project-section surface-panel">
+ <h2 class="heading text-xl font-semibold text-white mb-3">Status</h2>
+ <p class="text-zinc-400 leading-relaxed text-sm">
+ Live. Webhook mode preferred over long polling. WebUI on loopback behind nginx TLS. This is production personal infra for NitishLabs - not a slideware agent.
+ </p>
+ <div class="mt-4 flex flex-wrap gap-3 text-xs">
+ <a href="https://chat.nitishchauhan.com" class="px-3 py-1.5 meta-chip text-zinc-300 hover:text-white transition-colors">Open Chat</a>
+ <a href="https://cloud.nitishchauhan.com" class="px-3 py-1.5 meta-chip text-zinc-300 hover:text-white transition-colors">Nextcloud</a>
+ </div>
+ </section>
+
+ 
+ </article>
+ </main>
+ <div data-labs-footer data-labs-variant="article"></div>
+ <script src="../assets/shell.js?v=20260807p"></script>
+</body>
+</html>

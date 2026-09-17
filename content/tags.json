@@ -1,0 +1,7 @@
+{
+  "ai-systems": { "label": "AI Systems" },
+  "content": { "label": "Content & Writing" },
+  "visuals": { "label": "Visual Thinking" },
+  "capture": { "label": "Capture Tools" },
+  "infra": { "label": "Self-hosted Infra" }
+}

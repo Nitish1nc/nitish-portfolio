@@ -1,49 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ArrowRight, 
-  Mail, 
-  Github, 
-  Linkedin, 
-  BookOpen, 
-  FileText, 
+import React, { useState } from 'react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Compass,
+  Cpu,
   ExternalLink,
-  ChevronRight,
-  ArrowUpRight
+  FileText,
+  Inbox,
+  Linkedin,
+  Mail,
+  PenLine,
+  Server,
+  Sparkles,
 } from 'lucide-react';
+import { artifacts, tagOrder, tagLabel, Artifact, ArtifactStatus } from './content';
 
 // ==========================================
-// DATA LAYER (Simulating JSON/Markdown API)
+// DATA LAYER (static sections; artifacts live in content/)
 // ==========================================
 const siteData = {
   hero: {
-    name: "Nitish",
-    titles: ["Content Strategist.", "Technical Content Writer.", "Research-driven Marketing Thinker."],
-    description: "Helping companies explain complex products with clarity.",
-    keywords: ["Content Strategy", "Technical Writing", "B2B SaaS", "Product Marketing", "SEO", "AI", "Knowledge Management"]
+    name: "Nitish Chauhan",
+    titles: ["Content Strategist.", "AI Systems Builder.", "Technical Content Writer."],
+    description: "I make complex B2B products make sense, and I build the AI capture and agent systems I wish content teams already had.",
+    keywords: ["Content Strategy", "Technical Writing", "B2B SaaS", "Product Marketing", "SEO", "AI", "Systems Building", "Agent Middleware", "Self-hosted Infra", "Knowledge Management"]
   },
-  featuredWork: [
-    {
-      id: 1,
-      title: "Framework Library",
-      description: "A categorized collection of mental models for content strategy.",
-      tags: ["Content Strategy", "Thought Leadership"],
-      link: "#"
-    },
-    {
-      id: 2,
-      title: "Interview Playbooks",
-      description: "Standardized operating procedures for extracting subject matter expertise.",
-      tags: ["Product Education", "Knowledge Management"],
-      link: "#"
-    },
-    {
-      id: 3,
-      title: "Excalidraw Thinking Maps",
-      description: "Visual breakdowns of complex B2B SaaS architectures.",
-      tags: ["Information Architecture", "Content Frameworks"],
-      link: "#"
-    }
-  ],
   expertise: [
     { skill: "Content Strategy", level: 95 },
     { skill: "Technical Writing", level: 90 },
@@ -64,47 +46,31 @@ const siteData = {
       year: "2024 - Present",
       role: "Content Marketing Strategist",
       company: "Freelance",
-      description: "Designing content systems, technical documentation, and SEO strategies for B2B SaaS companies.",
+      description: "Designing content systems for B2B SaaS while shipping personal AI infrastructure: agent runtime, cognitive capture, and a self-hosted ops surface.",
       tags: ["B2B SaaS", "SEO", "AI", "Product Marketing"]
     },
     {
       id: 2,
       year: "2022 - 2024",
       role: "Technical Content Writer",
-      company: "TechCorp Inc.",
-      description: "Translated complex engineering concepts into accessible product education and landing pages.",
-      tags: ["Technical Documentation", "Landing Pages", "Blogs"]
-    }
-  ],
-  experiments: [
-    {
-      id: 1,
-      title: "Building an AI Research Workflow",
-      status: "Active",
-      description: "Designing a prompt engineering system for rapid market research.",
-      tags: ["AI", "Prompt Engineering", "Research"]
-    },
-    {
-      id: 2,
-      title: "Nextcloud Knowledge Management",
-      status: "Completed",
-      description: "Setting up a self-hosted knowledge base for portfolio evolution.",
-      tags: ["Knowledge Management", "Productivity"]
-    },
-    {
-      id: 3,
-      title: "Content Automation Engine",
-      status: "Paused",
-      description: "Exploring automated distribution using n8n and open-source models.",
-      tags: ["Automation", "Workflow Design"]
+      company: "Smartlead",
+      description: "Operated growth and AI-heavy workflows for cold email / deliverability; translated complex product mechanics into accessible education and landing pages.",
+      tags: ["Technical Documentation", "Growth", "B2B SaaS"]
     }
   ],
   writing: [
-    { id: 1, title: "The Architecture of a Good Technical Tutorial", date: "Oct 12, 2024", tag: "Technical Writing" },
-    { id: 2, title: "Why B2B SaaS Needs Less Marketing and More Education", date: "Sep 28, 2024", tag: "Content Strategy" },
-    { id: 3, title: "SEO is Dead, Long Live Information Retrieval", date: "Sep 15, 2024", tag: "SEO" },
-    { id: 4, title: "Mental Models for AI-Assisted Copywriting", date: "Aug 30, 2024", tag: "AI" },
-  ]
+    { id: 1, title: "Your funnel isn't leaking. It's measuring the wrong thing.", date: "Draft", tag: "Content Strategy" },
+    { id: 2, title: "Every AI product looks the same now. Here is the structural reason why.", date: "Draft", tag: "AI" },
+    { id: 3, title: "Healthcare AI doesn't have a technology trust problem. It has a language problem.", date: "Draft", tag: "Technical Writing" },
+    { id: 4, title: "Your executives don't have a visibility problem. They have a point-of-view problem.", date: "Draft", tag: "Content Strategy" },
+  ],
+  links: {
+    linkedin: "https://www.linkedin.com/in/nitish-chauhan-403b36230/",
+    email: "mailto:connect@nitishchauhan.com",
+    labs: "https://labs.nitishchauhan.com/",
+    writingHub: "https://library.nitishchauhan.com/",
+    resume: "/nitish-chauhan-technical-writer-cv.pdf",
+  },
 };
 
 // ==========================================
@@ -136,18 +102,146 @@ const Badge = ({ children, className = "" }) => (
   </span>
 );
 
-const StatusBadge = ({ status }) => {
-  const colors = {
-    Active: "bg-emerald-100 text-emerald-700",
-    Completed: "bg-blue-100 text-blue-700",
-    Paused: "bg-amber-100 text-amber-700",
-    Future: "bg-slate-100 text-slate-700"
-  };
+const STATUS_META: Record<ArtifactStatus, { label: string; badge: string; dot: string }> = {
+  live: { label: "Live", badge: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
+  prototype: { label: "Prototype", badge: "bg-sky-100 text-sky-700", dot: "bg-sky-500" },
+  "in-progress": { label: "In progress", badge: "bg-amber-100 text-amber-700", dot: "bg-amber-500" },
+  planned: { label: "Planned", badge: "bg-slate-100 text-slate-600", dot: "bg-slate-400" },
+};
+
+const StatusBadge = ({ status }: { status: ArtifactStatus }) => {
+  const meta = STATUS_META[status] || STATUS_META.planned;
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status] || colors.Future}`}>
-      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${status === 'Active' ? 'bg-emerald-500 animate-pulse' : status === 'Completed' ? 'bg-blue-500' : 'bg-amber-500'}`}></span>
-      {status}
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${meta.badge}`}>
+      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${meta.dot} ${status === 'live' ? 'animate-pulse' : ''}`}></span>
+      {meta.label}
     </span>
+  );
+};
+
+// ==========================================
+// ARTIFACT REGISTRY
+// ==========================================
+
+const TAG_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  "ai-systems": Cpu,
+  content: PenLine,
+  visuals: Compass,
+  capture: Inbox,
+  infra: Server,
+};
+
+const iconForTags = (tags: string[]) => TAG_ICONS[tags[0]] || Sparkles;
+
+const ArtifactCard = ({ artifact, featured = false }: { artifact: Artifact; featured?: boolean }) => {
+  const Icon = iconForTags(artifact.tags);
+  const inner = (
+    <>
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
+        {artifact.cover ? (
+          <img
+            src={artifact.cover}
+            alt={`${artifact.title} preview`}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 via-slate-50 to-sky-100/60">
+            <Icon className="h-10 w-10 text-slate-300" />
+          </div>
+        )}
+      </div>
+      <div className={featured ? "p-6 md:p-7" : "p-6"}>
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <StatusBadge status={artifact.status} />
+          {artifact.tags.map((tag) => (
+            <Badge key={tag}>{tagLabel(tag)}</Badge>
+          ))}
+        </div>
+        <h3 className={`font-medium text-slate-900 mb-2 ${featured ? "text-2xl" : "text-xl"}`}>{artifact.title}</h3>
+        <p className="text-slate-500 leading-relaxed">{artifact.oneLiner}</p>
+        {featured && artifact.body && (
+          <p className="mt-3 text-slate-600 leading-relaxed line-clamp-3">{artifact.body}</p>
+        )}
+        {artifact.url && (
+          <span className="mt-4 inline-flex items-center text-sm font-medium text-slate-500 transition-colors group-hover:text-slate-900">
+            Visit <ArrowUpRight className="ml-1 h-4 w-4" />
+          </span>
+        )}
+      </div>
+    </>
+  );
+  const shell =
+    "group flex h-full flex-col overflow-hidden rounded-[16px] border border-slate-200 bg-white text-left transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]";
+  return artifact.url ? (
+    <a href={artifact.url} target="_blank" rel="noopener noreferrer" className={shell}>
+      {inner}
+    </a>
+  ) : (
+    <div className={shell}>{inner}</div>
+  );
+};
+
+const FilterChip = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+      active
+        ? "border-slate-900 bg-slate-900 text-white"
+        : "border-slate-200 bg-white text-slate-600 hover:border-slate-400 hover:text-slate-900"
+    }`}
+  >
+    {label}
+  </button>
+);
+
+const Registry = () => {
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const featured = artifacts.filter((a) => a.featured);
+  const countFor = (tag: string | null) =>
+    tag === null ? artifacts.length : artifacts.filter((a) => a.tags.includes(tag)).length;
+  const gridItems = activeTag
+    ? artifacts.filter((a) => a.tags.includes(activeTag))
+    : artifacts.filter((a) => !a.featured);
+
+  return (
+    <Section id="work" className="bg-slate-50/50">
+      <SectionHeading
+        title="Selected Work"
+        subtitle="Demonstrable pieces across content, AI systems, and self-hosted infra. Filter by what you came for."
+      />
+
+      {!activeTag && (
+        <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {featured.map((artifact) => (
+            <ArtifactCard key={artifact.slug} artifact={artifact} featured />
+          ))}
+        </div>
+      )}
+
+      <div className="mb-8 flex flex-wrap gap-2">
+        <FilterChip label={`All (${countFor(null)})`} active={activeTag === null} onClick={() => setActiveTag(null)} />
+        {tagOrder.map((tag) => (
+          <FilterChip
+            key={tag}
+            label={`${tagLabel(tag)} (${countFor(tag)})`}
+            active={activeTag === tag}
+            onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+          />
+        ))}
+      </div>
+
+      {gridItems.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {gridItems.map((artifact) => (
+            <ArtifactCard key={artifact.slug} artifact={artifact} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-slate-500">Nothing under this tag yet. Check back soon.</p>
+      )}
+    </Section>
   );
 };
 
@@ -156,52 +250,56 @@ const StatusBadge = ({ status }) => {
 // ==========================================
 
 const Hero = () => (
-  <section className="min-h-[90vh] flex flex-col justify-center items-start w-full max-w-5xl mx-auto px-6 md:px-12 animate-in fade-in duration-1000">
-    <h1 className="text-5xl md:text-7xl font-semibold tracking-tighter text-slate-900 leading-tight mb-6">
-      {siteData.hero.name}.<br />
-      <span className="text-slate-400 block mt-2 text-4xl md:text-6xl">{siteData.hero.titles[0]}</span>
-      <span className="text-slate-400 block mt-2 text-4xl md:text-6xl">{siteData.hero.titles[1]}</span>
-    </h1>
-    <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mb-12 font-light leading-relaxed">
-      {siteData.hero.description}
-    </p>
-    
-    <div className="flex flex-wrap gap-4 items-center">
-      <a href="#featured" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-slate-900 hover:bg-slate-800 transition-colors">
-        View Work <ArrowRight className="ml-2 w-4 h-4" />
-      </a>
-      <a href="#contact" className="inline-flex items-center justify-center px-6 py-3 border border-slate-200 text-base font-medium rounded-full text-slate-700 bg-white hover:bg-slate-50 transition-colors">
-        LinkedIn <ArrowUpRight className="ml-2 w-4 h-4 text-slate-400" />
-      </a>
-    </div>
+  <section className="hero-shell relative w-full">
+    <div className="min-h-[90vh] flex flex-col justify-center items-center text-center w-full max-w-5xl mx-auto px-6 md:px-12 py-20 md:py-24">
+      <div className="mb-8 md:mb-10">
+        <div className="relative mx-auto w-44 h-44 md:w-56 md:h-56">
+          <div
+            aria-hidden="true"
+            className="absolute -inset-7 rounded-full bg-sky-200/40 blur-2xl"
+          />
+          <img
+            src="/nitish-dp.webp"
+            alt="Nitish Chauhan"
+            width={224}
+            height={224}
+            className="hero-portrait relative w-full h-full rounded-full object-cover object-[center_18%]"
+          />
+        </div>
+      </div>
 
-    {/* Invisible ATS Keywords (Screen reader only or visually hidden to keep UI clean, but present in DOM) */}
-    <div className="sr-only">
-      Keywords: {siteData.hero.keywords.join(", ")}
+      <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-slate-900 leading-[1.05] mb-5">
+        {siteData.hero.name}
+      </h1>
+
+      <p className="text-xl md:text-2xl text-slate-500 font-medium leading-snug max-w-2xl mb-4">
+        {siteData.hero.titles.join(" ")}
+      </p>
+
+      <p className="text-lg md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed">
+        {siteData.hero.description}
+      </p>
+
+      <div className="flex flex-wrap gap-3 md:gap-4 items-center justify-center">
+        <a
+          href="#work"
+          className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-sm shadow-slate-900/15"
+        >
+          View Work <ArrowRight className="ml-2 w-4 h-4" />
+        </a>
+        <a
+          href={siteData.links.email}
+          className="inline-flex items-center justify-center px-6 py-3 border border-slate-300/80 text-base font-medium rounded-full text-slate-800 bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
+        >
+          Get in touch <ArrowUpRight className="ml-2 w-4 h-4 text-slate-400" />
+        </a>
+      </div>
+
+      <div className="sr-only">
+        Keywords: {siteData.hero.keywords.join(", ")}
+      </div>
     </div>
   </section>
-);
-
-const FeaturedWork = () => (
-  <Section id="featured" className="bg-slate-50/50">
-    <SectionHeading title="Selected Work" subtitle="Frameworks, playbooks, and architectural maps designed for clarity." />
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {siteData.featuredWork.map((work) => (
-        <Card key={work.id} className="group cursor-pointer flex flex-col h-full">
-          <div className="h-40 w-full bg-slate-100 rounded-lg mb-6 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-            {work.id === 1 && <BookOpen className="w-10 h-10 text-slate-300" />}
-            {work.id === 2 && <FileText className="w-10 h-10 text-slate-300" />}
-            {work.id === 3 && <ExternalLink className="w-10 h-10 text-slate-300" />}
-          </div>
-          <h3 className="text-xl font-medium text-slate-900 mb-2">{work.title}</h3>
-          <p className="text-slate-500 mb-6 flex-grow">{work.description}</p>
-          <div className="flex flex-wrap gap-2 mt-auto">
-            {work.tags.map(tag => <Badge key={tag}>{tag}</Badge>)}
-          </div>
-        </Card>
-      ))}
-    </div>
-  </Section>
 );
 
 const Expertise = () => (
@@ -214,7 +312,7 @@ const Expertise = () => (
             <span className="text-base font-medium text-slate-900">{item.skill}</span>
           </div>
           <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-            <div 
+            <div
               className="bg-slate-800 h-2 rounded-full transition-all duration-1000 ease-out"
               style={{ width: `${item.level}%` }}
             ></div>
@@ -230,12 +328,11 @@ const ThinkingLibrary = () => (
     <SectionHeading title="Thinking Frameworks" subtitle="A structured library of mental models across different disciplines." />
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
       {siteData.thinkingLibrary.map((item) => (
-        <Card key={item.id} className="flex flex-col md:flex-row md:items-center justify-between cursor-pointer group hover:border-slate-300">
+        <Card key={item.id}>
           <div>
             <span className="text-sm font-medium text-slate-400 mb-1 block">{item.category}</span>
             <h3 className="text-lg font-medium text-slate-900">{item.title}</h3>
           </div>
-          <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-slate-600 transition-colors mt-4 md:mt-0 hidden md:block" />
         </Card>
       ))}
     </div>
@@ -248,18 +345,16 @@ const Experience = () => (
     <div className="space-y-12 max-w-3xl">
       {siteData.experience.map((exp) => (
         <div key={exp.id} className="relative pl-8 md:pl-0">
-          {/* Mobile Timeline Line */}
           <div className="md:hidden absolute left-0 top-2 bottom-0 w-px bg-slate-200"></div>
           <div className="md:hidden absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-slate-400"></div>
-          
+
           <div className="md:grid md:grid-cols-4 md:gap-8 items-start">
             <div className="md:col-span-1 md:text-right md:pt-1 mb-2 md:mb-0">
               <span className="text-sm font-medium text-slate-400 font-mono tracking-tight">{exp.year}</span>
             </div>
             <div className="md:col-span-3 pb-8 md:pb-12 md:border-l md:border-slate-200 md:pl-8 relative group">
-               {/* Desktop Timeline Dot */}
-               <div className="hidden md:block absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-slate-200 group-hover:bg-slate-400 transition-colors"></div>
-              
+              <div className="hidden md:block absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-slate-200 group-hover:bg-slate-400 transition-colors"></div>
+
               <h3 className="text-xl font-medium text-slate-900">{exp.role}</h3>
               <p className="text-lg text-slate-500 mb-4">{exp.company}</p>
               <p className="text-slate-600 mb-6 leading-relaxed">{exp.description}</p>
@@ -274,46 +369,25 @@ const Experience = () => (
   </Section>
 );
 
-const Experiments = () => (
-  <Section id="experiments" className="bg-slate-50/50">
-    <SectionHeading title="Learning & Experiments" subtitle="Active research, side projects, and workflow optimizations." />
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {siteData.experiments.map((exp) => (
-        <Card key={exp.id} className="flex flex-col h-full">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-medium text-slate-900 pr-4">{exp.title}</h3>
-            <StatusBadge status={exp.status} />
-          </div>
-          <p className="text-slate-600 mb-6 flex-grow">{exp.description}</p>
-          <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100">
-             {exp.tags.map(tag => <Badge key={tag} className="bg-white border border-slate-100">{tag}</Badge>)}
-          </div>
-        </Card>
-      ))}
-    </div>
-  </Section>
-);
-
 const Writing = () => (
-  <Section id="writing">
+  <Section id="writing" className="bg-slate-50/50">
     <SectionHeading title="Writing Library" subtitle="Recent essays, notes, and technical articles." />
     <div className="max-w-3xl flex flex-col space-y-4">
       {siteData.writing.map((post) => (
-        <a key={post.id} href="#" className="group flex flex-col md:flex-row md:items-center justify-between p-4 -mx-4 rounded-xl hover:bg-slate-50 transition-colors">
+        <div key={post.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 -mx-4 rounded-xl">
           <div className="mb-2 md:mb-0">
-            <h3 className="text-lg font-medium text-slate-900 group-hover:text-slate-600 transition-colors">{post.title}</h3>
+            <h3 className="text-lg font-medium text-slate-900">{post.title}</h3>
             <div className="flex items-center gap-3 mt-1">
-               <span className="text-sm text-slate-400 font-mono tracking-tight">{post.date}</span>
-               <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-               <span className="text-sm text-slate-500">{post.tag}</span>
+              <span className="text-sm text-slate-400 font-mono tracking-tight">{post.date}</span>
+              <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+              <span className="text-sm text-slate-500">{post.tag}</span>
             </div>
           </div>
-          <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-slate-900 transition-colors hidden md:block" />
-        </a>
+        </div>
       ))}
       <div className="pt-8">
-        <a href="#" className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
-          View all writing <ArrowRight className="ml-2 w-4 h-4" />
+        <a href={siteData.links.writingHub} className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+          Browse the Library <ArrowRight className="ml-2 w-4 h-4" />
         </a>
       </div>
     </div>
@@ -326,17 +400,20 @@ const Contact = () => (
       Let's build something meaningful.
     </h2>
     <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-8">
-      <a href="#" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
+      <a href={siteData.links.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
         <Linkedin className="w-5 h-5 mr-2" /> LinkedIn
       </a>
-      <a href="#" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
+      <a href={siteData.links.email} className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
         <Mail className="w-5 h-5 mr-2" /> Email
       </a>
-      <a href="#" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
-        <Github className="w-5 h-5 mr-2" /> GitHub
+      <a href={siteData.links.labs} target="_blank" rel="noopener noreferrer" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
+        <BookOpen className="w-5 h-5 mr-2" /> NitishLabs
       </a>
-      <a href="#" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
+      <a href={siteData.links.resume} target="_blank" rel="noopener noreferrer" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
         <FileText className="w-5 h-5 mr-2" /> Resume
+      </a>
+      <a href={siteData.links.writingHub} target="_blank" rel="noopener noreferrer" className="flex items-center text-lg text-slate-600 hover:text-slate-900 transition-colors">
+        <FileText className="w-5 h-5 mr-2" /> Library
       </a>
     </div>
   </Section>
@@ -348,21 +425,19 @@ const Contact = () => (
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-slate-100">
+    <div className="min-h-screen bg-white text-slate-900 selection:bg-sky-100">
       <main>
         <Hero />
-        <FeaturedWork />
+        <Registry />
         <Expertise />
         <ThinkingLibrary />
         <Experience />
-        <Experiments />
         <Writing />
         <Contact />
       </main>
-      
-      {/* Minimal Footer */}
+
       <footer className="py-8 text-center text-sm text-slate-400 border-t border-slate-50">
-        <p>© {new Date().getFullYear()} Nitish. Structured knowledge and clear thinking.</p>
+        <p>© {new Date().getFullYear()} Nitish Chauhan. Structured knowledge and clear thinking.</p>
       </footer>
     </div>
   );

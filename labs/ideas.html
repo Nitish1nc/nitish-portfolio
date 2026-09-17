@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Latest - NitishLabs</title>
+ <meta name="description" content="The NitishLabs ideas stream - covers, short theses, and Visual Wiki Maps from Nitish Chauhan." />
+ <meta name="theme-color" content="#09090b" />
+ <link rel="canonical" href="https://labs.nitishchauhan.com/ideas" />
+ <meta property="og:title" content="Latest - NitishLabs" />
+ <meta property="og:description" content="The NitishLabs ideas stream - covers, short theses, and Visual Wiki Maps from Nitish Chauhan." />
+ <meta property="og:url" content="https://labs.nitishchauhan.com/ideas" />
+ <meta property="og:type" content="website" />
+ <meta property="og:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="Latest - NitishLabs" />
+ <meta name="twitter:description" content="The NitishLabs ideas stream - covers, short theses, and Visual Wiki Maps from Nitish Chauhan." />
+ <meta name="twitter:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="assets/tailwind.css?v=20260807p" />
+ <link rel="stylesheet" href="assets/labs.css?v=20260807p" />
+</head>
+<body class="antialiased">
+ <div data-labs-nav data-labs-variant="ideas" data-labs-active="Latest"></div>
+
+ 
+
+ <main class="pt-24 pb-28 labs-glow">
+ <section class="max-w-7xl mx-auto px-6 page-hero border-b border-zinc-800/60">
+ <h1 class="heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">Latest from the Lab</h1>
+ <p class="text-zinc-400 max-w-xl leading-relaxed">
+ One stream: ideas I&rsquo;m still chewing, experiments under load, and models I&rsquo;d hand a peer. Covers first - prose if you want the full mechanism.
+ </p>
+ </section>
+
+ <section class="max-w-7xl mx-auto px-6 labs-section--tight" aria-label="Stream context">
+ <div class="context-strip">
+ <article class="context-card glass-hover card-transition">
+ <h2>What this stream is</h2>
+ <p>
+ A living index of NitishLabs output. Each card is a thesis + visual hook. Open a post for the Visual Wiki Map carousel and the working notes.
+ </p>
+ </article>
+ <article class="context-card glass-hover card-transition">
+ <h2>Reader context</h2>
+ <p>
+ You&rsquo;re looking at exploration-first material. Some pieces are sharp enough to steal tomorrow; some are still mid-compile. That&rsquo;s intentional.
+ </p>
+ </article>
+ <article class="context-card glass-hover card-transition">
+ <h2>Who&rsquo;s writing</h2>
+ <p>
+ <strong class="text-zinc-200 font-medium">Nitish Chauhan</strong> - Human Systems Strategist. I optimize for cognitive throughput and closed loops, not performative productivity.
+ </p>
+ </article>
+ </div>
+ </section>
+
+ <section class="max-w-7xl mx-auto px-6 labs-section">
+ <div class="section-head">
+ <h2 class="section-title">Pinned</h2>
+ <span class="meta-plain">Standing theses</span>
+ </div>
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="pinned-row"></div>
+ </section>
+
+ <section class="max-w-7xl mx-auto px-6 labs-section--lg">
+ <div class="section-head flex-col sm:flex-row sm:items-center items-start">
+ <h2 class="section-title">All Recent</h2>
+ </div>
+ <div class="filters-bar" id="filters-bar" role="toolbar" aria-label="Filter stream">
+ <div class="flex flex-wrap gap-2" id="filters">
+ <button type="button" data-filter="All" class="filter-btn active">All <span class="filter-count" data-count-for="All">0</span></button>
+ <button type="button" data-filter="Ideas" class="filter-btn">Ideas <span class="filter-count" data-count-for="Ideas">0</span></button>
+ <button type="button" data-filter="Experiments" class="filter-btn">Experiments <span class="filter-count" data-count-for="Experiments">0</span></button>
+ <button type="button" data-filter="Models" class="filter-btn">Models <span class="filter-count" data-count-for="Models">0</span></button>
+ </div>
+ </div>
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="all-grid"></div>
+ <p class="stream-empty hidden" id="stream-empty" hidden>Nothing in this lane yet. Try another filter.</p>
+ </section>
+ </main>
+ <div data-labs-footer data-labs-variant="ideas"></div>
+
+
+ 
+
+ <script src="assets/covers.js?v=20260807p"></script>
+ <script>
+ const PINNED_ICONS = {
+ systems: 'fa-diagram-project',
+ positioning: 'fa-bullseye',
+ workflow: 'fa-route',
+ learning: 'fa-screwdriver-wrench',
+ 'mental-models': 'fa-brain'
+ };
+
+ function escapeHtml(str) {
+ return String(str)
+ .replace(/&/g, '&amp;')
+ .replace(/</g, '&lt;')
+ .replace(/>/g, '&gt;')
+ .replace(/"/g, '&quot;');
+ }
+
+ function renderPinned(pinned) {
+ document.getElementById('pinned-row').innerHTML = pinned.map(item => {
+ const icon = PINNED_ICONS[item.tag] || 'fa-lightbulb';
+ const excerpt = item.whyItMatters || item.excerpt || '';
+ const category = item.tag
+ ? item.tag.replace(/(^|-)(\w)/g, (_, a, b) => (a ? ' ' : '') + b.toUpperCase())
+ : (item.category || 'Idea');
+ return `
+ <article class="glass rounded-3xl panel-card card-transition glass-hover">
+ <div class="icon-chip mb-5">
+ <i class="fa-solid ${escapeHtml(icon)}"></i>
+ </div>
+ <div class="meta-label mb-2.5">${escapeHtml(category)}</div>
+ <h3 class="post-card__title heading">${escapeHtml(item.title)}</h3>
+ <p class="text-sm text-zinc-400 leading-relaxed">${escapeHtml(excerpt)}</p>
+ </article>`;
+ }).join('');
+ }
+
+ let allItems = [];
+
+ function updateFilterCounts() {
+ const counts = { All: allItems.length, Ideas: 0, Experiments: 0, Models: 0 };
+ allItems.forEach((item) => {
+ if (counts[item.group] != null) counts[item.group] += 1;
+ });
+ document.querySelectorAll('[data-count-for]').forEach((el) => {
+ const key = el.getAttribute('data-count-for');
+ el.textContent = String(counts[key] || 0);
+ });
+ }
+
+ function renderAll(filter = 'All') {
+ const items = filter === 'All' ? allItems : allItems.filter(i => i.group === filter);
+ const grid = document.getElementById('all-grid');
+ const empty = document.getElementById('stream-empty');
+ if (!items.length) {
+ grid.innerHTML = '';
+ if (empty) {
+ empty.classList.remove('hidden');
+ empty.removeAttribute('hidden');
+ }
+ return;
+ }
+ if (empty) {
+ empty.classList.add('hidden');
+ empty.setAttribute('hidden', '');
+ }
+ grid.innerHTML = items.map(item => {
+ const coverBase = window.LabsCovers.baseFromHref(item.href) || '';
+ const srcAttr = item.cover ? ` data-labs-cover-src="${escapeHtml(item.cover)}"` : '';
+ const coverBlock = coverBase
+ ? `<div class="post-card-cover" data-labs-cover="${escapeHtml(coverBase)}"${srcAttr} data-labs-cover-alt="${escapeHtml(item.title)}"></div>`
+ : '';
+ const inner = `
+ ${coverBlock}
+ <div class="post-card__body">
+ <div class="flex items-center justify-between mb-3.5">
+ <span class="meta-label">${escapeHtml(item.category)}</span>
+ <span class="text-xs text-zinc-600">${escapeHtml(item.date || '')}</span>
+ </div>
+ <h3 class="post-card__title heading">${escapeHtml(item.title)}</h3>
+ <p class="text-sm text-zinc-400 leading-relaxed line-clamp-3">${escapeHtml(item.excerpt)}</p>
+ </div>
+ `;
+ if (item.href) {
+ return `<a href="${escapeHtml(item.href)}" class="block glass rounded-3xl card-transition glass-hover group post-card">${inner}</a>`;
+ }
+ return `<article class="glass rounded-3xl card-transition glass-hover group post-card">${inner}</article>`;
+ }).join('');
+ window.LabsCovers.hydrateAll(grid);
+ }
+
+ document.getElementById('filters').addEventListener('click', (e) => {
+ const btn = e.target.closest('.filter-btn');
+ if (!btn) return;
+ document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
+ renderAll(btn.dataset.filter);
+ });
+
+ Promise.all([
+ fetch('content/pinned-ideas.json').then((r) => r.json()),
+ fetch('content/ideas-stream.json').then((r) => r.json())
+ ]).then(([pinnedDoc, stream]) => {
+ renderPinned(pinnedDoc.pinnedIdeas || pinnedDoc || []);
+ allItems = Array.isArray(stream) ? stream : [];
+ updateFilterCounts();
+ renderAll();
+ }).catch((err) => {
+ console.error(err);
+ document.getElementById('all-grid').innerHTML =
+ '<p class="text-zinc-500">Could not load the ideas stream.</p>';
+ });
+ </script>
+ <script src="assets/shell.js?v=20260807p"></script>
+</body>
+</html>

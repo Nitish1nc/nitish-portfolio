@@ -2,7 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+ --ink: #0f172a;
+ --muted: #64748b;
+ --paper: #f7f9fc;
+ --sky-wash: #dbeafe;
+ --sky-deep: #93c5fd;
+}
+
 html, body, #root {
-  margin: 0;
-  min-height: 100%;
+ margin: 0;
+ min-height: 100%;
+}
+
+body {
+ font-family: "Figtree", ui-sans-serif, sans-serif;
+ background: var(--paper);
+ color: var(--ink);
+}
+
+.font-display {
+ font-family: "Newsreader", Georgia, serif;
+}
+
+.hero-shell {
+ background:
+ radial-gradient(ellipse 80% 55% at 50% -10%, rgba(147, 197, 253, 0.45), transparent 58%),
+ radial-gradient(ellipse 50% 40% at 80% 20%, rgba(226, 232, 240, 0.7), transparent 50%),
+ linear-gradient(180deg, #eef4fb 0%, #f7f9fc 42%, #ffffff 100%);
+}
+
+.hero-portrait {
+ box-shadow:
+ 0 0 0 3px #ffffff,
+ 0 0 0 4px rgba(15, 23, 42, 0.08),
+ 0 18px 40px rgba(15, 23, 42, 0.14);
 }

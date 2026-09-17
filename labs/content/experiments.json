@@ -1,0 +1,130 @@
+[
+ {
+ "id": "relief-valve",
+ "title": "Relief Valve",
+ "status": "Active",
+ "note": "A quiet smash toy. One thumb. No scoreboard.",
+ "summary": "A one-thumb occupancy loop, not a random pink game. Designed from bed-and-pain constraints: low cognitive load, zero fail states, warm light, a smash verb instead of a wellness lecture. Tap Crush. No timer, no combo, no homework.",
+ "stack": ["React", "Vite", "Tailwind", "motion"],
+ "tags": ["play", "relief", "cozy", "mobile"],
+ "sourceFiles": [
+ "apps/hydraulic-crumble"
+ ],
+ "href": "relief-valve/"
+ },
+ {
+ "id": "inner-voice",
+ "title": "Why Some Writing Sounds Like Talking",
+ "status": "Active",
+ "note": "Prosodic Cognitive Simulation: four labs on silent reading as inner speech",
+ "summary": "Interactive experiment by Nitish Chauhan. Flip controls across Working Memory Buffer, Prosodic Simulation, Delayed Closure, and Predictive Syntax to feel why some prose sounds spoken and some prose keeps resetting the inner ear.",
+ "stack": ["Vanilla JS", "Labs shell", "static HTML"],
+ "tags": ["cognitive-science", "writing", "interactive", "reading"],
+ "sourceFiles": [
+ "labs/inner-voice",
+ "canvases/prosodic-cognitive-simulation.canvas.tsx"
+ ],
+ "href": "inner-voice/"
+ },
+ {
+ "id": "mental-models-reality-engine",
+ "title": "Mental Models Reality Engine",
+ "status": "Active",
+ "note": "Top priority interactive: intuition vs statistical reality",
+ "summary": "Three visceral sims (Assumption Stacks, Compound Effect, Pareto Gravity) hosted on Labs. Library holds the Visceral Math note and a ten-model Cognitive Rewiring companion.",
+ "stack": ["React", "Vite", "Tailwind", "motion"],
+ "tags": ["mental-models", "interactive", "priority"],
+ "sourceFiles": [
+ "apps/mental-models-reality-engine",
+ "Library Final - Mental Models Visceral Math"
+ ],
+ "href": "reality-engine/"
+ },
+ {
+ "id": "hermes-agent-stack",
+ "title": "Hermes VPS Agent Stack",
+ "status": "Running",
+ "note": "Telegram + WebUI face on a self-hosted agent middleware brain",
+ "summary": "Hermes runs on the VPS as agent middleware - tool loop, memory, OpenAI-compatible API - while Telegram stays the fast path and a richer WebUI (chat.nitishchauhan.com) handles deep work. Open WebUI is the face; Hermes is the brains. Nitish Chauhan treats this as living personal infrastructure, not a demo chat bot.",
+ "stack": ["Hermes", "Telegram webhook", "systemd", "VPS", "OpenAI-compatible API", "nginx"],
+ "tags": ["agents", "self-host", "middleware", "mobile"],
+ "sourceFiles": [
+ "ChatGPT-20.4 WebUI and AI Agents.md",
+ "GoogleSearchAI-So_does_OpenWeb_UI...-_Google_Search.md",
+ "So_does_OpenWeb_UI...-_Google_Search.md"
+ ],
+ "href": "projects/hermes.html"
+ },
+ {
+ "id": "vault",
+ "title": "Vault - Capture & Close the Loop",
+ "status": "Active",
+ "note": "Export-first conversation capture; deliberately not a second brain",
+ "summary": "Vault is a universal Chrome extension PRD: finish a chat, queue it, export Markdown/JSON/HTML/TXT, close the mental loop. Philosophy is capture-first - never summarize, rewrite, or decide what matters for you. Modular site extractors (ChatGPT, Claude, Gemini, Grok, Cursor, generic fallback) plus an IndexedDB queue. AI memory features are explicitly out of V1 scope.",
+ "stack": ["Chrome MV3", "TypeScript", "React", "Tailwind", "IndexedDB", "JSZip", "Turndown"],
+ "tags": ["extension", "capture", "export", "local-first"],
+ "sourceFiles": [
+ "Project Requirements Document - Vault.pdf",
+ "Engineering Specification V1.pdf"
+ ],
+ "href": "projects/vault.html"
+ },
+ {
+ "id": "memory-capture-mvp",
+ "title": "Memory Capture Extension (Phase 1)",
+ "status": "Prototype",
+ "note": "Zero-friction highlight → silent Markdown download to Memory/Inbox",
+ "summary": "Phase 1 MVP coded against the Cursor implementation guide: context menus for page, selection, and link; Turndown Markdown with a fixed metadata header; chrome.downloads to Memory/Inbox/YYYY/MM/DD; duplicate hash checks; Friction Counter CSV. No cloud, no prompts during capture. Lives under NitishLabs active-projects as the screwdriver before Vault's full queue UX.",
+ "stack": ["Chrome MV3", "JavaScript", "Turndown", "chrome.downloads", "IndexedDB"],
+ "tags": ["extension", "mvp", "markdown", "offline"],
+ "sourceFiles": [
+ "Cursor_MVP_Implementation_Guide.pdf",
+ "Desktop/NitishLabs/1) active-projects/memory-capture-extension"
+ ],
+ "href": "projects/cursor-extension.html"
+ },
+ {
+ "id": "atlas-bubble-chat",
+ "title": "Atlas / Bubble Chat",
+ "status": "Prototype",
+ "note": "Thinking workspace: sessions, floating bubbles, compression - not another chat client",
+ "summary": "Atlas is a spatial thinking workspace you can play in the browser: Session, Workspace, Objects, Messages. Dual modes, park and pin, compression, and demo replies without an API key. Open the live prototype, then skip into the desk.",
+ "stack": ["Electron/Desktop TBD", "OpenRouter", "OpenMLC / HF Chat UI fork", "local-first"],
+ "tags": ["workspace", "spatial-ui", "sessions", "compression"],
+ "sourceFiles": [
+ "1 Feature intro - Bubble Chats.md",
+ "3 Final - Bubble Chat MVP RoadMap.md",
+ "Few More Feature Add-ons.md",
+ "Cursor-Extension-Technical-Specification---Google-Gemini---....md",
+ "Cursor-Extension-Technical-Specification---Google-Gemini---... (1).md"
+ ],
+ "href": "atlas/"
+ },
+ {
+ "id": "ai-chat-capture",
+ "title": "Nitish AI Chat Capture",
+ "status": "Active",
+ "note": "v1.1.0 source done; rebuild + Grok export reload still pending",
+ "summary": "Earlier retrieval-grade chat capture extension: roles, offsets, hashes, and INDEX-first exports aimed at human memory first (agents inherit a clean handoff). Active-projects index marks rebuild pending after v1.1.0 dedupe/role fixes. Feeds the same problem space as Vault - preserve conversations without turning capture into a KM product.",
+ "stack": ["Chrome extension", "service worker", "structured JSON export"],
+ "tags": ["extension", "capture", "indexing"],
+ "sourceFiles": [
+ "Desktop/NitishLabs/1) active-projects/nitish-ai-chat-capture"
+ ]
+ },
+ {
+ "id": "self-compressing-vault",
+ "title": "Self-Compressing Knowledge Vault",
+ "status": "Prototype",
+ "note": "Preserve questions first; distill knowledge denser over time - not a dump that only grows",
+ "summary": "From the agent-stack design chats: a vault that compresses daily dumps and keeps the questions that generated insights, not just summaries of answers. Pairs with Atlas's compression pipeline and Hermes as the runtime that can run Historian / Scout style workers. Experiment framing - money as feedback signal on whether the artifact helps other people, not as the goal.",
+ "stack": ["Nextcloud folders", "Hermes workers", "Markdown/JSON archives"],
+ "tags": ["compression", "metacognition", "personal-infra"],
+ "sourceFiles": [
+ "ChatGPT-20.4 WebUI and AI Agents.md",
+ "1st Part.md",
+ "2nd Part.md",
+ "3 Final - Bubble Chat MVP RoadMap.md"
+ ]
+ }
+]

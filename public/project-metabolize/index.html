@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metabolize - Notes That Compress Themselves</title>
+  <meta name="description" content="A working-memory extension that captures in sub-seconds and compresses through recursive spatial passes." />
+  <meta name="theme-color" content="#F59E0B" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="apple-touch-icon.png" type="image/png" sizes="512x512" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Metabolize - Notes That Compress Themselves" />
+  <meta property="og:description" content="Stop hoarding information. Start metabolizing it." />
+  <meta property="og:url" content="https://www.nitishchauhan.com/project-metabolize/" />
+  <meta property="og:image" content="https://www.nitishchauhan.com/project-metabolize/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Metabolize by Nitish Chauhan: notes that compress themselves" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Metabolize - Notes That Compress Themselves" />
+  <meta name="twitter:description" content="Stop hoarding information. Start metabolizing it." />
+  <meta name="twitter:image" content="https://www.nitishchauhan.com/project-metabolize/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="simulator.css" />
+  <style>
+    :root {
+      --bg: #FAFAFA; --bg-warm: #F8F6F3; --bg-canvas: #F3F1EE; --bg-source: #FFFFFF;
+      --text-primary: #1F2937; --text-secondary: #6B7280; --text-muted: #9CA3AF;
+      --accent: #F59E0B; --accent-light: #FCD34D; --accent-glow: rgba(245,158,11,0.3);
+      --accent-dark: #D97706; --success: #10B981; --success-glow: rgba(16,185,129,0.3);
+      --pruned: #D1D5DB; --border: #E5E7EB;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08); --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08);
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --spring: cubic-bezier(0.34,1.56,0.64,1); --ease-out: cubic-bezier(0.16,1,0.3,1);
+      --ease-smooth: cubic-bezier(0.4,0,0.2,1);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Figtree',-apple-system,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.6; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+    .audio-toggle { position:fixed; top:20px; right:20px; z-index:1000; background:var(--bg-source); border:1px solid var(--border); border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-md); transition:all 0.2s var(--ease-smooth); font-size:18px; }
+    .audio-toggle:hover { transform:scale(1.05); box-shadow:var(--shadow-lg); }
+    .audio-toggle.muted { opacity:0.5; }
+    .nav-dots { position:fixed; right:20px; top:50%; transform:translateY(-50%); z-index:100; display:flex; flex-direction:column; gap:12px; }
+    .nav-dot { width:10px; height:10px; border-radius:50%; background:var(--border); cursor:pointer; transition:all 0.3s var(--ease-smooth); }
+    .nav-dot.active { background:var(--accent); transform:scale(1.3); }
+    .nav-dot:hover { background:var(--accent-light); }
+    section { min-height:100vh; padding:80px 40px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; }
+    .hero { background:linear-gradient(135deg,var(--bg-warm) 0%,var(--bg) 50%,#FEF3C7 100%); text-align:center; padding:120px 40px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--bg-source); border:1px solid var(--accent-light); padding:8px 16px; border-radius:100px; font-size:13px; font-weight:600; color:var(--accent-dark); margin-bottom:32px; box-shadow:var(--shadow-sm); }
+    .hero-badge .pulse { width:8px; height:8px; background:var(--accent); border-radius:50%; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+    .hero h1 { font-family:'Newsreader',Georgia,serif; font-size:clamp(48px,8vw,96px); font-weight:700; line-height:1.05; margin-bottom:24px; letter-spacing:-0.03em; }
+    .hero h1 .highlight { color:var(--accent); position:relative; }
+    .hero h1 .highlight::after { content:''; position:absolute; bottom:4px; left:0; right:0; height:8px; background:var(--accent-light); opacity:0.4; border-radius:4px; z-index:-1; }
+    .hero-subtitle { font-size:clamp(16px,2vw,20px); color:var(--text-secondary); max-width:640px; margin:0 auto 40px; line-height:1.7; }
+    .hero-cta { display:inline-flex; align-items:center; gap:10px; background:var(--text-primary); color:white; padding:16px 32px; border-radius:100px; font-size:16px; font-weight:600; text-decoration:none; transition:all 0.3s var(--ease-smooth); box-shadow:var(--shadow-lg); }
+    .hero-cta:hover { transform:translateY(-2px); box-shadow:var(--shadow-xl); }
+    .hero-cta svg { transition:transform 0.2s var(--spring); }
+    .hero-cta:hover svg { transform:translateY(3px); }
+    .hero-stats { display:flex; gap:48px; margin-top:64px; padding-top:48px; border-top:1px solid var(--border); }
+    .hero-stat { text-align:center; }
+    .hero-stat-value { font-family:'Newsreader',serif; font-size:36px; font-weight:700; color:var(--accent-dark); }
+    .hero-stat-label { font-size:13px; color:var(--text-muted); font-weight:500; margin-top:4px; }
+
+    .problem { background:var(--bg); padding:100px 40px; }
+    .section-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:var(--accent-dark); margin-bottom:16px; }
+    .section-title { font-family:'Newsreader',serif; font-size:clamp(32px,4vw,48px); font-weight:700; text-align:center; margin-bottom:16px; letter-spacing:-0.02em; }
+    .section-subtitle { font-size:18px; color:var(--text-secondary); text-align:center; max-width:600px; margin:0 auto 64px; }
+    .problem-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; max-width:1000px; width:100%; }
+    .problem-card { background:var(--bg-source); border:1px solid var(--border); border-radius:var(--radius-lg); padding:32px; transition:all 0.3s var(--ease-smooth); }
+    .problem-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:var(--accent-light); }
+    .problem-icon { width:48px; height:48px; background:#FEF3C7; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:20px; }
+    .problem-card h3 { font-size:18px; font-weight:700; margin-bottom:12px; }
+    .problem-card p { font-size:14px; color:var(--text-secondary); line-height:1.7; }
+    .problem-card .cite { display:inline-block; margin-top:12px; font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; background:var(--bg-canvas); padding:4px 8px; border-radius:4px; }
+
+    .phase1 { background:linear-gradient(180deg,var(--bg) 0%,var(--bg-warm) 100%); padding:100px 40px; }
+    .diagram-container { max-width:900px; width:100%; background:var(--bg-source); border:1px solid var(--border); border-radius:var(--radius-xl); padding:48px; box-shadow:var(--shadow-lg); }
+    .diagram-flow { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:40px; }
+    .diagram-panel { flex:1; background:var(--bg-canvas); border-radius:var(--radius-md); padding:24px; min-height:180px; }
+    .diagram-panel-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-bottom:16px; }
+    .diagram-arrow { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--accent-dark); font-weight:600; font-size:13px; }
+    .diagram-arrow svg { animation:arrowPulse 1.5s infinite; }
+    @keyframes arrowPulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+    .diagram-hotkey { display:inline-flex; align-items:center; gap:6px; background:var(--text-primary); color:white; padding:6px 12px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; }
+    .diagram-features { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+    .diagram-feature { display:flex; align-items:flex-start; gap:12px; padding:16px; background:var(--bg-canvas); border-radius:var(--radius-sm); }
+    .diagram-feature-icon { width:32px; height:32px; background:var(--accent-light); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
+    .diagram-feature h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+    .diagram-feature p { font-size:12px; color:var(--text-secondary); line-height:1.5; }
+    .simulation { background:var(--bg-warm); padding:100px 20px; min-height:auto; }
+    .variables { background:var(--bg); padding:100px 40px; }
+    .variables-table { max-width:900px; width:100%; border-collapse:separate; border-spacing:0; background:var(--bg-source); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-lg); border:1px solid var(--border); }
+    .variables-table th { background:var(--text-primary); color:white; padding:16px 24px; text-align:left; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+    .variables-table td { padding:16px 24px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:top; }
+    .variables-table tr:last-child td { border-bottom:none; }
+    .variables-table tr:hover td { background:var(--bg-canvas); }
+    .phase-tag { display:inline-block; padding:4px 10px; border-radius:100px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+    .phase-tag.phase-1 { background:#FEF3C7; color:var(--accent-dark); }
+    .phase-tag.phase-2 { background:#D1FAE5; color:#065F46; }
+    .variables-table .mechanism { font-weight:600; }
+    .variables-table .principle { font-size:12px; color:var(--text-secondary); font-style:italic; }
+    .footer { background:var(--text-primary); color:white; padding:80px 40px; text-align:center; min-height:auto; }
+    .footer h2 { font-family:'Newsreader',serif; font-size:clamp(28px,4vw,40px); font-weight:700; margin-bottom:16px; }
+    .footer p { font-size:16px; color:rgba(255,255,255,0.7); max-width:500px; margin:0 auto 32px; }
+    .footer-links { display:flex; gap:24px; justify-content:center; }
+    .footer-link { color:var(--accent-light); text-decoration:none; font-weight:600; font-size:14px; transition:color 0.2s; }
+    .footer-link:hover { color:white; }
+    .footer-credit { margin-top:48px; padding-top:32px; border-top:1px solid rgba(255,255,255,0.1); font-size:13px; color:rgba(255,255,255,0.4); }
+    .fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.6s var(--ease-out),transform 0.6s var(--ease-out); }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    @media(max-width:768px) {
+      section { padding:60px 20px; }
+      .hero { padding:80px 20px; }
+      .hero-stats { flex-direction:column; gap:24px; }
+      .diagram-flow { flex-direction:column; }
+      .diagram-arrow { transform:rotate(90deg); }
+      .nav-dots { display:none; }
+      .audio-toggle { top:12px; right:12px; width:36px; height:36px; }
+    }
+  </style>
+</head>
+<body>
+  <button class="audio-toggle" id="audioToggle" title="Toggle sound"><span id="audioIcon">🔊</span></button>
+  <nav class="nav-dots" id="navDots">
+    <div class="nav-dot active" data-section="hero"></div>
+    <div class="nav-dot" data-section="problem"></div>
+    <div class="nav-dot" data-section="phase1"></div>
+    <div class="nav-dot" data-section="simulation"></div>
+    <div class="nav-dot" data-section="variables"></div>
+    <div class="nav-dot" data-section="footer"></div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="hero-badge"><span class="pulse"></span>Live Prototype</div>
+    <h1>Notes That<br><span class="highlight">Metabolize</span></h1>
+    <p class="hero-subtitle">A working-memory extension that captures in sub-seconds and compresses through recursive spatial passes. Stop hoarding information. Start metabolizing it.</p>
+    <a href="#simulation" class="hero-cta">Try the Simulation<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-value">&lt;200ms</div><div class="hero-stat-label">Capture Latency</div></div>
+      <div class="hero-stat"><div class="hero-stat-value">95%</div><div class="hero-stat-label">Compression Ratio</div></div>
+      <div class="hero-stat"><div class="hero-stat-value">3</div><div class="hero-stat-label">Recursive Passes</div></div>
+    </div>
+  </section>
+
+  <section class="problem" id="problem">
+    <div class="section-label fade-in">The Problem</div>
+    <h2 class="section-title fade-in">Your Notes Are a Cognitive Tax</h2>
+    <p class="section-subtitle fade-in">Traditional note-taking doesn't reduce load. It defers it. Every unprocessed highlight is a debt your future self has to pay.</p>
+    <div class="problem-grid">
+      <div class="problem-card fade-in"><div class="problem-icon">🔄</div><h3>Context-Switching Cost</h3><p>Every time you jump between source and notes, your working memory bleeds. The brain doesn't switch cleanly - it drags residue from the previous task.</p><span class="cite">Leroy (2009) - Attention Residue</span></div>
+      <div class="problem-card fade-in"><div class="problem-icon">🧠</div><h3>Working-Memory Overload</h3><p>Holding key points in your head while you read consumes the same cognitive resources you need for comprehension. Offload too slow, and the loop breaks.</p><span class="cite">Risk & Gilbert (2016) - Cognitive Offloading</span></div>
+      <div class="problem-card fade-in"><div class="problem-icon">📦</div><h3>Archive Bloat</h3><p>Most note systems are built to accumulate. The result: thousands of half-processed artifacts that create background cognitive noise, not clarity.</p><span class="cite">Kirsh (1995) - External Representation</span></div>
+    </div>
+  </section>
+
+  <section class="phase1" id="phase1">
+    <div class="section-label fade-in">Phase 1</div>
+    <h2 class="section-title fade-in">Sub-Perceptual Capture</h2>
+    <p class="section-subtitle fade-in">Capture must feel instantaneous. If you can feel the delay, working memory doesn't release the item.</p>
+    <div class="diagram-container fade-in">
+      <div class="diagram-flow">
+        <div class="diagram-panel"><div class="diagram-panel-label">Source Material</div><p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Read articles, papers, or docs. Highlight what matters. The content stays in view - no app switching.</p></div>
+        <div class="diagram-arrow"><span class="diagram-hotkey">⌘ + K</span><svg width="32" height="16" viewBox="0 0 32 16" fill="none"><path d="M0 8h28M22 2l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="diagram-panel"><div class="diagram-panel-label">Active Buffer</div><p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Captured items appear in real-time on the right panel. Watch the note body assemble without leaving your source.</p></div>
+      </div>
+      <div class="diagram-features">
+        <div class="diagram-feature"><div class="diagram-feature-icon">⚡</div><div><h4>Sub-Second Feedback</h4><p>Capture confirmation in under 200ms triggers working-memory release</p></div></div>
+        <div class="diagram-feature"><div class="diagram-feature-icon"></div><div><h4>Active Buffer Routing</h4><p>All highlights auto-route to a daily buffer. No decision friction during capture</p></div></div>
+        <div class="diagram-feature"><div class="diagram-feature-icon">👁️</div><div><h4>Peripheral Awareness</h4><p>Side-by-side view keeps captures in peripheral vision, not modal interrupts</p></div></div>
+        <div class="diagram-feature"><div class="diagram-feature-icon">🧩</div><div><h4>Session Nodes</h4><p>Temporary topic branches for multi-topic research. Auto-expire after inactivity</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="simulation" id="simulation">
+    <div id="simulator-mount"></div>
+  </section>
+
+  <section class="variables" id="variables">
+    <div class="section-label fade-in">Core Variables</div>
+    <h2 class="section-title fade-in">What This System Targets</h2>
+    <p class="section-subtitle fade-in">Each mechanism maps to a specific cognitive variable backed by research.</p>
+    <table class="variables-table fade-in">
+      <thead><tr><th>Phase</th><th>Mechanism</th><th>Cognitive Variable</th><th>Scientific Principle</th></tr></thead>
+      <tbody>
+        <tr><td><span class="phase-tag phase-1">Phase 1</span></td><td class="mechanism">Active Buffer & Hotkey Capture</td><td>Working-Memory Relief & Perceived Agency</td><td class="principle">Sub-perceptual feedback (&lt;200ms) offloads short-term memory and reinforces action completion</td></tr>
+        <tr><td><span class="phase-tag phase-1">Phase 1</span></td><td class="mechanism">Side-by-Side Panel View</td><td>Attention Residue Reduction</td><td class="principle">Eliminates app-level context switching; visual scanning across panels costs far less than full app replacement</td></tr>
+        <tr><td><span class="phase-tag phase-2">Phase 2</span></td><td class="mechanism">Proportional Spatial Canvas</td><td>Spatial Memory Encoding</td><td class="principle">Geometric placement serves as a non-linear memory retrieval key, activating allocentric spatial recall pathways</td></tr>
+        <tr><td><span class="phase-tag phase-2">Phase 2</span></td><td class="mechanism">Recursive Pruning (v1 → vn)</td><td>Background Load Reduction</td><td class="principle">Active metabolism reduces long-term archive clutter; notes shrink through iterative re-encounter and selective extraction</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="footer" id="footer">
+    <h2>This Is a Live Prototype</h2>
+    <p>The product is being built. The thesis is public. The stakes are real.</p>
+    <div class="footer-links">
+      <a href="https://www.nitishchauhan.com" class="footer-link">Portfolio</a>
+      <a href="https://labs.nitishchauhan.com" class="footer-link">Labs</a>
+      <a href="https://library.nitishchauhan.com" class="footer-link">Library</a>
+    </div>
+    <div class="footer-credit">Built by Nitish Chauhan - Notes that metabolize, not accumulate.</div>
+  </section>
+
+  <script src="simulator.js"></script>
+  <script>
+    (function () {
+      /* Audio toggle wired to simulator */
+      var audioToggle = document.getElementById('audioToggle');
+      var audioIcon = document.getElementById('audioIcon');
+      audioToggle.addEventListener('click', function () {
+        if (window.MetabolizeAudio) {
+          var on = window.MetabolizeAudio.toggle();
+          audioIcon.textContent = on ? '🔊' : '🔇';
+          audioToggle.classList.toggle('muted', !on);
+        }
+      });
+
+      /* Scroll fade-in */
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-in').forEach(function (el) { observer.observe(el); });
+
+      /* Nav dots */
+      var sections = ['hero', 'problem', 'phase1', 'simulation', 'variables', 'footer'];
+      var dots = document.querySelectorAll('.nav-dot');
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          var sec = document.getElementById(dot.dataset.section);
+          if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      var dotObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            dots.forEach(function (d) { d.classList.remove('active'); });
+            var ad = document.querySelector('.nav-dot[data-section="' + entry.target.id + '"]');
+            if (ad) ad.classList.add('active');
+          }
+        });
+      }, { threshold: 0.3 });
+      sections.forEach(function (id) {
+        var s = document.getElementById(id);
+        if (s) dotObserver.observe(s);
+      });
+    })();
+  </script>
+</body>
+</html>

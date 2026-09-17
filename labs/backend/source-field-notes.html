@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html>
+<head>
+                <style>.lw { font-size: 60px; font-family: Arial, Helvetica, sans-serif; }</style>
+            </head>
+            <body>
+                
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NitishLabs — Field Notes from the Workbench</title>
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🧪&lt;/text&gt;&lt;/svg&gt;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,600&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   GLOBAL RESET + SHARED
+============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Space Grotesk', -apple-system, sans-serif; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+
+/* Scroll-reveal helper */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.rv.in { opacity: 1; transform: none; }
+
+/* Article-body typography (shared across modals) */
+.art p { margin-bottom: 16px; line-height: 1.75; }
+.art h1, .art h2, .art h3 { margin: 26px 0 12px; line-height: 1.2; }
+.art ul, .art ol { margin: 12px 0 12px 24px; }
+.art li { margin-bottom: 6px; line-height: 1.6; }
+.art blockquote { margin: 20px 0; padding: 4px 0 4px 18px; font-style: italic; }
+.art a { text-decoration: underline; }
+.art pre { padding: 16px; overflow-x: auto; margin: 18px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; }
+.art code { font-family: 'JetBrains Mono', monospace; }
+.art img { border-radius: 6px; margin: 16px 0; }
+
+/* ============================================================
+   SHELL — FLOATING LAYOUT SWITCHER
+============================================================ */
+#switcher {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 9999; display: flex; align-items: center; gap: 6px;
+  background: #101014; border: 1px solid rgba(255,255,255,.12);
+  padding: 8px 10px; border-radius: 100px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  font-family: 'JetBrains Mono', monospace;
+}
+#switcher .sw-label {
+  font-size: 10px; letter-spacing: 2px; color: #777;
+  padding: 0 8px 0 4px; text-transform: uppercase; white-space: nowrap;
+}
+#switcher button {
+  background: transparent; border: none; color: #aaa;
+  font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  padding: 8px 14px; border-radius: 100px; cursor: pointer;
+  transition: all .18s ease; text-transform: uppercase; white-space: nowrap;
+}
+#switcher button:hover { color: #fff; background: rgba(255,255,255,.08); }
+#switcher button.on { color: #0b0b0e; }
+#switcher button.on[data-l="terminal"]     { background: #00ff41; }
+#switcher button.on[data-l="editorial"]    { background: #ffd23f; }
+#switcher button.on[data-l="bento"]        { background: #4ecdc4; }
+#switcher button.on[data-l="neobrutalist"] { background: #ff6b6b; }
+#switcher .sw-hint { font-size: 9px; color: #555; padding-left: 6px; border-left: 1px solid rgba(255,255,255,.1); }
+@media (max-width: 640px) { #switcher .sw-label, #switcher .sw-hint { display: none; } }
+
+/* ============================================================
+   LAYOUT 1 — TERMINAL
+============================================================ */
+.nl-terminal {
+  --bg:#070b07; --fg:#3dff6e; --dim:#1d8f42; --amber:#ffb000; --cyan:#41e0e0;
+  --line:#155c2e; --mono:'JetBrains Mono', 'Courier New', monospace;
+  background: var(--bg); color: var(--fg); font-family: var(--mono);
+  min-height: 100vh; position: relative; overflow-x: hidden;
+}
+.nl-terminal::before { /* ambient grid */
+  content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(61,255,110,.035) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(61,255,110,.035) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+.nl-terminal .scan { position: fixed; inset:0; pointer-events:none; z-index:60;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px); }
+.nl-terminal .vig { position: fixed; inset:0; pointer-events:none; z-index:59;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.5) 100%); }
+
+.nl-terminal header {
+  position: sticky; top:0; z-index:50; background: rgba(7,11,7,.92);
+  backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); padding: 12px 24px;
+}
+.nl-terminal .bar { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.nl-terminal .dot { width:11px; height:11px; border-radius:50%; }
+.nl-terminal .d-r{background:#ff5f56} .nl-terminal .d-y{background:#ffbd2e} .nl-terminal .d-g{background:#27c93f}
+.nl-terminal .path { color: var(--dim); margin-left:12px; font-size:12px; }
+.nl-terminal .clock { margin-left:auto; color: var(--cyan); font-size:12px; }
+.nl-terminal nav { display:flex; gap:22px; flex-wrap:wrap; }
+.nl-terminal nav a { color: var(--fg); text-decoration:none; font-size:13px; padding:3px 0; transition: color .18s; cursor:pointer; }
+.nl-terminal nav a::before { content:'> '; color: var(--dim); }
+.nl-terminal nav a:hover { color: var(--amber); }
+
+.nl-terminal main { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:44px 24px 120px; }
+.nl-terminal .sec { display:none; animation: tFade .35s ease; }
+.nl-terminal .sec.on { display:block; }
+@keyframes tFade { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+
+.nl-terminal .boot { border:1px solid var(--line); background: rgba(61,255,110,.03); padding:24px; margin-bottom:30px; }
+.nl-terminal .promptline { margin-bottom:14px; font-size:14px; }
+.nl-terminal .p { color: var(--amber); }
+.nl-terminal .cursor { display:inline-block; animation: tBlink 1s steps(1) infinite; }
+@keyframes tBlink { 50%{opacity:0} }
+.nl-terminal .out { color: var(--dim); white-space: pre-wrap; font-size:13px; line-height:1.7; }
+.nl-terminal .out .ok { color: var(--fg); }
+.nl-terminal .out .me { color: var(--cyan); }
+
+.nl-terminal .stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px; }
+.nl-terminal .stat { border:1px solid var(--line); padding:16px; display:flex; justify-content:space-between; align-items:baseline; transition: all .2s; }
+.nl-terminal .stat:hover { background: rgba(61,255,110,.07); box-shadow: 0 0 24px rgba(61,255,110,.25); transform: translateY(-3px); }
+.nl-terminal .stat b { color: var(--dim); font-weight:500; font-size:12px; }
+.nl-terminal .stat span { color: var(--amber); font-weight:700; font-size:20px; }
+
+.nl-terminal h2.st { color: var(--amber); font-size:18px; border-bottom:1px dashed var(--line); padding-bottom:10px; margin-bottom:22px; }
+.nl-terminal .logs { display:flex; flex-direction:column; gap:10px; }
+.nl-terminal .log { border-left:2px solid var(--dim); padding:12px 16px; cursor:pointer; transition: all .18s; }
+.nl-terminal .log:hover { border-left-color: var(--amber); background: rgba(61,255,110,.05); padding-left:26px; }
+.nl-terminal .log .m { font-size:11px; color: var(--dim); margin-bottom:4px; }
+.nl-terminal .log .t { font-size:15px; color: var(--fg); }
+.nl-terminal .log .g { margin-top:6px; font-size:10px; color: var(--cyan); letter-spacing:1px; }
+.nl-terminal .contact { color: var(--fg); font-size:13px; line-height:1.9; white-space:pre; overflow-x:auto; }
+
+.nl-terminal .modal { position:fixed; inset:0; background: rgba(0,0,0,.9); z-index:200; display:flex; align-items:center; justify-content:center; padding:24px; }
+.nl-terminal .modal.hide { display:none; }
+.nl-terminal .mbox { background: var(--bg); border:1px solid var(--fg); max-width:820px; width:100%; max-height:86vh; overflow-y:auto; padding:34px; position:relative; box-shadow: 0 0 60px rgba(61,255,110,.2); }
+.nl-terminal .mclose { position:absolute; top:14px; right:14px; background:none; border:1px solid var(--dim); color:var(--fg); font-family:var(--mono); font-size:12px; padding:6px 12px; cursor:pointer; transition: all .18s; }
+.nl-terminal .mclose:hover { border-color: var(--amber); color: var(--amber); }
+.nl-terminal .art { color: var(--fg); font-size:14px; }
+.nl-terminal .art h1,.nl-terminal .art h2,.nl-terminal .art h3 { color: var(--amber); }
+.nl-terminal .art code { background: rgba(61,255,110,.12); color: var(--cyan); padding:2px 6px; }
+.nl-terminal .art pre { background: rgba(0,0,0,.5); border:1px solid var(--line); color: var(--fg); }
+.nl-terminal .art blockquote { border-left:2px solid var(--cyan); color: var(--cyan); }
+.nl-terminal .art a { color: var(--amber); }
+
+/* ============================================================
+   LAYOUT 2 — EDITORIAL
+============================================================ */
+.nl-editorial {
+  --paper:#f6f4ee; --ink:#131a2e; --mut:#5c6172; --red:#d92b2b; --blue:#1436c9;
+  --serif:'Fraunces', Georgia, serif; --sans:'Archivo', -apple-system, sans-serif;
+  background: var(--paper); color: var(--ink); font-family: var(--sans); min-height:100vh;
+}
+.nl-editorial .ticker { background: var(--ink); color: var(--paper); font-size:11px; letter-spacing:2.5px; text-transform:uppercase; padding:9px 0; overflow:hidden; white-space:nowrap; }
+.nl-editorial .ticker span { display:inline-block; animation: eScroll 34s linear infinite; }
+@keyframes eScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+.nl-editorial .masthead { text-align:center; padding:52px 24px 26px; border-bottom:3px double var(--ink); }
+.nl-editorial .issue { font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--mut); margin-bottom:16px; }
+.nl-editorial .logo { font-family:var(--serif); font-weight:900; font-size:clamp(52px,9vw,104px); line-height:.95; letter-spacing:-3px; }
+.nl-editorial .logo em { font-style:italic; font-weight:400; color: var(--red); }
+.nl-editorial .tagline { font-family:var(--serif); font-style:italic; font-size:18px; color:var(--mut); margin-top:12px; }
+.nl-editorial .mnav { display:flex; justify-content:center; gap:34px; flex-wrap:wrap; margin-top:26px; padding-top:18px; border-top:1px solid var(--ink); }
+.nl-editorial .mnav a { font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--ink); text-decoration:none; cursor:pointer; padding:4px 0; border-bottom:2px solid transparent; transition: all .18s; }
+.nl-editorial .mnav a:hover { color: var(--red); border-bottom-color: var(--red); }
+
+.nl-editorial main { max-width:1100px; margin:0 auto; padding:56px 24px 110px; }
+.nl-editorial .sec { display:none; }
+.nl-editorial .sec.on { display:block; animation: eUp .5s ease; }
+@keyframes eUp { from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none} }
+
+.nl-editorial .feature { text-align:center; padding-bottom:56px; border-bottom:1px solid var(--ink); margin-bottom:56px; }
+.nl-editorial .kicker { font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--red); margin-bottom:20px; }
+.nl-editorial .feature h2 { font-family:var(--serif); font-weight:900; font-size:clamp(38px,5.5vw,68px); line-height:1.05; max-width:820px; margin:0 auto 22px; letter-spacing:-1px; }
+.nl-editorial .feature .deck { font-family:var(--serif); font-style:italic; font-size:20px; color:var(--mut); max-width:600px; margin:0 auto 32px; }
+.nl-editorial .readbtn { background:var(--ink); color:var(--paper); border:none; padding:15px 34px; font-size:12px; letter-spacing:2.5px; text-transform:uppercase; font-weight:700; cursor:pointer; transition: all .2s; }
+.nl-editorial .readbtn:hover { background: var(--red); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(217,43,43,.3); }
+
+.nl-editorial .cols { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+@media (max-width:768px){ .nl-editorial .cols{grid-template-columns:1fr} }
+.nl-editorial .coltitle { font-family:var(--serif); font-size:24px; font-weight:600; border-bottom:1px solid var(--ink); padding-bottom:12px; margin-bottom:24px; }
+.nl-editorial .coltitle i { font-style:normal; color:var(--blue); }
+.nl-editorial .stack { display:flex; flex-direction:column; gap:26px; }
+.nl-editorial .acard { padding-bottom:24px; border-bottom:1px solid rgba(19,26,46,.15); cursor:pointer; transition: transform .2s; }
+.nl-editorial .acard:hover { transform: translateX(6px); }
+.nl-editorial .acard:last-child { border-bottom:none; }
+.nl-editorial .acard .d { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--mut); margin-bottom:8px; }
+.nl-editorial .acard .t { font-family:var(--serif); font-size:22px; font-weight:600; line-height:1.25; margin-bottom:8px; transition: color .18s; }
+.nl-editorial .acard:hover .t { color: var(--red); }
+.nl-editorial .acard .x { color:var(--mut); font-size:14px; line-height:1.55; }
+
+.nl-editorial .shead { font-family:var(--serif); font-weight:900; font-size:clamp(42px,6vw,76px); letter-spacing:-2px; margin-bottom:14px; }
+.nl-editorial .slede { font-family:var(--serif); font-style:italic; font-size:20px; color:var(--mut); margin-bottom:46px; max-width:560px; }
+.nl-editorial .list { display:flex; flex-direction:column; }
+.nl-editorial .litem { display:grid; grid-template-columns:110px 1fr auto; gap:30px; align-items:baseline; padding:26px 8px; border-top:1px solid var(--ink); cursor:pointer; transition: all .2s; }
+.nl-editorial .litem:hover { background: rgba(20,54,201,.05); padding-left:20px; }
+.nl-editorial .litem .d { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--mut); }
+.nl-editorial .litem .t { font-family:var(--serif); font-size:28px; font-weight:600; line-height:1.15; margin-bottom:6px; }
+.nl-editorial .litem .x { color:var(--mut); font-size:15px; }
+.nl-editorial .litem .n { font-family:var(--serif); font-size:40px; font-weight:900; color: rgba(19,26,46,.12); }
+@media (max-width:640px){ .nl-editorial .litem{grid-template-columns:1fr} .nl-editorial .litem .n{display:none} }
+
+.nl-editorial .about { max-width:700px; }
+.nl-editorial .about p.big { font-family:var(--serif); font-size:23px; line-height:1.6; margin-bottom:38px; }
+.nl-editorial .about p.big::first-letter { font-size:68px; float:left; line-height:.85; margin:6px 10px 0 0; color:var(--red); font-weight:900; }
+.nl-editorial .ameta { display:flex; flex-direction:column; gap:12px; font-size:15px; }
+.nl-editorial .ameta b { color: var(--blue); }
+
+.nl-editorial .colophon { text-align:center; padding:36px 24px; border-top:3px double var(--ink); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--mut); }
+
+.nl-editorial .modal { position:fixed; inset:0; background: rgba(19,26,46,.85); z-index:200; overflow-y:auto; padding:44px 24px; }
+.nl-editorial .modal.hide { display:none; }
+.nl-editorial .mbox { background:var(--paper); max-width:740px; margin:0 auto; padding:64px 44px; position:relative; }
+.nl-editorial .mclose { position:absolute; top:20px; right:20px; background:none; border:none; font-size:26px; cursor:pointer; color:var(--mut); transition: color .18s; }
+.nl-editorial .mclose:hover { color: var(--red); }
+.nl-editorial .mkicker { font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--red); margin-bottom:16px; }
+.nl-editorial .mtitle { font-family:var(--serif); font-weight:900; font-size:46px; line-height:1.05; margin-bottom:16px; letter-spacing:-1px; }
+.nl-editorial .mmeta { font-size:13px; color:var(--mut); border-bottom:1px solid var(--ink); padding-bottom:22px; margin-bottom:30px; }
+.nl-editorial .art { font-size:17px; color: var(--ink); }
+.nl-editorial .art p:first-child::first-letter { font-family:var(--serif); font-size:58px; float:left; line-height:.85; margin:6px 10px 0 0; font-weight:900; color:var(--blue); }
+.nl-editorial .art h2 { font-family:var(--serif); font-size:28px; }
+.nl-editorial .art blockquote { border-left:3px solid var(--red); font-family:var(--serif); font-size:20px; color:var(--mut); padding-left:20px; }
+.nl-editorial .art code { background: rgba(19,26,46,.07); padding:2px 6px; font-size:14px; }
+.nl-editorial .art pre { background: var(--ink); color: var(--paper); }
+.nl-editorial .art a { color: var(--blue); }
+
+/* ============================================================
+   LAYOUT 3 — BENTO
+============================================================ */
+.nl-bento {
+  --bg:#0e1016; --card:#171a23; --card2:#1d2130; --txt:#eef0f6; --mut:#8b90a3;
+  --coral:#ff6b6b; --teal:#4ecdc4; --gold:#ffd23f; --lav:#a78bfa; --blue:#5aa9ff;
+  --sans:'Space Grotesk', sans-serif;
+  background: var(--bg); color: var(--txt); font-family: var(--sans); min-height:100vh; position:relative; overflow-x:hidden;
+}
+.nl-bento::before { /* ambient dot-grid + glows */
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.nl-bento::after {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background: radial-gradient(600px 400px at 12% 8%, rgba(78,205,196,.09), transparent 60%),
+              radial-gradient(700px 500px at 88% 90%, rgba(167,139,250,.09), transparent 60%);
+}
+.nl-bento .top { position:sticky; top:0; z-index:50; background: rgba(14,16,22,.85); backdrop-filter: blur(16px); border-bottom:1px solid rgba(255,255,255,.06); padding:15px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+.nl-bento .brand { display:flex; align-items:center; gap:12px; }
+.nl-bento .bmark { width:42px; height:42px; border-radius:12px; background: linear-gradient(135deg, var(--coral), var(--lav)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; color:#fff; box-shadow: 0 6px 22px rgba(255,107,107,.35); }
+.nl-bento .bname { font-weight:700; font-size:16px; }
+.nl-bento .bsub { font-size:11px; color:var(--mut); }
+.nl-bento .filters { display:flex; gap:8px; flex-wrap:wrap; }
+.nl-bento .fbtn { background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.09); color:var(--txt); padding:8px 16px; border-radius:100px; font-size:13px; cursor:pointer; transition: all .18s; }
+.nl-bento .fbtn:hover { background: rgba(255,255,255,.11); transform: translateY(-1px); }
+.nl-bento .fbtn.on { background: var(--txt); color: var(--bg); border-color: var(--txt); }
+
+.nl-bento .wrap { position:relative; z-index:1; padding:26px 24px 130px; max-width:1400px; margin:0 auto; }
+.nl-bento .grid { display:grid; grid-template-columns: repeat(6,1fr); grid-auto-rows:118px; gap:16px; }
+.nl-bento .card { background: var(--card); border:1px solid rgba(255,255,255,.06); border-radius:20px; padding:24px; cursor:pointer; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; transition: transform .3s cubic-bezier(.4,0,.2,1), border-color .3s, box-shadow .3s; }
+.nl-bento .card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.09), transparent 42%); opacity:0; transition: opacity .3s; pointer-events:none; }
+.nl-bento .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,.18); box-shadow: 0 18px 44px rgba(0,0,0,.4); }
+.nl-bento .card:hover::before { opacity:1; }
+
+.nl-bento .hero-c { grid-column: span 4; grid-row: span 3; background: linear-gradient(135deg, var(--card2), #232a3d); }
+.nl-bento .wide-c { grid-column: span 3; grid-row: span 2; }
+.nl-bento .tall-c { grid-column: span 2; grid-row: span 3; }
+.nl-bento .sq-c   { grid-column: span 2; grid-row: span 2; }
+.nl-bento .sm-c   { grid-column: span 2; grid-row: span 1; }
+@media (max-width:1024px){
+  .nl-bento .grid{grid-template-columns:repeat(4,1fr)}
+  .nl-bento .hero-c{grid-column:span 4; grid-row:span 2}
+  .nl-bento .wide-c{grid-column:span 4}
+  .nl-bento .tall-c{grid-column:span 2; grid-row:span 2}
+}
+@media (max-width:640px){
+  .nl-bento .grid{grid-template-columns:repeat(2,1fr); grid-auto-rows:100px}
+  .nl-bento .card{grid-column:span 2 !important; grid-row:span 2 !important}
+}
+
+.nl-bento .ctag { display:inline-block; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; padding:4px 11px; border-radius:100px; margin-bottom:12px; width:fit-content; font-weight:600; }
+.nl-bento .ctag.experiments{ background:rgba(255,107,107,.18); color:var(--coral); }
+.nl-bento .ctag.posts{ background:rgba(78,205,196,.18); color:var(--teal); }
+.nl-bento .ctag.thoughts{ background:rgba(167,139,250,.18); color:var(--lav); }
+.nl-bento .ctag.projects{ background:rgba(255,210,63,.18); color:var(--gold); }
+.nl-bento .ctitle { font-size:21px; font-weight:700; line-height:1.2; margin-bottom:8px; }
+.nl-bento .hero-c .ctitle { font-size:34px; }
+.nl-bento .sm-c .ctitle { font-size:15px; margin-bottom:0; }
+.nl-bento .cexc { color:var(--mut); font-size:14px; line-height:1.5; flex-grow:1; }
+.nl-bento .hero-c .cexc { font-size:16px; }
+.nl-bento .cmeta { display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--mut); margin-top:12px; }
+.nl-bento .cmeta .arr { transition: transform .2s; }
+.nl-bento .card:hover .arr { transform: translateX(4px); color: var(--teal); }
+
+.nl-bento .welcome { grid-column:span 4; grid-row:span 2; padding:32px; background: linear-gradient(135deg, #1a1f2e, #221a2e); }
+.nl-bento .welcome h2 { font-size:30px; margin-bottom:12px; }
+.nl-bento .welcome h2 b { color: var(--teal); font-weight:700; }
+.nl-bento .welcome p { color:var(--mut); font-size:15px; max-width:520px; line-height:1.55; }
+.nl-bento .statcard { grid-column:span 2; grid-row:span 2; background: linear-gradient(135deg, var(--teal), var(--blue)); color:#06222a; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.nl-bento .statcard .num { font-size:62px; font-weight:700; line-height:1; }
+.nl-bento .statcard .lab { font-size:12px; letter-spacing:2.5px; text-transform:uppercase; margin-top:8px; font-weight:600; }
+.nl-bento .clockcard { grid-column:span 2; grid-row:span 2; background: linear-gradient(135deg, #2a2416, #1d1a10); display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.nl-bento .clockcard .time { font-size:34px; font-weight:700; color: var(--gold); font-variant-numeric: tabular-nums; }
+.nl-bento .clockcard .day { font-size:12px; color:var(--mut); letter-spacing:2px; text-transform:uppercase; margin-top:6px; }
+.nl-bento .quotecard { grid-column:span 2; grid-row:span 2; background: linear-gradient(135deg, #2a1a1e, #1a1a2a); display:flex; flex-direction:column; justify-content:center; }
+.nl-bento .quotecard .qm { font-family:'Fraunces',serif; font-size:58px; color:var(--gold); line-height:.4; margin-bottom:14px; }
+.nl-bento .quotecard blockquote { font-family:'Fraunces',serif; font-style:italic; font-size:17px; line-height:1.45; }
+
+.nl-bento .modal { position:fixed; inset:0; background: rgba(5,6,10,.82); backdrop-filter: blur(10px); z-index:200; overflow-y:auto; padding:44px 24px; }
+.nl-bento .modal.hide { display:none; }
+.nl-bento .mbox { background: var(--card); max-width:820px; margin:0 auto; padding:50px; border-radius:22px; position:relative; border:1px solid rgba(255,255,255,.1); }
+.nl-bento .mclose { position:absolute; top:20px; right:20px; background:rgba(255,255,255,.08); border:none; width:38px; height:38px; border-radius:50%; color:var(--txt); cursor:pointer; font-size:16px; transition: all .18s; }
+.nl-bento .mclose:hover { background: rgba(255,255,255,.16); transform: rotate(90deg); }
+.nl-bento .mtag { font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); margin-bottom:16px; }
+.nl-bento .mtitle { font-size:40px; font-weight:700; line-height:1.1; margin-bottom:16px; }
+.nl-bento .mmeta { color:var(--mut); font-size:13px; border-bottom:1px solid rgba(255,255,255,.08); padding-bottom:22px; margin-bottom:30px; }
+.nl-bento .art { font-size:16px; color: var(--txt); }
+.nl-bento .art h2 { font-size:24px; }
+.nl-bento .art code { background: rgba(255,255,255,.08); color: var(--gold); padding:2px 6px; border-radius:4px; font-size:14px; }
+.nl-bento .art pre { background: rgba(0,0,0,.45); border-radius:12px; color: var(--txt); }
+.nl-bento .art blockquote { border-left:3px solid var(--lav); color: var(--lav); padding-left:18px; }
+.nl-bento .art a { color: var(--teal); }
+
+/* ============================================================
+   LAYOUT 4 — NEOBRUTALIST
+============================================================ */
+.nl-brut {
+  --bg:#fef3d0; --ink:#001689; --coral:#ff6b6b; --teal:#08d9d6; --lemon:#ffe66d; --pink:#f25f5c; --blue:#247ba0;
+  --card:#ffffff; --bd:3px solid #001689; --sh:6px 6px 0 #001689; --shh:11px 11px 0 #001689;
+  --sans:'Archivo', sans-serif;
+  background: var(--bg); color: var(--ink); font-family: var(--sans); min-height:100vh; overflow-x:hidden;
+}
+.nl-brut .marquee { background: var(--ink); color: var(--lemon); padding:11px 0; overflow:hidden; white-space:nowrap; font-weight:800; font-size:14px; letter-spacing:2px; border-bottom: var(--bd); }
+.nl-brut .marquee span { display:inline-block; animation: bScroll 28s linear infinite; }
+@keyframes bScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+.nl-brut .hero { padding:76px 24px 56px; text-align:center; position:relative; overflow:hidden; }
+.nl-brut .hero::before { content:''; position:absolute; top:15%; left:8%; width:220px; height:220px; background:var(--coral); border-radius:50%; filter:blur(90px); opacity:.35; }
+.nl-brut .hero::after { content:''; position:absolute; bottom:5%; right:10%; width:260px; height:260px; background:var(--teal); border-radius:50%; filter:blur(100px); opacity:.35; }
+.nl-brut .hinner { position:relative; z-index:1; max-width:1000px; margin:0 auto; }
+.nl-brut .sticker { display:inline-block; background:var(--lemon); border:var(--bd); box-shadow:var(--sh); padding:8px 18px; font-weight:900; font-size:13px; letter-spacing:2px; transform:rotate(-3deg); margin-bottom:26px; }
+.nl-brut .mega { font-size:clamp(64px,15vw,190px); font-weight:900; line-height:.88; letter-spacing:-5px; margin-bottom:26px; }
+.nl-brut .mega .l1 { display:block; -webkit-text-stroke:3px var(--ink); color:transparent; }
+.nl-brut .mega .l2 { display:inline-block; color:var(--coral); -webkit-text-stroke:3px var(--ink); }
+.nl-brut .mega .spark { color:var(--lemon); -webkit-text-stroke:0; font-size:.55em; vertical-align:super; display:inline-block; animation: bSpin 4s linear infinite; }
+@keyframes bSpin { to{transform:rotate(360deg)} }
+.nl-brut .hsub { font-size:clamp(16px,2vw,21px); max-width:620px; margin:0 auto 34px; line-height:1.5; font-weight:500; }
+.nl-brut .hcta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.nl-brut .btn { padding:16px 32px; font-weight:800; font-size:14px; letter-spacing:1px; text-transform:uppercase; border:var(--bd); cursor:pointer; text-decoration:none; display:inline-block; transition: all .15s; color:var(--ink); }
+.nl-brut .btn-p { background:var(--lemon); box-shadow:var(--sh); }
+.nl-brut .btn-p:hover { box-shadow:var(--shh); transform:translate(-3px,-3px); }
+.nl-brut .btn-g { background:var(--card); box-shadow:var(--sh); }
+.nl-brut .btn-g:hover { background:var(--teal); box-shadow:var(--shh); transform:translate(-3px,-3px); }
+
+.nl-brut .catnav { padding:22px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; border-top:var(--bd); border-bottom:var(--bd); background:var(--card); position:sticky; top:0; z-index:50; }
+.nl-brut .cbtn { background:var(--card); border:var(--bd); padding:11px 19px; font-weight:800; font-size:13px; cursor:pointer; box-shadow:4px 4px 0 var(--ink); transition: all .15s; }
+.nl-brut .cbtn:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
+.nl-brut .cbtn.on { background:var(--coral); color:#fff; transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+
+.nl-brut .feed { padding:50px 24px 120px; max-width:1400px; margin:0 auto; }
+.nl-brut .fgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:28px; }
+.nl-brut .fcard { background:var(--card); border:var(--bd); box-shadow:var(--sh); padding:24px; cursor:pointer; transition: all .15s; display:flex; flex-direction:column; min-height:250px; }
+.nl-brut .fcard:hover { transform:translate(-4px,-4px) rotate(-.6deg); box-shadow:var(--shh); }
+.nl-brut .fcard:nth-child(4n+1){background:#fff4e1}
+.nl-brut .fcard:nth-child(4n+2){background:#e0f7f6}
+.nl-brut .fcard:nth-child(4n+3){background:#ffe8e8}
+.nl-brut .fcard:nth-child(4n+4){background:#fff9d6}
+.nl-brut .ftag { display:inline-block; padding:4px 11px; font-size:11px; font-weight:900; letter-spacing:1.5px; margin-bottom:16px; width:fit-content; text-transform:uppercase; }
+.nl-brut .ftag.experiments{background:var(--pink); color:#fff}
+.nl-brut .ftag.posts{background:var(--blue); color:#fff}
+.nl-brut .ftag.thoughts{background:var(--teal); color:var(--ink)}
+.nl-brut .ftag.projects{background:var(--ink); color:var(--lemon)}
+.nl-brut .ftitle { font-size:24px; font-weight:900; line-height:1.15; margin-bottom:12px; flex-grow:1; }
+.nl-brut .fexc { font-size:14px; line-height:1.5; margin-bottom:16px; opacity:.85; }
+.nl-brut .fmeta { display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:2px dashed var(--ink); font-size:12px; font-weight:800; }
+.nl-brut .farr { width:34px; height:34px; background:var(--ink); color:var(--lemon); display:flex; align-items:center; justify-content:center; font-size:18px; transition: transform .15s; }
+.nl-brut .fcard:hover .farr { transform:translate(2px,-2px); }
+
+.nl-brut .aboutsec { padding:0 24px 90px; }
+.nl-brut .aboutcard { max-width:820px; margin:0 auto; background:var(--lemon); border:var(--bd); box-shadow:var(--sh); padding:48px; transform:rotate(-.5deg); }
+.nl-brut .alabel { font-size:12px; letter-spacing:3px; font-weight:900; margin-bottom:12px; }
+.nl-brut .atitle { font-size:46px; font-weight:900; margin-bottom:20px; line-height:1; }
+.nl-brut .atext { font-size:18px; line-height:1.6; margin-bottom:28px; font-weight:500; }
+.nl-brut .alinks { display:flex; gap:12px; flex-wrap:wrap; }
+.nl-brut .achip { padding:10px 18px; background:var(--card); border:var(--bd); text-decoration:none; color:var(--ink); font-weight:800; font-size:13px; box-shadow:3px 3px 0 var(--ink); transition: all .15s; }
+.nl-brut .achip:hover { transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); background:var(--teal); }
+
+.nl-brut .footer { text-align:center; padding:30px 24px; border-top:var(--bd); background:var(--ink); color:var(--lemon); font-weight:800; letter-spacing:2px; font-size:13px; }
+
+.nl-brut .modal { position:fixed; inset:0; background: rgba(0,22,137,.72); backdrop-filter: blur(6px); z-index:200; overflow-y:auto; padding:44px 24px; }
+.nl-brut .modal.hide { display:none; }
+.nl-brut .mbox { background:var(--bg); max-width:820px; margin:0 auto; padding:50px; border:var(--bd); box-shadow:12px 12px 0 var(--ink); position:relative; }
+.nl-brut .mclose { position:absolute; top:16px; right:16px; background:var(--coral); color:#fff; border:var(--bd); width:42px; height:42px; font-weight:900; font-size:18px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); transition: all .15s; }
+.nl-brut .mclose:hover { transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+.nl-brut .mtag { display:inline-block; padding:6px 14px; background:var(--ink); color:var(--lemon); font-weight:900; font-size:12px; letter-spacing:1.5px; margin-bottom:20px; }
+.nl-brut .mtitle { font-size:44px; font-weight:900; line-height:1; margin-bottom:16px; }
+.nl-brut .mmeta { font-size:13px; font-weight:800; color:var(--blue); border-bottom:3px dashed var(--ink); padding-bottom:18px; margin-bottom:28px; }
+.nl-brut .art { font-size:17px; }
+.nl-brut .art h2 { font-size:27px; font-weight:900; background:var(--lemon); padding:4px 12px; display:inline-block; box-shadow:3px 3px 0 var(--ink); }
+.nl-brut .art code { background:var(--ink); color:var(--lemon); padding:2px 8px; font-weight:700; }
+.nl-brut .art pre { background:var(--ink); color:var(--lemon); border:var(--bd); }
+.nl-brut .art a { color:var(--pink); font-weight:800; text-decoration-thickness:3px; }
+.nl-brut .art blockquote { border-left:6px solid var(--coral); padding-left:20px; font-style:italic; font-size:20px; }
+</style>
+
+
+
+<div id="app"><div class="nl-brut"><div class="marquee"><span>✦ EXPERIMENTS ✦ POSTS ✦ THOUGHTS ✦ PROJECTS ✦ BEHIND THE SCENES ✦ RAW STUFF ✦ WILD IDEAS ✦ EXPERIMENTS ✦ POSTS ✦ THOUGHTS ✦ PROJECTS ✦ BEHIND THE SCENES ✦ RAW STUFF ✦ WILD IDEAS </span></div><header class="hero"><div class="hinner"><div class="sticker">100% HANDMADE · NO BUILD STEP</div><h1 class="mega"><span class="l1">NITISH</span><span class="l2">LABS<span class="spark">✦</span></span></h1><p class="hsub">a public laboratory for raw ideas, wild experiments, and half-baked thoughts</p><div class="hcta"><a class="btn btn-p" href="#b-feed">SEE THE FEED ↓</a><a class="btn btn-g" href="#b-about">WHO AM I?</a></div></div></header><nav class="catnav"><button class="cbtn on" data-c="all">ALL THE STUFF</button><button class="cbtn" data-c="experiments">🧪 EXPERIMENTS</button><button class="cbtn" data-c="posts">📝 POSTS</button><button class="cbtn" data-c="thoughts">💭 THOUGHTS</button><button class="cbtn" data-c="projects">🚀 PROJECTS</button></nav><main class="feed" id="b-feed"><div class="fgrid" id="n-grid"><article class="fcard rv" data-f="projects" data-s="nitishlabs-site"><span class="ftag projects">projects</span><h3 class="ftitle">This Very Website</h3><p class="fexc">A single-file lab notebook with four swappable layouts. You are looking at the demo.</p><div class="fmeta"><span>Jul 30, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="experiments" data-s="llm-mouse"><span class="ftag experiments">experiments</span><h3 class="ftitle">I Let an LLM Drive My Mouse for a Day</h3><p class="fexc">What happens when you hand your cursor to a language model with a caffeine-grade attention span.</p><div class="fmeta"><span>Jul 28, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="thoughts" data-s="dopamine-design"><span class="ftag thoughts">thoughts</span><h3 class="ftitle">Dopamine Is a Design Material</h3><p class="fexc">Motion, feedback, and reward are raw materials. Use them like a carpenter uses wood, not like a casino uses lights.</p><div class="fmeta"><span>Jul 25, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="posts" data-s="ship-ugly"><span class="ftag posts">posts</span><h3 class="ftitle">Ship Ugly: A Manifesto</h3><p class="fexc">Polish is a phase, not a precondition. The version you are embarrassed by is the version that teaches you.</p><div class="fmeta"><span>Jul 22, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="experiments" data-s="css-synth"><span class="ftag experiments">experiments</span><h3 class="ftitle">A CSS-Only Synthesizer (Why Did I Do This)</h3><p class="fexc">Hover states as oscillators. I am sorry.</p><div class="fmeta"><span>Jul 14, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="thoughts" data-s="thinking-in-public"><span class="ftag thoughts">thoughts</span><h3 class="ftitle">Notes on Thinking in Public</h3><p class="fexc">Publishing half-formed ideas is scary and it is also the fastest feedback loop I have ever found.</p><div class="fmeta"><span>Jul 10, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="posts" data-s="breaking-things"><span class="ftag posts">posts</span><h3 class="ftitle">What Breaking Things Taught Me About Building</h3><p class="fexc">Destructive testing is a love language. Here is what a decade of breaking my own code taught me.</p><div class="fmeta"><span>Jul 5, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="experiments" data-s="4am-commit"><span class="ftag experiments">experiments</span><h3 class="ftitle">The 4AM Commit: A Sleep-Deprivation Field Study</h3><p class="fexc">I tracked my commit quality against my sleep. The graph is a confession.</p><div class="fmeta"><span>Jun 30, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="thoughts" data-s="half-life-ideas"><span class="ftag thoughts">thoughts</span><h3 class="ftitle">The Half-Life of Ideas</h3><p class="fexc">Most ideas decay in a week. The ones that survive a month of neglect are worth building.</p><div class="fmeta"><span>Jun 25, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="posts" data-s="second-brain"><span class="ftag posts">posts</span><h3 class="ftitle">My Second Brain Has Too Many Brains</h3><p class="fexc">I migrated my notes five times in two years. Here is what finally stuck.</p><div class="fmeta"><span>Jun 18, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="experiments" data-s="coffee-iot"><span class="ftag experiments">experiments</span><h3 class="ftitle">Reverse-Engineering My Coffee Machine</h3><p class="fexc">It had a WiFi chip. It had secrets. Now it has a REST API.</p><div class="fmeta"><span>Jun 12, 2026</span><div class="farr">→</div></div></article><article class="fcard rv" data-f="projects" data-s="tiny-tools"><span class="ftag projects">projects</span><h3 class="ftitle">Tiny Tools Collection</h3><p class="fexc">A growing drawer of single-purpose scripts that each save me about four minutes a day.</p><div class="fmeta"><span>Jun 8, 2026</span><div class="farr">→</div></div></article></div></main><section class="aboutsec" id="b-about"><div class="aboutcard"><div class="alabel">ABOUT THE HUMAN</div><h2 class="atitle">hi, i am nitish 👋</h2><p class="atext">I build things, break things, and write about both. This site is my public notebook — part portfolio for clients, part diary for me. Expect raw experiments, unfiltered thoughts, and the occasional fully-formed idea.</p><div class="alinks"><a class="achip" href="mailto:nitish@nitishlabs.dev">✉ EMAIL</a><a class="achip" href="#">🐦 TWITTER</a><a class="achip" href="#">💻 GITHUB</a></div></div></section><footer class="footer">MADE WITH ☕ AND CHAOS · © 2026 NITISH LABS</footer><div class="modal hide"><div class="mbox"><button class="mclose">✕</button><div class="mtag"></div><h1 class="mtitle"></h1><div class="mmeta"></div><div class="art"></div></div></div></div></div>
+
+<div id="switcher">
+  <span class="sw-label">LAB·OS</span>
+  <button data-l="terminal" class="">Term</button>
+  <button data-l="editorial" class="">Edit</button>
+  <button data-l="bento" class="">Bento</button>
+  <button data-l="neobrutalist" class="on">Brut</button>
+  <span class="sw-hint">keys 1–4</span>
+</div>
+
+<script>
+/* ============================================================
+   1. CONTENT STORE — EDIT YOUR MARKDOWN HERE
+   Each item is one markdown file with frontmatter.
+   To add a post: copy any { file: `...` } block, edit, done.
+============================================================ */
+const CONTENT = {
+  experiments: [
+    { file: `---
+slug: llm-mouse
+title: I Let an LLM Drive My Mouse for a Day
+date: 2026-07-28
+tags: [ai, automation, chaos]
+readingTime: 6 min
+excerpt: What happens when you hand your cursor to a language model with a caffeine-grade attention span.
+---
+
+## The Setup
+
+I wrote a tiny bridge that reads my screen, asks a model what to do next, and moves the mouse accordingly. Then I went to make coffee. Big mistake.
+
+By the time I came back it had opened three browser windows, starred forty-one repos, and was halfway through renaming my desktop icons after pokemon.
+
+## What I Learned
+
+- Autonomy without goals is just entropy with a plan.
+- The model is extremely confident about clicking things it cannot undo.
+- \`undo\` is the most important API in any agent stack.
+
+> Verdict: 10/10 would lose control of my computer again.
+
+The bridge is about 80 lines. I will clean it up and post it once it stops embarrassing me.` },
+
+    { file: `---
+slug: css-synth
+title: A CSS-Only Synthesizer (Why Did I Do This)
+date: 2026-07-14
+tags: [css, webaudio, crimes]
+readingTime: 4 min
+excerpt: Hover states as oscillators. I am sorry.
+---
+
+## The Crime
+
+CSS \`transition\` events can trigger Web Audio nodes if you squint hard enough. I built a keyboard where hovering keys schedules notes. No JavaScript touches the sound path.
+
+It works. It should not. I have no defense.
+
+## The Numbers
+
+- 12 keys, 3 waveforms, 0 regrets (some regrets)
+- Latency: surprisingly fine
+- Maintainability: a war crime
+
+> Just because you can, does not mean you should. But you should at least document it when you do.
+
+Full write-up with the oscillator wiring coming soon.` },
+
+    { file: `---
+slug: 4am-commit
+title: The 4AM Commit: A Sleep-Deprivation Field Study
+date: 2026-06-30
+tags: [meta, git, regret]
+readingTime: 5 min
+excerpt: I tracked my commit quality against my sleep. The graph is a confession.
+---
+
+## The Experiment
+
+For one month I logged sleep hours and scored every commit the next morning. Hypothesis: I do my best work at night.
+
+Result: I do my most confident work at night. Those are different things.
+
+## Findings
+
+- After midnight, commit messages get longer and code gets worse.
+- My 4AM self loves renaming things. My 9AM self inherits the mess.
+- The single best refactor of the month happened at 11AM after a full night of sleep.
+
+> Night brain is a brainstormer. Morning brain is the engineer. Let them trade shifts, not overlap.` },
+
+    { file: `---
+slug: coffee-iot
+title: Reverse-Engineering My Coffee Machine
+date: 2026-06-12
+tags: [hardware, iot, caffeine]
+readingTime: 7 min
+excerpt: It had a WiFi chip. It had secrets. Now it has a REST API.
+---
+
+## The Target
+
+My coffee machine phones home. To where? Unknown. I sniffed the traffic and found it beacons a telemetry endpoint every brew. My espresso has a data plan.
+
+## The Hack
+
+- Sniffed the local protocol with a cheap logic analyzer
+- Replayed the brew command successfully on attempt four
+- Wrapped it in a tiny local API: \`POST /brew { strength: 3 }\`
+
+The machine now obeys me and only me. The cloud can wait for its latte.
+
+> Every smart device is a dumb device with a secret. Find the secret.` }
+  ],
+
+  posts: [
+    { file: `---
+slug: ship-ugly
+title: Ship Ugly: A Manifesto
+date: 2026-07-22
+tags: [craft, shipping, mindset]
+readingTime: 5 min
+excerpt: Polish is a phase, not a precondition. The version you are embarrassed by is the version that teaches you.
+---
+
+## The Trap
+
+I have a graveyard of beautiful half-built things. Each one was going to be perfect. Each one taught me nothing, because none of them met a real user.
+
+The projects that actually changed my thinking were the ugly ones I shipped in a weekend and then had to defend in public.
+
+## The Rules
+
+- Ship the version you would only show a friend. Then show a stranger.
+- Embarrassment is tuition. Pay it early, pay it small.
+- Polish compounds only on things that exist.
+
+> Nobody iterates on a secret.
+
+This site itself is the proof. You are reading the rough draft.` },
+
+    { file: `---
+slug: breaking-things
+title: What Breaking Things Taught Me About Building
+date: 2026-07-05
+tags: [craft, debugging, learning]
+readingTime: 6 min
+excerpt: Destructive testing is a love language. Here is what a decade of breaking my own code taught me.
+---
+
+## Break First
+
+Before I write a single test, I try to break the thing in my head. What input is rude? What happens at midnight? What if the network lies?
+
+This paranoia, it turns out, is a design tool.
+
+## Lessons From the Rubble
+
+- Every assumption you did not write down is a bug with a schedule.
+- The error message is part of the product. Budget for it.
+- Things that fail loudly are gifts. Things that fail silently are debts.
+
+> Build like an optimist. Test like a saboteur.` },
+
+    { file: `---
+slug: second-brain
+title: My Second Brain Has Too Many Brains
+date: 2026-06-18
+tags: [notes, tools, pkm]
+readingTime: 4 min
+excerpt: I migrated my notes five times in two years. Here is what finally stuck.
+---
+
+## The Migration Cycle
+
+New notes app, new me. For two years I mistook tooling for thinking. Every migration felt like productivity and was actually procrastination with a nicer icon.
+
+## What Finally Worked
+
+- Plain markdown files in folders. Boring. Permanent.
+- One inbox, reviewed weekly. Everything else is retrieval.
+- The best tool is the one I stop thinking about.
+
+> Your second brain should be a warehouse, not a museum.` }
+  ],
+
+  thoughts: [
+    { file: `---
+slug: dopamine-design
+title: Dopamine Is a Design Material
+date: 2026-07-25
+tags: [design, psychology]
+readingTime: 3 min
+excerpt: Motion, feedback, and reward are raw materials. Use them like a carpenter uses wood, not like a casino uses lights.
+---
+
+Feedback is not decoration. Every hover state, every transition, every tiny sound is a sentence in a conversation between the tool and the hand.
+
+The craft is restraint. A response on every meaningful action, silence everywhere else.
+
+> The best interfaces feel alive, not loud.` },
+
+    { file: `---
+slug: thinking-in-public
+title: Notes on Thinking in Public
+date: 2026-07-10
+tags: [writing, meta]
+readingTime: 3 min
+excerpt: Publishing half-formed ideas is scary and it is also the fastest feedback loop I have ever found.
+---
+
+A private thought can stay comfortable forever. The moment you publish it, the world starts editing it for you, for free, whether you like it or not.
+
+That discomfort is the point. It is how you find out which ideas are load-bearing.
+
+> Write to find out what you think. Publish to find out what you got wrong.` },
+
+    { file: `---
+slug: half-life-ideas
+title: The Half-Life of Ideas
+date: 2026-06-25
+tags: [ideas, time]
+readingTime: 2 min
+excerpt: Most ideas decay in a week. The ones that survive a month of neglect are worth building.
+---
+
+I keep a graveyard folder. Ideas go in, and I refuse to touch them for thirty days.
+
+Most dissolve on their own. The ones that still itch after a month, I build. It is the cheapest filter I have ever found.
+
+> Time is the best code reviewer.` }
+  ],
+
+  projects: [
+    { file: `---
+slug: nitishlabs-site
+title: This Very Website
+date: 2026-07-30
+tags: [meta, web, this-site]
+readingTime: 4 min
+excerpt: A single-file lab notebook with four swappable layouts. You are looking at the demo.
+---
+
+## The Build
+
+This site is one HTML file. Four layouts, a tiny markdown engine, and a content store you can edit by hand. No build step, no dependencies, no excuses.
+
+## The Idea
+
+- Content lives in markdown with frontmatter.
+- Layouts are swappable skins over the same data.
+- The whole lab ships in a single file you can email.
+
+> A personal site should be as portable as a notebook.` },
+
+    { file: `---
+slug: tiny-tools
+title: Tiny Tools Collection
+date: 2026-06-08
+tags: [tools, cli, utilities]
+readingTime: 3 min
+excerpt: A growing drawer of single-purpose scripts that each save me about four minutes a day.
+---
+
+Small, sharp, single-purpose. Each tool does one thing and refuses to grow.
+
+## Current Residents
+
+- \`standup\` — generates a standup summary from yesterday's git log
+- \`rename\` — bulk renames with a dry-run by default
+- \`focus\` — blocks everything for 25 minutes, no appeals
+
+> A tool that does two things is a tool you will abandon.` }
+  ]
+};
+
+/* ============================================================
+   2. MARKDOWN ENGINE
+============================================================ */
+const MarkdownParser = {
+  escape(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  },
+  parseFrontmatter(raw) {
+    const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!m) return { meta: {}, body: raw };
+    const meta = {};
+    m[1].split('\n').forEach(function(line) {
+      const idx = line.indexOf(':');
+      if (idx === -1) return;
+      const key = line.slice(0, idx).trim();
+      let val = line.slice(idx + 1).trim();
+      if (val.charAt(0) === '[' && val.charAt(val.length - 1) === ']') {
+        val = val.slice(1, -1).split(',').map(function(s) {
+          return s.trim().replace(/^["']|["']$/g, '');
+        });
+      } else {
+        val = val.replace(/^["']|["']$/g, '');
+      }
+      if (key) meta[key] = val;
+    });
+    return { meta: meta, body: m[2] };
+  },
+  parse(md) {
+    if (!md) return '';
+    let h = md;
+    h = h.replace(/```(\w*)\n([\s\S]*?)```/g, function(_, lang, code) {
+      return '<pre><code>' + MarkdownParser.escape(code.trim()) + '</code></pre>';
+    });
+    h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+    h = h.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+    h = h.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+    h = h.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+    h = h.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
+    h = h.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>');
+    h = h.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    h = h.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    h = h.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+    h = h.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    h = h.replace(/^- (.*)$/gm, '<li>$1</li>');
+    h = h.replace(/(<li>[\s\S]*?<\/li>)(?=\n(?!<li>)|\n?$)/g, '$1');
+    h = h.replace(/(?:<li>[\s\S]*?<\/li>\n?)+/g, function(block) { return '<ul>' + block + '</ul>'; });
+    h = h.split(/\n\n+/).map(function(block) {
+      const t = block.trim();
+      if (!t) return '';
+      if (/^<(h\d|ul|ol|pre|blockquote|img)/.test(t)) return t;
+      return '<p>' + t.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
+    return h;
+  },
+  excerpt(md, max) {
+    max = max || 160;
+    const text = md
+      .replace(/^#+ .*/gm, '')
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[*`>]/g, '')
+      .replace(/\n+/g, ' ')
+      .trim();
+    return text.length > max ? text.slice(0, max).trim() + '…' : text;
+  }
+};
+
+/* ============================================================
+   3. DATABASE — parse content once at boot
+============================================================ */
+const DB = { experiments: [], posts: [], thoughts: [], projects: [] };
+
+function buildDB() {
+  Object.keys(CONTENT).forEach(function(folder) {
+    DB[folder] = CONTENT[folder].map(function(entry) {
+      const parsed = MarkdownParser.parseFrontmatter(entry.file);
+      const meta = parsed.meta;
+      return {
+        slug: meta.slug || 'untitled',
+        title: meta.title || 'Untitled',
+        date: meta.date || '2026-01-01',
+        tags: Array.isArray(meta.tags) ? meta.tags : [],
+        readingTime: meta.readingTime || '3 min',
+        excerpt: meta.excerpt || MarkdownParser.excerpt(parsed.body),
+        folder: folder,
+        body: parsed.body
+      };
+    }).sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  });
+}
+
+function allItems() {
+  return [].concat(DB.experiments, DB.posts, DB.thoughts, DB.projects)
+    .sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+}
+
+function fmtDate(d, style) {
+  const dt = new Date(d);
+  if (style === 'long') {
+    return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/* ============================================================
+   4. SHARED HELPERS
+============================================================ */
+const app = document.getElementById('app');
+
+function openModal(root, item) {
+  const modal = root.querySelector('.modal');
+  root.querySelector('.mtag').textContent = item.folder;
+  root.querySelector('.mtitle').textContent = item.title;
+  root.querySelector('.mmeta').textContent = fmtDate(item.date, 'long') + '  ·  ' + item.readingTime + ' read';
+  root.querySelector('.art').innerHTML = MarkdownParser.parse(item.body);
+  modal.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(root) {
+  root.querySelector('.modal').classList.add('hide');
+  document.body.style.overflow = '';
+}
+
+function findItem(folder, slug) {
+  return (DB[folder] || []).find(function(i) { return i.slug === slug; });
+}
+
+function observeReveals(root) {
+  const els = root.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('in'); });
+    return;
+  }
+  const io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(function(el) { io.observe(el); });
+}
+
+/* ============================================================
+   5. LAYOUT: TERMINAL
+============================================================ */
+const LayoutTerminal = {
+  render() {
+    const expN = DB.experiments.length, postN = DB.posts.length, thN = DB.thoughts.length;
+    app.innerHTML =
+      '<div class="nl-terminal">' +
+        '<div class="scan"></div><div class="vig"></div>' +
+        '<header>' +
+          '<div class="bar">' +
+            '<span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>' +
+            '<span class="path">nitish@labs:~$</span>' +
+            '<span class="clock" id="t-clock">--:--:--</span>' +
+          '</div>' +
+          '<nav>' +
+            '<a data-sec="home">./home</a>' +
+            '<a data-sec="experiments">./experiments</a>' +
+            '<a data-sec="posts">./posts</a>' +
+            '<a data-sec="thoughts">./thoughts</a>' +
+            '<a data-sec="contact">./contact</a>' +
+          '</nav>' +
+        '</header>' +
+        '<main>' +
+          '<section class="sec on" data-sec="home">' +
+            '<div class="boot">' +
+              '<div class="promptline"><span class="p">nitish@labs:~$</span> <span id="t-typed"></span><span class="cursor">▊</span></div>' +
+              '<pre class="out" id="t-out"></pre>' +
+            '</div>' +
+            '<div class="stats">' +
+              '<div class="stat"><b>experiments</b><span>' + expN + '</span></div>' +
+              '<div class="stat"><b>posts</b><span>' + postN + '</span></div>' +
+              '<div class="stat"><b>thoughts</b><span>' + thN + '</span></div>' +
+              '<div class="stat"><b>status</b><span style="font-size:14px;color:#41e0e0">OPEN_TO_COLLAB</span></div>' +
+            '</div>' +
+          '</section>' +
+          '<section class="sec" data-sec="experiments"><h2 class="st">&gt; experiments/</h2><div class="logs" id="t-exp"></div></section>' +
+          '<section class="sec" data-sec="posts"><h2 class="st">&gt; posts/</h2><div class="logs" id="t-post"></div></section>' +
+          '<section class="sec" data-sec="thoughts"><h2 class="st">&gt; thoughts/</h2><div class="logs" id="t-th"></div></section>' +
+          '<section class="sec" data-sec="contact"><h2 class="st">&gt; contact/</h2>' +
+            '<pre class="contact">┌──────────────────────────────────────────┐\n│  EMAIL    : nitish@nitishlabs.dev        │\n│  GITHUB   : github.com/nitishlabs       │\n│  TWITTER  : @nitishlabs                 │\n│  STATUS   : OPEN_FOR_COLLAB             │\n└──────────────────────────────────────────┘</pre>' +
+          '</section>' +
+        '</main>' +
+        '<div class="modal hide">' +
+          '<div class="mbox">' +
+            '<button class="mclose">[x] close</button>' +
+            '<div class="mtag" style="display:none"></div>' +
+            '<h1 class="mtitle" style="display:none"></h1>' +
+            '<div class="mmeta" style="display:none"></div>' +
+            '<article class="art"></article>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    const root = app.querySelector('.nl-terminal');
+    this.bind(root);
+    this.boot(root);
+  },
+
+  bind(root) {
+    const self = this;
+    root.querySelectorAll('nav a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        root.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+        root.querySelector('.sec[data-sec="' + a.dataset.sec + '"]').classList.add('on');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    root.querySelector('.mclose').addEventListener('click', function() { closeModal(root); });
+    root.querySelector('.modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal(root);
+    });
+
+    this.fillLog(root, '#t-exp', DB.experiments);
+    this.fillLog(root, '#t-post', DB.posts);
+    this.fillLog(root, '#t-th', DB.thoughts);
+
+    setInterval(function() {
+      const el = root.querySelector('#t-clock');
+      if (el) el.textContent = new Date().toLocaleTimeString('en-GB');
+    }, 1000);
+  },
+
+  fillLog(root, sel, items) {
+    const self = this;
+    const box = root.querySelector(sel);
+    box.innerHTML = items.map(function(i) {
+      return '<div class="log rv" data-f="' + i.folder + '" data-s="' + i.slug + '">' +
+        '<div class="m">[' + i.date + '] // ' + i.folder + '</div>' +
+        '<div class="t">' + i.title + '</div>' +
+        (i.tags.length ? '<div class="g">tags: ' + i.tags.join(', ') + '</div>' : '') +
+      '</div>';
+    }).join('');
+    box.querySelectorAll('.log').forEach(function(el) {
+      el.addEventListener('click', function() {
+        openModal(root, findItem(el.dataset.f, el.dataset.s));
+      });
+    });
+    observeReveals(box);
+  },
+
+  boot(root) {
+    const lines = [
+      '> initializing nitishlabs kernel v2.6 ...',
+      '> mounting /content ............ <span class="ok">OK</span>',
+      '> loading experiments [' + DB.experiments.length + '] ....... <span class="ok">OK</span>',
+      '> loading posts [' + DB.posts.length + '] ............. <span class="ok">OK</span>',
+      '> loading thoughts [' + DB.thoughts.length + '] .......... <span class="ok">OK</span>',
+      '> caffeine module .............. <span class="ok">ACTIVE</span>',
+      '> ready.',
+      '',
+      '<span class="me">Nitish — builder, tinkerer, chronic experimenter.</span>',
+      '<span class="me">I break things on purpose, then write about what broke.</span>',
+      '<span class="me">Welcome to the lab.</span>'
+    ];
+    const out = root.querySelector('#t-out');
+    const typed = root.querySelector('#t-typed');
+    const cmd = 'whoami';
+    let ci = 0;
+    const cmdTimer = setInterval(function() {
+      typed.textContent += cmd.charAt(ci);
+      ci++;
+      if (ci >= cmd.length) {
+        clearInterval(cmdTimer);
+        let li = 0;
+        const lineTimer = setInterval(function() {
+          out.innerHTML += lines[li] + '\n';
+          li++;
+          if (li >= lines.length) clearInterval(lineTimer);
+        }, 130);
+      }
+    }, 70);
+  }
+};
+
+/* ============================================================
+   6. LAYOUT: EDITORIAL
+============================================================ */
+const LayoutEditorial = {
+  render() {
+    const featured = DB.posts[0] || allItems()[0];
+    const ticker = '✦ FIELD NOTES ✦ EXPERIMENTS ✦ ESSAYS ✦ DISPATCHES FROM THE WORKBENCH ✦ EST. 2026 ✦ ';
+
+    const card = function(i) {
+      return '<div class="acard rv" data-f="' + i.folder + '" data-s="' + i.slug + '">' +
+        '<div class="d">' + fmtDate(i.date) + ' · ' + i.folder + '</div>' +
+        '<div class="t">' + i.title + '</div>' +
+        '<div class="x">' + i.excerpt + '</div>' +
+      '</div>';
+    };
+
+    let n = 0;
+    const litem = function(i) {
+      n++;
+      return '<div class="litem rv" data-f="' + i.folder + '" data-s="' + i.slug + '">' +
+        '<div class="d">' + fmtDate(i.date) + '</div>' +
+        '<div><div class="t">' + i.title + '</div><div class="x">' + i.excerpt + '</div></div>' +
+        '<div class="n">' + String(n).padStart(2, '0') + '</div>' +
+      '</div>';
+    };
+
+    app.innerHTML =
+      '<div class="nl-editorial">' +
+        '<div class="ticker"><span>' + ticker + ticker + '</span></div>' +
+        '<header class="masthead">' +
+          '<div class="issue">Vol. 01 · Thursday, July 30 2026</div>' +
+          '<h1 class="logo">Nitish<em>Labs</em></h1>' +
+          '<div class="tagline">Field notes from the workbench</div>' +
+          '<nav class="mnav">' +
+            '<a data-sec="index">Index</a><a data-sec="experiments">Experiments</a>' +
+            '<a data-sec="essays">Essays</a><a data-sec="journal">Journal</a><a data-sec="about">About</a>' +
+          '</nav>' +
+        '</header>' +
+        '<main>' +
+          '<section class="sec on" data-sec="index">' +
+            '<div class="feature">' +
+              '<div class="kicker">Featured Dispatch</div>' +
+              '<h2>' + featured.title + '</h2>' +
+              '<p class="deck">' + featured.excerpt + '</p>' +
+              '<button class="readbtn" id="e-read">Read the piece →</button>' +
+            '</div>' +
+            '<div class="cols">' +
+              '<div><h3 class="coltitle"><i>§</i> Recent Experiments</h3><div class="stack">' + DB.experiments.slice(0, 4).map(card).join('') + '</div></div>' +
+              '<div><h3 class="coltitle"><i>§</i> Latest Essays</h3><div class="stack">' + DB.posts.slice(0, 4).map(card).join('') + '</div></div>' +
+            '</div>' +
+          '</section>' +
+          '<section class="sec" data-sec="experiments"><h2 class="shead">Experiments</h2><p class="slede">Things I built, broke, or set on fire — documented.</p><div class="list">' + DB.experiments.map(litem).join('') + '</div></section>' +
+          '<section class="sec" data-sec="essays"><h2 class="shead">Essays</h2><p class="slede">Long-form thinking, unfiltered.</p><div class="list">' + DB.posts.map(litem).join('') + '</div></section>' +
+          '<section class="sec" data-sec="journal"><h2 class="shead">Journal</h2><p class="slede">Scraps, fragments, half-formed ideas.</p><div class="list">' + DB.thoughts.map(litem).join('') + '</div></section>' +
+          '<section class="sec" data-sec="about"><div class="about">' +
+            '<h2 class="shead">About the Lab</h2>' +
+            '<p class="big">NitishLabs is a public notebook — part portfolio, part laboratory, part diary. I share raw experiments, half-baked ideas, and the occasional fully-formed thought. Some of it is useful. Most of it is just honest.</p>' +
+            '<div class="ameta">' +
+              '<div><b>Based in:</b> The internet</div>' +
+              '<div><b>Working on:</b> Everything, simultaneously</div>' +
+              '<div><b>Reach me:</b> nitish@nitishlabs.dev</div>' +
+            '</div>' +
+          '</div></section>' +
+        '</main>' +
+        '<footer class="colophon">© 2026 NitishLabs · Set in Fraunces &amp; Archivo · Printed in pixels</footer>' +
+        '<div class="modal hide"><div class="mbox">' +
+          '<button class="mclose">✕</button>' +
+          '<div class="mkicker"></div><h1 class="mtitle"></h1><div class="mmeta"></div>' +
+          '<div class="art"></div>' +
+        '</div></div>' +
+      '</div>';
+
+    const root = app.querySelector('.nl-editorial');
+    this.bind(root, featured);
+    observeReveals(root);
+  },
+
+  bind(root, featured) {
+    root.querySelectorAll('.mnav a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        root.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+        root.querySelector('.sec[data-sec="' + a.dataset.sec + '"]').classList.add('on');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    root.querySelector('#e-read').addEventListener('click', function() { openModal(root, featured); });
+    root.querySelectorAll('.acard, .litem').forEach(function(el) {
+      el.addEventListener('click', function() { openModal(root, findItem(el.dataset.f, el.dataset.s)); });
+    });
+    root.querySelector('.mclose').addEventListener('click', function() { closeModal(root); });
+    root.querySelector('.modal').addEventListener('click', function(e) { if (e.target === this) closeModal(root); });
+  }
+};
+
+/* ============================================================
+   7. LAYOUT: BENTO
+============================================================ */
+const LayoutBento = {
+  current: 'all',
+
+  render() {
+    app.innerHTML =
+      '<div class="nl-bento">' +
+        '<header class="top">' +
+          '<div class="brand"><div class="bmark">N</div><div><div class="bname">NitishLabs</div><div class="bsub">public lab notebook</div></div></div>' +
+          '<nav class="filters">' +
+            '<button class="fbtn on" data-f="all">All</button>' +
+            '<button class="fbtn" data-f="experiments">Experiments</button>' +
+            '<button class="fbtn" data-f="posts">Posts</button>' +
+            '<button class="fbtn" data-f="thoughts">Thoughts</button>' +
+            '<button class="fbtn" data-f="projects">Projects</button>' +
+          '</nav>' +
+        '</header>' +
+        '<main class="wrap"><div class="grid" id="b-grid"></div></main>' +
+        '<div class="modal hide"><div class="mbox">' +
+          '<button class="mclose">✕</button>' +
+          '<div class="mtag"></div><h1 class="mtitle"></h1><div class="mmeta"></div>' +
+          '<div class="art"></div>' +
+        '</div></div>' +
+      '</div>';
+
+    const root = app.querySelector('.nl-bento');
+    this.bind(root);
+    this.draw(root);
+  },
+
+  bind(root) {
+    const self = this;
+    root.querySelectorAll('.fbtn').forEach(function(b) {
+      b.addEventListener('click', function() {
+        root.querySelectorAll('.fbtn').forEach(function(x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        self.current = b.dataset.f;
+        self.draw(root);
+      });
+    });
+    root.querySelector('.mclose').addEventListener('click', function() { closeModal(root); });
+    root.querySelector('.modal').addEventListener('click', function(e) { if (e.target === this) closeModal(root); });
+  },
+
+  sizeClass(i) {
+    if (i === 0) return 'hero-c';
+    const pat = ['wide-c', 'sq-c', 'tall-c', 'sm-c', 'sq-c', 'wide-c'];
+    return pat[i % pat.length];
+  },
+
+  draw(root) {
+    const self = this;
+    const grid = root.querySelector('#b-grid');
+    const total = allItems().length;
+    const items = this.current === 'all' ? allItems() : DB[this.current];
+
+    let html =
+      '<div class="card welcome rv"><div>' +
+        '<h2>Welcome to the <b>lab</b> 👋</h2>' +
+        '<p>This is my public notebook — experiments, essays, half-formed thoughts, and things I am building in the open. Pull up a chair.</p>' +
+      '</div></div>' +
+      '<div class="card statcard rv"><div class="num">' + total + '</div><div class="lab">entries logged</div></div>' +
+      '<div class="card clockcard rv"><div class="time" id="b-time">--:--</div><div class="day" id="b-day">loading</div></div>';
+
+    items.forEach(function(i, idx) {
+      html += '<div class="card ' + self.sizeClass(idx) + ' rv" data-f="' + i.folder + '" data-s="' + i.slug + '">' +
+        '<div>' +
+          '<span class="ctag ' + i.folder + '">' + i.folder + '</span>' +
+          '<div class="ctitle">' + i.title + '</div>' +
+          '<div class="cexc">' + i.excerpt + '</div>' +
+        '</div>' +
+        '<div class="cmeta"><span>' + fmtDate(i.date) + '</span><span class="arr">→</span></div>' +
+      '</div>';
+    });
+
+    html += '<div class="card quotecard rv"><div class="qm">“</div>' +
+      '<blockquote>Build in public. Break in private. Ship anyway.</blockquote></div>';
+
+    grid.innerHTML = html;
+
+    grid.querySelectorAll('.card[data-s]').forEach(function(el) {
+      el.addEventListener('mousemove', function(e) {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+      el.addEventListener('click', function() { openModal(root, findItem(el.dataset.f, el.dataset.s)); });
+    });
+
+    observeReveals(grid);
+
+    const tick = function() {
+      const t = root.querySelector('#b-time'), d = root.querySelector('#b-day');
+      if (!t) return;
+      const now = new Date();
+      t.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      d.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    };
+    tick();
+    clearInterval(this._clock);
+    this._clock = setInterval(tick, 15000);
+  }
+};
+
+/* ============================================================
+   8. LAYOUT: NEOBRUTALIST
+============================================================ */
+const LayoutBrut = {
+  current: 'all',
+
+  render() {
+    const marq = '✦ EXPERIMENTS ✦ POSTS ✦ THOUGHTS ✦ PROJECTS ✦ BEHIND THE SCENES ✦ RAW STUFF ✦ WILD IDEAS ';
+    app.innerHTML =
+      '<div class="nl-brut">' +
+        '<div class="marquee"><span>' + marq + marq + '</span></div>' +
+        '<header class="hero"><div class="hinner">' +
+          '<div class="sticker">100% HANDMADE · NO BUILD STEP</div>' +
+          '<h1 class="mega"><span class="l1">NITISH</span><span class="l2">LABS<span class="spark">✦</span></span></h1>' +
+          '<p class="hsub">a public laboratory for raw ideas, wild experiments, and half-baked thoughts</p>' +
+          '<div class="hcta"><a class="btn btn-p" href="#b-feed">SEE THE FEED ↓</a><a class="btn btn-g" href="#b-about">WHO AM I?</a></div>' +
+        '</div></header>' +
+        '<nav class="catnav">' +
+          '<button class="cbtn on" data-c="all">ALL THE STUFF</button>' +
+          '<button class="cbtn" data-c="experiments">🧪 EXPERIMENTS</button>' +
+          '<button class="cbtn" data-c="posts">📝 POSTS</button>' +
+          '<button class="cbtn" data-c="thoughts">💭 THOUGHTS</button>' +
+          '<button class="cbtn" data-c="projects">🚀 PROJECTS</button>' +
+        '</nav>' +
+        '<main class="feed" id="b-feed"><div class="fgrid" id="n-grid"></div></main>' +
+        '<section class="aboutsec" id="b-about"><div class="aboutcard">' +
+          '<div class="alabel">ABOUT THE HUMAN</div>' +
+          '<h2 class="atitle">hi, i am nitish 👋</h2>' +
+          '<p class="atext">I build things, break things, and write about both. This site is my public notebook — part portfolio for clients, part diary for me. Expect raw experiments, unfiltered thoughts, and the occasional fully-formed idea.</p>' +
+          '<div class="alinks">' +
+            '<a class="achip" href="mailto:nitish@nitishlabs.dev">✉ EMAIL</a>' +
+            '<a class="achip" href="#">🐦 TWITTER</a>' +
+            '<a class="achip" href="#">💻 GITHUB</a>' +
+          '</div>' +
+        '</div></section>' +
+        '<footer class="footer">MADE WITH ☕ AND CHAOS · © 2026 NITISH LABS</footer>' +
+        '<div class="modal hide"><div class="mbox">' +
+          '<button class="mclose">✕</button>' +
+          '<div class="mtag"></div><h1 class="mtitle"></h1><div class="mmeta"></div>' +
+          '<div class="art"></div>' +
+        '</div></div>' +
+      '</div>';
+
+    const root = app.querySelector('.nl-brut');
+    this.bind(root);
+    this.draw(root);
+  },
+
+  bind(root) {
+    const self = this;
+    root.querySelectorAll('.cbtn').forEach(function(b) {
+      b.addEventListener('click', function() {
+        root.querySelectorAll('.cbtn').forEach(function(x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        self.current = b.dataset.c;
+        self.draw(root);
+      });
+    });
+    root.querySelector('.mclose').addEventListener('click', function() { closeModal(root); });
+    root.querySelector('.modal').addEventListener('click', function(e) { if (e.target === this) closeModal(root); });
+  },
+
+  draw(root) {
+    const grid = root.querySelector('#n-grid');
+    const items = this.current === 'all' ? allItems() : DB[this.current];
+    grid.innerHTML = items.map(function(i) {
+      return '<article class="fcard rv" data-f="' + i.folder + '" data-s="' + i.slug + '">' +
+        '<span class="ftag ' + i.folder + '">' + i.folder + '</span>' +
+        '<h3 class="ftitle">' + i.title + '</h3>' +
+        '<p class="fexc">' + i.excerpt + '</p>' +
+        '<div class="fmeta"><span>' + fmtDate(i.date) + '</span><div class="farr">→</div></div>' +
+      '</article>';
+    }).join('');
+
+    grid.querySelectorAll('.fcard').forEach(function(el) {
+      el.addEventListener('click', function() { openModal(root, findItem(el.dataset.f, el.dataset.s)); });
+    });
+    observeReveals(grid);
+  }
+};
+
+/* ============================================================
+   9. SHELL — layout switching
+============================================================ */
+const LAYOUTS = {
+  terminal: LayoutTerminal,
+  editorial: LayoutEditorial,
+  bento: LayoutBento,
+  neobrutalist: LayoutBrut
+};
+
+let currentLayout = 'bento';
+
+function setLayout(name) {
+  if (!LAYOUTS[name]) return;
+  currentLayout = name;
+  document.body.style.overflow = '';
+  LAYOUTS[name].render();
+  document.querySelectorAll('#switcher button').forEach(function(b) {
+    b.classList.toggle('on', b.dataset.l === name);
+  });
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('#switcher button').forEach(function(b) {
+  b.addEventListener('click', function() { setLayout(b.dataset.l); });
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const map = { '1': 'terminal', '2': 'editorial', '3': 'bento', '4': 'neobrutalist' };
+  if (map[e.key]) setLayout(map[e.key]);
+  if (e.key === 'Escape') {
+    const open = document.querySelector('.modal:not(.hide)');
+    if (open) {
+      open.classList.add('hide');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
+/* Boot */
+buildDB();
+setLayout('bento');
+console.log('%c🧪 NitishLabs OS online — ' + allItems().length + ' entries loaded. Press 1-4 to switch layouts.', 'color:#4ecdc4;font-weight:bold;font-size:13px');
+</script>
+
+
+                <script>// Write JavaScript here</script>
+            
+        
+    </body>

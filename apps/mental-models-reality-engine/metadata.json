@@ -1,0 +1,6 @@
+{
+  "name": "Mental Models Reality Engine",
+  "description": "Visceral simulations that expose the mathematical truth behind Assumption Stacks, the Compound Effect, and the Pareto Principle.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,26 @@
+[Unit]
+Description=Hermes WebUI
+After=network-online.target hermes-gateway.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/hermes-webui
+Environment=HOME=/root
+Environment=HERMES_HOME=/root/.hermes
+Environment=HERMES_WEBUI_HOST=127.0.0.1
+Environment=HERMES_WEBUI_PORT=8787
+Environment=HERMES_WEBUI_FOREGROUND=1
+Environment=HERMES_WEBUI_DEFAULT_WORKSPACE=/opt/nitish-portfolio
+Environment=PATH=/usr/local/lib/hermes-agent/venv/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=/root/.hermes/webui.env
+ExecStart=/bin/bash /opt/hermes-webui/start.sh --foreground
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+{
+ "format": "linkedin-carousel",
+ "aspect": "1080x1350",
+ "skill": "visual-wiki-maps",
+ "slideCount": 5,
+ "slides": [
+ "slide-01.svg",
+ "slide-02.svg",
+ "slide-03.svg",
+ "slide-04.svg",
+ "slide-05.svg"
+ ],
+ "cover": "cover.png"
+}

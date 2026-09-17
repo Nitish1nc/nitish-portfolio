@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img">
+ <rect width="1080" height="1350" fill="#f7f5f1"/>
+ <rect x="40" y="40" width="1000" height="1270" rx="36" fill="none" stroke="#d6d3d1" stroke-width="2"/>
+
+ <text x="72" y="160" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-weight="700" fill="#14213d">
+ <tspan x="72" dy="0">Not a Trophy.</tspan>
+ <tspan x="72" dy="56">A Prison You Learned Inside.</tspan>
+ </text>
+ <g transform="translate(72, 340)">
+ <rect width="900" height="200" rx="22" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+ <text x="40" y="80" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#14213d">
+ <tspan x="40" dy="0">From outside, resilience looks admirable.</tspan>
+ <tspan x="40" dy="42">From inside, it is often what remained</tspan>
+ <tspan x="40" dy="42">after softer exits closed.</tspan>
+ </text>
+ </g>
+ <g transform="translate(72, 580)">
+ <rect width="900" height="240" rx="22" fill="#14213d"/>
+ <text x="40" y="90" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#f7f5f1">
+ <tspan x="40" dy="0">&#34;It&#39;s not a trophy I cherish.</tspan>
+ <tspan x="40" dy="48">It&#39;s the prison I live inside.&#34;</tspan>
+ </text>
+ </g>
+
+ <text x="72" y="1260" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#4a5568">NitishLabs · Visual Wiki Map · 4/5</text>
+</svg>

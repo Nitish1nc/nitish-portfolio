@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Memory Capture Extension - NitishLabs</title>
+ <meta name="description" content="Phase 1 zero-friction Markdown capture: highlight, export, silence. No cloud, no questions." />
+ <meta name="theme-color" content="#09090b" />
+ <link rel="canonical" href="https://labs.nitishchauhan.com/projects/cursor-extension.html" />
+ <meta property="og:title" content="Memory Capture Extension" />
+ <meta property="og:description" content="A perfect screwdriver - not a Swiss Army knife. Capture is immediate, headless, and silent." />
+ <meta property="og:url" content="https://labs.nitishchauhan.com/projects/cursor-extension.html" />
+ <meta property="og:type" content="website" />
+ <meta property="og:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="Memory Capture Extension" />
+ <meta name="twitter:description" content="A perfect screwdriver - not a Swiss Army knife. Capture is immediate, headless, and silent." />
+ <meta name="twitter:image" content="https://labs.nitishchauhan.com/posts/build-the-kitchen-first/carousel/cover.png" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../assets/tailwind.css?v=20260807p" />
+ <link rel="stylesheet" href="../assets/labs.css?v=20260807p" />
+</head>
+<body class="antialiased">
+ <div data-labs-nav data-labs-variant="article" data-labs-active="Experiments"></div>
+
+ 
+
+ <main class="pt-24 pb-24">
+ <article class="max-w-3xl mx-auto px-6">
+ <header class="article-header">
+ <div class="meta-row">
+ <span class="meta-chip">Prototype</span>
+ <span>Phase 1 MVP</span>
+ </div>
+ <h1 class="heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-4 leading-tight">
+ Memory Capture
+ </h1>
+ <p class="text-lg text-zinc-400 leading-relaxed max-w-2xl">
+ A perfect screwdriver. Highlight → Export to Memory. No prompts. No cloud. Files land in <code class="text-zinc-300 text-base">Memory/Inbox/YYYY/MM/DD/</code>.
+ </p>
+ </header>
+
+ <section class="project-section">
+ <h2 class="heading text-xl font-semibold text-white">What</h2>
+ <p class="text-zinc-400 leading-relaxed">
+ Cursor-optimized Manifest V3 extension: page / selection / link capture, Turndown Markdown with a fixed metadata header, silent <code class="text-sm text-zinc-300">chrome.downloads</code>, duplicate hashing, and a Friction Counter CSV for moments that still hurt. ChatGPT &amp; Claude DOM heuristics with a generic fallback. Strict Phase&nbsp;1 exclusions: OCR, AI summaries, cloud sync, folder pickers.
+ </p>
+ </section>
+
+ <section class="project-section">
+ <h2 class="heading text-xl font-semibold text-white">Why</h2>
+ <p class="text-zinc-400 leading-relaxed">
+ Organize later. At discovery time, every extra decision is friction. The implementation guide's core rule: never ask the user a question during capture. Inbox-first keeps the ADHD brain moving; sorting is tomorrow's problem - which is a compliment, not a bug.
+ </p>
+ </section>
+
+ <section class="project-section surface-panel">
+ <h2 class="heading text-xl font-semibold text-white mb-3">Status</h2>
+ <p class="text-zinc-400 leading-relaxed text-sm">
+ Source lives in NitishLabs <span class="text-zinc-300">active-projects/memory-capture-extension</span>, built to the Phase&nbsp;1 guide. Upstream productization path is Vault (queue sidebar + multi-format export). This MVP proves silent local capture first.
+ </p>
+ </section>
+
+ 
+ </article>
+ </main>
+ <div data-labs-footer data-labs-variant="article"></div>
+ <script src="../assets/shell.js?v=20260807p"></script>
+</body>
+</html>

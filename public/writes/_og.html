@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1200, height=630, initial-scale=1" />
+    <title>Writes OG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet" />
+    <style>
+      * { box-sizing: border-box; }
+
+      html, body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      body {
+        background: #f7f9fc;
+        color: #0f172a;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      .og-card {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        padding: 76px 88px 80px;
+        overflow: hidden;
+        background: #f7f9fc;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      #og-kicker {
+        margin: 0 0 18px;
+        max-width: 1024px;
+        font-family: "Figtree", ui-sans-serif, sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #64748b;
+      }
+
+      #og-kicker:empty { display: none; }
+
+      #og-title {
+        margin: 0;
+        max-width: 1024px;
+        font-family: "Newsreader", Georgia, serif;
+        font-optical-sizing: auto;
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.16;
+        letter-spacing: -0.022em;
+        color: #0f172a;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        text-wrap: pretty;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+      }
+
+      .og-rule {
+        width: 56px;
+        height: 1px;
+        margin: 28px 0 22px;
+        background: #e2e8f0;
+        border: 0;
+      }
+
+      #og-meta {
+        margin: 0;
+        max-width: 1024px;
+        font-family: "Figtree", ui-sans-serif, sans-serif;
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og-card">
+      <p id="og-kicker"></p>
+      <h1 id="og-title">Forget Motivation, Forget Big Goals. Just Pick One Tiny Starting Point</h1>
+      <div class="og-rule" aria-hidden="true"></div>
+      <p id="og-meta">Writes · Nitish Chauhan</p>
+    </div>
+  </body>
+</html>

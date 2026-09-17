@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0.0",
+  "archetype": "stepper-lab",
+  "slug": "clause-syntax",
+  "title": "Why Some Writing Sounds Like Talking",
+  "eyebrow": "Prosodic Cognitive Simulation",
+  "hook": "When we read prose, we do not process every sentence as an isolated packet. We build a prosodic simulation: pauses, stress, closure, expectation.",
+  "excerpt": "Four interactive labs on the shelf, the breath, the held thought, and the next-word pull.",
+  "lede": [
+    "When we read prose, we do not process every sentence as an isolated packet. We build a <strong>prosodic simulation</strong>: where the speaker would pause, which words would receive stress, whether the thought has resolved, and whether another clause is expected.",
+    "Your brain does not treat words as isolated bits of data. It runs an active, predictive simulation that links incoming fragments into a single conceptual package. Some syntax keeps that simulation open longer than usual. Some syntax resets it every few words. The difference is not literary taste. It is measurable cognitive load."
+  ],
+  "date": "2026-09-08",
+  "dateDisplay": "Sep 8, 2026",
+  "author": "Nitish Chauhan",
+  "category": "Experiments",
+  "host": "both",
+  "canonicalUrl": "https://www.nitishchauhan.com/clause-syntax/",
+  "howThisWorks": "Flip a control. Watch the shelf, the breath, or the held thought change in real time. Lab 04 adds the next-word pull: once a pattern is set, your parser starts loading the shape of what comes next.",
+  "contrast": {
+    "left": {
+      "label": "Isolated packets",
+      "body": "Point A, Point B, Point C. Each period packages the thought and clears the shelf."
+    },
+    "right": {
+      "label": "One held arc",
+      "body": "She stopped at the door while he waited in the hallway as nothing moved between them until rain finally broke the silence."
+    }
+  },
+  "modules": [
+    {
+      "id": "buffer",
+      "num": "01",
+      "scienceName": "Working Memory Shelf",
+      "plainName": "The shelf",
+      "intro": "This is the <strong>working memory shelf</strong> (phonological loop in the literature). Short beats like <em>Point A, Point B, Point C</em> hit a period, package the claim, and clear the shelf. Chained, multi-clause grammar signals that the thought is incomplete.",
+      "whatToDo": "<strong>1.</strong> Flip Staccato vs Multi-clause. <strong>2.</strong> Step through clauses (or tap a beat).",
+      "writerRule": "So on the page, chain clauses into one arc. Do not package and purge after every beat.",
+      "soFar": "Isolated stops clear the shelf after each period. Chained syntax keeps it open.",
+      "widgets": [
+        {
+          "type": "shelf-toggle",
+          "data": {
+            "staccatoLabel": "Staccato",
+            "multiLabel": "Multi-clause",
+            "staccato": [
+              { "id": "s1", "beat": "A", "line": "First claim lands and wraps up." },
+              { "id": "s2", "beat": "B", "line": "Shelf purged. A fresh claim starts." },
+              { "id": "s3", "beat": "C", "line": "Purged again. No arc survives." }
+            ],
+            "multi": [
+              { "id": "m1", "text": "She stopped at the door" },
+              { "id": "m2", "text": "while he waited in the hallway" },
+              { "id": "m3", "text": "as nothing moved between them" },
+              { "id": "m4", "text": "until rain finally broke the silence." }
+            ],
+            "signalStaccato": "Each full stop: wrap-up, package, purge. The shelf never carries a long arc.",
+            "signalMulti": "Grammar says <em>not done yet</em>. Earlier clauses stay active while the brain awaits downstream resolution."
+          }
+        }
+      ]
+    },
+    {
+      "id": "prosody",
+      "num": "02",
+      "scienceName": "Prosodic Simulation",
+      "plainName": "The breath",
+      "intro": "This is <strong>implicit prosody</strong> (IPH): even during silent reading, auditory regions construct rhythm, intonation, and pauses. Chaining parallel <em>-ing</em> grammar sets a cadence that feels like one sustained breath.",
+      "whatToDo": "<strong>1.</strong> Toggle Abrupt halt vs Sustained breath. <strong>2.</strong> If breath is on, try Shorter / Longer.",
+      "writerRule": "So on the page, use parallel rhythm (-ing chains, matched cadence) so implicit prosody stays mid-breath.",
+      "soFar": "Parallel grammar keeps the inner ear mid-breath instead of putting the microphone down.",
+      "widgets": [
+        {
+          "type": "breath-contour",
+          "data": {
+            "chain": ["understanding", "mapping", "basing", "using", "integrating"],
+            "haltLeft": "Abrupt halt",
+            "breathRight": "Sustained breath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "closure",
+      "num": "03",
+      "scienceName": "Syntactic Integration",
+      "plainName": "The held thought",
+      "intro": "This is <strong>syntactic integration cost</strong>. Because each new clause depends on the main stem, the reader cannot reach semantic closure until the very end.",
+      "whatToDo": "<strong>1.</strong> Tap a step pill or use Advance arc. <strong>2.</strong> Watch the arc fill until resolution lands.",
+      "writerRule": "So on the page, park the claim on the main stem and land resolution at the end. Do not settle every clause on its own.",
+      "soFar": "Integration cost stays high until semantic closure finally lands.",
+      "widgets": [
+        {
+          "type": "arc-stepper",
+          "data": {
+            "steps": [
+              {
+                "role": "Claim",
+                "text": "Treating a disorder is not about suppressing symptoms",
+                "hold": "Main stem parked. The reader cannot wrap up yet."
+              },
+              {
+                "role": "Condition",
+                "text": "when you keep reopening the same diagnostic frame",
+                "hold": "Condition attaches to the stem. Still one evolving proposition."
+              },
+              {
+                "role": "Qualification",
+                "text": "and each new clause depends on that frame holding",
+                "hold": "Integration cost rises. Semantic closure still pending."
+              },
+              {
+                "role": "Resolution",
+                "text": "until the full treatment arc finally lands as one idea.",
+                "hold": "Resolution arrives. The internal listener can put the mic down."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "predict",
+      "num": "04",
+      "scienceName": "Predictive Syntax",
+      "plainName": "The next-word pull",
+      "intro": "This is the <strong>next-word pull</strong>. Once a rhythmic, hierarchical structure is set, the parser anticipates the grammatical shape of what comes next.",
+      "whatToDo": "<strong>1.</strong> Pick a track. <strong>2.</strong> Choose the continuation your parser expects (try both if you miss).",
+      "writerRule": "So on the page, set a grammatical pattern the parser can ride. Breaking it snaps the voice.",
+      "soFar": "Once rhythm locks in, the brain loads the next shape before the word arrives.",
+      "widgets": [
+        {
+          "type": "predict-choice",
+          "data": {
+            "tracks": [
+              {
+                "cue": "After establishing parallel -ing…",
+                "predicted": "another -ing verb",
+                "distractor": "a hard full stop",
+                "why": "Rhythm locks the next grammatical shape before the word arrives."
+              },
+              {
+                "cue": "After a subordinate if-clause…",
+                "predicted": "a then-resolution",
+                "distractor": "an unrelated new topic",
+                "why": "Hierarchy sets an expectation of completion, not a reset."
+              },
+              {
+                "cue": "After not X, but…",
+                "predicted": "a contrastive Y",
+                "distractor": "a dictionary gloss of X",
+                "why": "Contrast frames create forward pull toward the opposing term."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "takeawayTitle": "Write for the inner ear",
+  "takeaway": "Keep the shelf open with multi-clause arcs instead of stabbing a full stop between every beat. Set parallel rhythm so the implicit prosody stays mid-breath. Park the claim early and land resolution at the end so syntactic integration cost pays off as one held thought. Give the parser a pattern it can ride forward.",
+  "foundations": [
+    {
+      "badge": "DLT",
+      "title": "Dependency Locality Theory",
+      "cite": "Edward Gibson, 2000",
+      "body": "Human sentence processing incurs two cognitive costs: <strong>storage cost</strong> (keeping open syntactic predictions in memory) and <strong>integration cost</strong> (connecting a new word to an earlier structure)."
+    },
+    {
+      "badge": "IPH",
+      "title": "Implicit Prosody Hypothesis",
+      "cite": "Janet Fodor, 1998, 2002",
+      "body": "Silent readers systematically project phonological and prosodic contours onto written text. That projection guides how sentences are parsed and comprehended."
+    },
+    {
+      "badge": "LC",
+      "title": "Late closure and immediacy",
+      "cite": "Frazier and Rayner, 1982; Just and Carpenter, 1980",
+      "body": "Readers prefer to attach incoming items to the clause currently being processed, postponing propositional wrap-up until punctuation or structural completion forces semantic closure."
+    }
+  ],
+  "terms": [
+    "phonological loop",
+    "implicit prosody",
+    "syntactic integration",
+    "dependency locality",
+    "predictive processing"
+  ],
+  "caveat": "Demo sentences are illustrative, not empirical stimuli. Nitish Chauhan compiled this page from established psycholinguistics for writers who want the mechanism, not the textbook tone.",
+  "ogMetaphor": "violet breath arc on zinc, isolated stop vs sustained contour",
+  "ogAlt": "Why Some Writing Sounds Like Talking - interactive lab by Nitish Chauhan",
+  "shape": "mechanism-explainer",
+  "confidence": 1
+}

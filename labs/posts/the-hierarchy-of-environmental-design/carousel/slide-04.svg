@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img">
+ <rect width="1080" height="1350" fill="#f7f5f1"/>
+ <rect x="40" y="40" width="1000" height="1270" rx="36" fill="none" stroke="#d6d3d1" stroke-width="2"/>
+ 
+ <text x="72" y="140" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#0f766e" letter-spacing="2">VISUAL WIKI MAP</text>
+ <text x="72" y="200" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#14213d">Layer 3</text>
+ 
+ <g transform="translate(72, 260)">
+ <rect width="936" height="280" rx="24" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+ <circle cx="56" cy="56" r="34" fill="#e07a5f"/>
+ <text x="56" y="66" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#fff">5</text>
+ <text x="120" y="70" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#14213d">Level 5</text>
+ <text x="48" y="140" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#4a5568">
+ <tspan x="48" dy="0">Ambient Conditions &amp; Ergonomics -</tspan><tspan x="48" dy="34">furniture icon at bottom.</tspan>
+ </text>
+ </g>
+ 
+ <g transform="translate(72, 580)">
+ <rect width="936" height="280" rx="24" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+ <circle cx="56" cy="56" r="34" fill="#c9a227"/>
+ <text x="56" y="66" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#fff">6</text>
+ <text x="120" y="70" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#14213d">Level 6</text>
+ <text x="48" y="140" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#4a5568">
+ <tspan x="48" dy="0">🛡️ Hard Physical Defaults - Highest</tspan><tspan x="48" dy="34">Impact</tspan>
+ </text>
+ </g>
+ 
+ <text x="72" y="1260" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#4a5568">NitishLabs · Visual Wiki Map · 4/6</text>
+ 
+</svg>

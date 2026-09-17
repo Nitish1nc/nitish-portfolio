@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limbic Notes - Highlight. Throw. Keep reading.</title>
+<meta name="description" content="Limbic Notes is a pair of always-on-top notepads at the edge of your screen. Highlight anything, hit an arrow key, and watch your draft build itself in peripheral vision.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nitish Chauhan">
+<meta property="og:title" content="Limbic Notes - Highlight. Throw. Keep reading.">
+<meta property="og:description" content="Capture and classify at the speed of reading. Zero alt-tabs. Zero focus stolen.">
+<meta property="og:url" content="https://www.nitishchauhan.com/limbic-notes/">
+<meta property="og:image" content="https://www.nitishchauhan.com/limbic-notes/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Limbic Notes - Highlight. Throw. Keep reading.">
+<meta name="twitter:image" content="https://www.nitishchauhan.com/limbic-notes/og-image.png">
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#141419; --line:#26262e; --ink:#f2f2f5;
+    --dim:#8f8f9a; --accent:#a3ff6b; --accent2:#7dd3fc; --warn:#ff5d5d;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+    line-height:1.65; overflow-x:hidden;
+    background-image:radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  ::selection{background:var(--accent); color:#0a0a0c}
+  main{max-width:780px; margin:0 auto; padding:0 26px 120px}
+  @media(min-width:1240px){ main{margin:0 auto; padding-right:340px; max-width:1120px} }
+
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:99}
+
+  /* ---------- peripheral pane (the meta-demo) ---------- */
+  #pane{
+    position:fixed; right:20px; top:50%; transform:translateY(-50%);
+    width:290px; max-height:72vh; display:none; flex-direction:column;
+    background:rgba(20,20,25,.88); backdrop-filter:blur(14px);
+    border:1px solid var(--line); border-radius:16px; overflow:hidden; z-index:50;
+    box-shadow:0 20px 60px rgba(0,0,0,.55);
+  }
+  @media(min-width:1440px){ #pane{display:flex} }
+  #pane header{
+    padding:12px 16px; border-bottom:1px solid var(--line);
+    font:600 11px/1 var(--mono); letter-spacing:.14em; color:var(--dim);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  #pane header b{color:var(--accent)}
+  #feed{padding:10px; overflow-y:auto; display:flex; flex-direction:column; gap:8px}
+  .cap{
+    padding:9px 12px; border-left:2px solid var(--accent);
+    background:rgba(163,255,107,.06); border-radius:0 10px 10px 0;
+    font-size:12.5px; color:var(--ink);
+    animation:capIn .5s cubic-bezier(.2,.9,.3,1.25);
+  }
+  .cap .t{display:block; font:600 10px var(--mono); color:var(--accent); margin-bottom:3px; letter-spacing:.08em}
+  .cap.sum{border-left-color:var(--accent2); background:rgba(125,211,252,.08)}
+  .cap.sum .t{color:var(--accent2)}
+  @keyframes capIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+  #pane.glow{animation:glow 1.2s ease-out}
+  @keyframes glow{0%{box-shadow:0 0 0 2px rgba(163,255,107,.55),0 20px 60px rgba(0,0,0,.55)}100%{box-shadow:0 0 0 0 rgba(163,255,107,0),0 20px 60px rgba(0,0,0,.55)}}
+  #mcount{
+    position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+    font:600 11px var(--mono); color:var(--accent); letter-spacing:.1em;
+    background:rgba(20,20,25,.9); border:1px solid var(--line);
+    padding:7px 14px; border-radius:99px; z-index:50;
+  }
+  @media(min-width:1240px){ #mcount{display:none} }
+
+  /* ---------- typography ---------- */
+  .eyebrow{font:600 11px var(--mono); letter-spacing:.2em; color:var(--dim); text-transform:uppercase; margin-bottom:18px}
+  .eyebrow b{color:var(--accent)}
+  h1{font-size:clamp(42px,7vw,76px); line-height:1.02; letter-spacing:-.03em; font-weight:800}
+  h1 em{font-style:normal; color:var(--accent)}
+  h2{font-size:clamp(28px,4vw,44px); letter-spacing:-.02em; line-height:1.1; font-weight:800; margin-bottom:18px}
+  p{color:var(--dim); font-size:17px; margin-bottom:16px}
+  p.big{color:var(--ink); font-size:clamp(20px,2.6vw,27px); font-weight:600; letter-spacing:-.01em; line-height:1.4; margin:28px 0}
+  .mono{font-family:var(--mono)}
+  section{padding:110px 0 0}
+  .hero{padding-top:16vh}
+  .hint{font:500 12px var(--mono); color:var(--accent2); letter-spacing:.06em; margin-top:34px}
+
+  /* ---------- keycaps ---------- */
+  .keyrow{display:flex; gap:14px; margin:30px 0}
+  .key{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:68px; height:68px; border-radius:14px; font-size:26px; color:var(--ink);
+    background:linear-gradient(#2b2b33,#1b1b22); border:1px solid #3c3c46;
+    box-shadow:0 5px 0 #0b0b0e, 0 10px 24px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.09);
+    transition:transform .08s, box-shadow .08s, color .08s, border-color .08s;
+  }
+  .key.pressed{transform:translateY(4px); box-shadow:0 1px 0 #0b0b0e, inset 0 1px 0 rgba(255,255,255,.05); color:var(--accent); border-color:var(--accent)}
+
+  /* ---------- steps / focus meter ---------- */
+  .steps{list-style:none; margin:26px 0; border:1px solid var(--line); border-radius:14px; overflow:hidden}
+  .steps li{
+    padding:11px 18px; font:500 14px var(--mono); color:var(--dim);
+    border-bottom:1px solid var(--line); opacity:.25; transform:translateX(-8px);
+    transition:opacity .4s, transform .4s, color .4s;
+  }
+  .steps li:last-child{border-bottom:none}
+  .steps li.on{opacity:1; transform:none; color:var(--ink)}
+  .steps li.on i{color:var(--warn)}
+  .steps i{font-style:normal; color:var(--dim); margin-right:12px}
+  .meter{margin:26px 0 8px}
+  .meter label{font:600 11px var(--mono); letter-spacing:.14em; color:var(--dim)}
+  .track{height:8px; background:#1c1c22; border:1px solid var(--line); border-radius:6px; margin-top:10px; overflow:hidden}
+  #focusbar{height:100%; width:100%; border-radius:6px; background:linear-gradient(90deg,var(--accent),#ffd166,var(--warn)); transition:width .7s cubic-bezier(.3,.8,.3,1)}
+
+  /* ---------- cards ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:30px 0}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:22px; transition:transform .25s, border-color .25s;
+  }
+  .card:hover{transform:translateY(-4px); border-color:#3a3a46}
+  .card h3{font-size:16px; letter-spacing:-.01em; margin-bottom:8px}
+  .card h3 span{font:600 10px var(--mono); color:var(--accent); letter-spacing:.16em; display:block; margin-bottom:8px}
+  .card p{font-size:14px; margin:0}
+
+  /* ---------- reveal ---------- */
+  .rv{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.3,1)}
+  .rv.in{opacity:1; transform:none}
+
+  /* ---------- cta ---------- */
+  form{display:flex; gap:10px; margin-top:26px; flex-wrap:wrap}
+  input[type=email]{
+    flex:1; min-width:220px; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; padding:14px 16px; color:var(--ink); font-size:15px; outline:none;
+  }
+  input[type=email]:focus{border-color:var(--accent)}
+  button{
+    background:var(--accent); color:#0a0a0c; border:none; border-radius:12px;
+    padding:14px 24px; font-size:15px; font-weight:700; cursor:pointer;
+    transition:transform .12s, filter .12s;
+  }
+  button:hover{transform:translateY(-2px); filter:brightness(1.08)}
+  footer{margin-top:120px; padding-top:26px; border-top:1px solid var(--line); font:500 12px var(--mono); color:var(--dim); letter-spacing:.08em}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+<!--SIM-STYLE-START-->
+<style>
+#ln-sim{--panel:#131316;--line:#26262c;--line2:#3a3a45;--ink:#f5f5f7;--dim:#9a9aa3;--acc:#A3FF6B;
+  position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;width:100vw;
+  padding:48px 24px 72px;color:var(--ink);box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;}
+#ln-sim *{box-sizing:border-box}
+#ln-sim .ls-wrap{max-width:1280px;margin:0 auto}
+#ln-sim .eyebrow{font:600 11px/1 ui-monospace,'SF Mono',Menlo,monospace;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+#ln-sim .eyebrow b{color:var(--acc)}
+#ln-sim h2{font-size:clamp(26px,3.6vw,42px);margin:10px 0 10px;letter-spacing:-.02em}
+#ln-sim h2 em{color:var(--acc);font-style:normal}
+#ln-sim .ls-lede{color:var(--dim);font-size:15px;line-height:1.75;max-width:760px;margin:0 0 14px}
+#ln-sim .ls-lede strong{color:var(--ink)}
+#ln-sim .ls-steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+#ln-sim .ls-steps span{font:500 12px/1 ui-monospace,Menlo,monospace;color:var(--dim);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px}
+#ln-sim .ls-steps b{color:var(--acc);margin-right:6px}
+#ln-sim .ls-real{margin:12px 2px 0;font:500 11px/1.6 ui-monospace,Menlo,monospace;color:var(--dim);text-align:center;letter-spacing:.04em}
+#ln-sim .ls-concept{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+#ln-sim .ls-concept .cstep{flex:1 1 200px;display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+#ln-sim .ls-concept .ico{font-size:17px;line-height:1.3;flex:none}
+#ln-sim .ls-concept b{display:block;font:600 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:var(--acc);margin-bottom:4px}
+#ln-sim .ls-concept span{font-size:12.5px;line-height:1.55;color:var(--dim)}
+#ln-sim .ls-head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+#ln-sim #ls-desc{color:var(--dim);font-size:13px;max-width:560px;margin:6px 0 0}
+#ln-sim .ls-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+#ln-sim .ls-tabs button{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--dim);cursor:pointer}
+#ln-sim .ls-tabs button.on{color:#0a0a0b;background:var(--acc);border-color:var(--acc)}
+#ln-sim .ls-srow{display:flex;gap:6px;flex-wrap:wrap}
+#ln-sim select,#ln-sim .ls-btn{font:500 12px/1 ui-monospace,Menlo,monospace;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+#ln-sim .ls-btn:hover{border-color:var(--acc)}
+#ln-sim #ls-grid{display:grid;gap:16px}
+#ln-sim .ls-div{width:1px;justify-self:center;background:linear-gradient(180deg,transparent,var(--line2) 10%,var(--line2) 90%,transparent)}
+#ln-sim .ls-read{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:18px 22px;min-height:0;display:flex;flex-direction:column}
+#ln-sim .ls-mat-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+#ln-sim .ls-mat-title{font:700 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--acc)}
+#ln-sim .ls-mat-sub{font:500 11px/1 ui-monospace,Menlo,monospace;color:var(--dim)}
+#ln-sim #ls-fold{margin-left:auto}
+#ln-sim .ls-mat-body{overflow-y:auto;max-height:600px;padding-right:6px}
+#ln-sim .ls-read.min .ls-mat-body{display:none}
+#ln-sim .ls-read.min{padding:12px 16px}
+#ln-sim .ls-read.min .ls-mat-head{margin-bottom:0}
+#ln-sim .ls-read h3{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}
+#ln-sim .ls-read .by{font:500 11px/1 ui-monospace,Menlo,monospace;color:var(--dim);letter-spacing:.14em;margin-bottom:16px}
+#ln-sim .ls-read p{font-size:14.5px;line-height:1.75;color:#c9c9d1;margin:0 0 14px}
+#ln-sim .ls-read blockquote{border-left:2px solid var(--acc);margin:0 0 14px;padding:4px 0 4px 14px;color:var(--ink);font-size:14.5px;line-height:1.7}
+#ln-sim .ls-read ul{margin:0 0 14px;padding-left:18px;color:#c9c9d1;font-size:14.5px;line-height:1.8}
+#ln-sim mark.ls-flash{background:rgba(163,255,107,.35);color:inherit;border-radius:3px;transition:background .6s}
+#ln-sim .ls-pane{background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:0;display:flex;flex-direction:column;min-height:170px;max-height:340px;box-shadow:0 10px 28px rgba(0,0,0,.35);transition:border-color .3s,box-shadow .3s}
+#ln-sim #ls-grid.folded .ls-pane{max-height:none;min-height:240px}
+#ln-sim .ls-pane.ack{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 0 26px rgba(163,255,107,.28)}
+#ln-sim .ls-pane header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+#ln-sim .ls-key{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:linear-gradient(#2a2a30,#1c1c22);border:1px solid #3a3a42;box-shadow:0 2px 0 #0c0c0f;font-size:13px;color:var(--acc);flex:none}
+#ln-sim .ls-label{font:600 12px/1.2 -apple-system,sans-serif;letter-spacing:.02em;color:var(--ink);outline:none;border-bottom:1px dashed transparent;min-width:36px}
+#ln-sim .ls-label:focus{border-bottom-color:var(--acc)}
+#ln-sim .ls-rem{border:none;background:none;cursor:pointer;font-size:13px;padding:2px 4px;opacity:.75}
+#ln-sim .ls-rem:hover{opacity:1}
+#ln-sim .ls-remb{font:600 10px/1 ui-monospace,Menlo,monospace;color:var(--acc)}
+#ln-sim .ls-n{margin-left:auto;font:600 10px/1 ui-monospace,Menlo,monospace;color:var(--dim)}
+#ln-sim .ls-feed{flex:1;overflow-y:auto;padding:10px 12px;min-height:0}
+#ln-sim .cap{padding:8px 10px;margin:0 0 8px;border-left:2px solid var(--acc);background:rgba(163,255,107,.05);border-radius:0 9px 9px 0;font-size:12.5px;line-height:1.55;color:#d6d6de}
+#ln-sim .cap.in{animation:lsIn .5s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes lsIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#ln-sim .cap .t{font:600 10.5px/1 ui-monospace,Menlo,monospace;color:var(--acc);white-space:nowrap;display:inline;margin:0}
+#ln-sim .ls-edits{border-top:1px dashed var(--line);padding:8px 12px;font-size:12px;line-height:1.6;color:#b9f8a9;outline:none;min-height:56px;max-height:120px;overflow-y:auto}
+#ln-sim .ls-widget{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center}
+#ln-sim .ls-widget .big{font:700 28px/1 ui-monospace,Menlo,monospace;color:var(--ink)}
+#ln-sim .ls-widget .sub{font:500 11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim)}
+#ln-sim .ls-widget .tick{font:600 14px/1.4 -apple-system,sans-serif;color:var(--acc)}
+#ln-sim .bar{height:6px;border-radius:3px;background:var(--acc);margin:3px 0;width:0%}
+#ln-sim .ls-status{margin:14px 0 0;display:flex;gap:18px;align-items:center;font:500 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);flex-wrap:wrap}
+#ln-sim #ls-hint{color:var(--acc)}
+#ln-sim .ls-touch{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:none;gap:8px;z-index:60}
+#ln-sim .ls-touch.show{display:flex}
+#ln-sim .ls-touch button{width:46px;height:46px;border-radius:12px;border:1px solid var(--acc);background:rgba(19,19,22,.92);color:var(--acc);font-size:18px;cursor:pointer;backdrop-filter:blur(8px)}
+#ln-sim #ls-rempop{position:fixed;z-index:80;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;display:none;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#ln-sim #ls-rempop.show{display:flex;flex-direction:column;gap:4px}
+#ln-sim #ls-rempop button{font:500 12px/1 ui-monospace,Menlo,monospace;text-align:left;border:none;background:none;color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer}
+#ln-sim #ls-rempop button:hover{background:#222228;color:var(--acc)}
+#ln-sim #ls-toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--acc);color:var(--ink);font:600 12.5px/1.4 -apple-system,sans-serif;border-radius:12px;padding:12px 18px;opacity:0;pointer-events:none;transition:all .35s;z-index:90;max-width:80vw;text-align:center}
+#ln-sim #ls-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#ln-sim .ls-coach{position:absolute;inset:0;background:rgba(6,6,8,.78);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:70}
+#ln-sim .ls-coach.hide{display:none}
+#ln-sim .ls-coach .card{max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 30px}
+#ln-sim .ls-coach h4{margin:0 0 12px;font-size:19px}
+#ln-sim .ls-coach ol{margin:0 0 18px;padding-left:18px;color:#c9c9d1;font-size:13.5px;line-height:1.9}
+#ln-sim .ls-coach .go{font:700 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;padding:12px 20px;border:none;border-radius:10px;background:var(--acc);color:#0a0a0b;cursor:pointer}
+#ln-sim .ls-coach kbd{font:600 11px ui-monospace,Menlo,monospace;background:#222228;border:1px solid #3a3a42;border-radius:5px;padding:2px 6px;color:var(--acc)}
+</style>
+<!--SIM-STYLE-END-->
+<style>
+/* sim placement on product page: breathing room, less clutter */
+#ln-sim{padding:120px 24px 64px}
+#ln-sim .ls-lede{display:none}
+#ln-sim .ls-steps{display:none}
+#ln-sim .ls-concept{margin:0 0 30px}
+/* --- lift: the sim is the product, not another copy section --- */
+#ln-sim{position:relative}
+#ln-sim::before{content:'';position:absolute;inset:56px 0 12px;border-radius:32px;pointer-events:none;
+  background:radial-gradient(52% 34% at 16% 0%, rgba(163,255,107,.14), transparent 62%),
+  radial-gradient(46% 30% at 84% 4%, rgba(125,211,252,.12), transparent 62%),
+  radial-gradient(60% 26% at 50% 100%, rgba(255,209,102,.07), transparent 70%)}
+#ln-sim::after{content:'';position:absolute;inset:56px 0 12px;border-radius:32px;pointer-events:none;
+  border:1px solid transparent;
+  background:linear-gradient(180deg, rgba(163,255,107,.30), rgba(125,211,252,.12) 42%, rgba(255,255,255,.05)) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  mask-composite:exclude}
+#ln-sim .ls-wrap{position:relative;z-index:1}
+/* glassy, colorful concept tiles */
+#ln-sim .ls-concept .cstep{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 14px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform .25s, box-shadow .25s}
+#ln-sim .ls-concept .cstep:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1)}
+#ln-sim .ls-concept .cstep::before{content:'';position:absolute;inset:0;pointer-events:none}
+#ln-sim .ls-concept .cstep:nth-child(1)::before{background:radial-gradient(130% 100% at 0% 0%, rgba(163,255,107,.16), transparent 55%)}
+#ln-sim .ls-concept .cstep:nth-child(2)::before{background:radial-gradient(130% 100% at 0% 0%, rgba(125,211,252,.16), transparent 55%)}
+#ln-sim .ls-concept .cstep:nth-child(3)::before{background:radial-gradient(130% 100% at 0% 0%, rgba(255,209,102,.15), transparent 55%)}
+#ln-sim .ls-concept .cstep:nth-child(1) b{color:#a3ff6b}
+#ln-sim .ls-concept .cstep:nth-child(2) b{color:#7dd3fc}
+#ln-sim .ls-concept .cstep:nth-child(3) b{color:#ffd166}
+/* peripheral ring + vibrant 3D panes */
+#ln-sim #ls-grid{position:relative;border-radius:22px;padding:16px;border:1px solid rgba(163,255,107,.16);
+  background:rgba(255,255,255,.02);box-shadow:0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05)}
+#ln-sim .ls-pane{border:1px solid rgba(255,255,255,.10);background:linear-gradient(165deg,#1a1a21,#121217 60%);
+  box-shadow:0 16px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07)}
+#ln-sim .ls-pane[data-pane="A"]{border-top:2px solid rgba(163,255,107,.55)}
+#ln-sim .ls-pane[data-pane="B"]{border-top:2px solid rgba(125,211,252,.55)}
+#ln-sim .ls-pane[data-pane="C"]{border-top:2px solid rgba(255,93,93,.55)}
+#ln-sim .ls-pane[data-pane="D"]{border-top:2px solid rgba(255,209,102,.55)}
+#ln-sim .ls-read{border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,#15151b,#0f0f14);
+  box-shadow:0 24px 70px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06)}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<aside id="pane">
+  <header><span>PERIPHERAL FEED</span><b>LIVE</b></header>
+  <div id="feed"></div>
+</aside>
+<div id="mcount">● 0 CAPTURED</div>
+
+<main>
+  <header class="hero rv">
+    <div class="eyebrow"><b>LIMBIC NOTES</b> · NATIVE macOS IN DEVELOPMENT</div>
+    <h1>Highlight. Throw.<br><em>Keep reading.</em></h1>
+    <p style="margin-top:26px; max-width:560px">Limbic Notes is a pair of always-on-top notepads living at the edge of your screen. Highlight anything, hit an arrow key, and watch your draft build itself in your peripheral vision — without ever leaving the page.</p>
+    <p class="hint">↓ this page practices what it preaches. read it — and watch the right edge.</p>
+  </header>
+
+  <section id="tax" class="rv">
+    <div class="eyebrow"><b>01</b> · THE PROBLEM</div>
+    <h2>The Alt-Tab Tax</h2>
+    <p>Every single extraction from what you're reading costs eight moves:</p>
+    <ol class="steps">
+      <li data-step><i>01</i>highlight the line</li>
+      <li data-step><i>02</i>⌘C</li>
+      <li data-step><i>03</i>⌘Tab out of the flow</li>
+      <li data-step><i>04</i>hunt the notes window</li>
+      <li data-step><i>05</i>scroll to the bottom</li>
+      <li data-step><i>06</i>⌘V</li>
+      <li data-step><i>07</i>type a timestamp, fix the format</li>
+      <li data-step><i>08</i>⌘Tab back — if you remember where you were</li>
+    </ol>
+    <div class="meter">
+      <label>YOUR FOCUS AFTER ONE CAPTURE</label>
+      <div class="track"><div id="focusbar"></div></div>
+    </div>
+    <p class="big" data-capture="You don't lose focus in one crash. You lose it in forty small taxes.">You don't lose focus in one big crash. You lose it in forty small taxes.</p>
+  </section>
+
+  <section id="reflex" class="rv">
+    <div class="eyebrow"><b>02</b> · THE REFLEX</div>
+    <h2>One gesture. Capture <em style="color:var(--accent);font-style:normal">and</em> classify.</h2>
+    <p>Highlight. Press ↑ for one bucket, ↓ for the other. That's the entire manual. The decision never reaches conscious deliberation — categorization becomes a physical reflex.</p>
+    <div class="keyrow"><div class="key" id="k-up">↑</div><div class="key" id="k-down">↓</div></div>
+    <p class="big" data-capture="Classification becomes a physical reflex.">Classification becomes a physical reflex.</p>
+  </section>
+
+  <section id="ack" class="rv">
+    <div class="eyebrow"><b>03</b> · THE ACK</div>
+    <h2>Your peripheral vision is bandwidth.</h2>
+    <p>Every throw lands with a cascade and a glow at the edge of your eye — a delivery confirmation you feel, not read. In networking, a packet needs an ACK. So does a thought.</p>
+    <p class="big" data-capture="You never look at the notepad. You just know it caught.">You never look at the notepad. You just know it caught.</p>
+  </section>
+
+  <section id="grid" class="rv">
+    <div class="eyebrow"><b>04</b> · THE GRID</div>
+    <h2>Two buckets become four.</h2>
+    <p>Up = hooks. Down = evidence. Left = objections. Right = questions. Your map, your labels. Go on — press your arrow keys right now.</p>
+    <div class="keyrow"><div class="key" id="k-left">←</div><div class="key" id="k-up2">↑</div><div class="key" id="k-down2">↓</div><div class="key" id="k-right">→</div></div>
+    <p class="big" data-capture="Two buckets become four. Four become a cockpit.">Two buckets become four. Four become a cockpit.</p>
+  </section>
+
+  <section id="sessions" class="rv">
+    <div class="eyebrow"><b>05</b> · SESSIONS</div>
+    <h2>Context, isolated by default.</h2>
+    <p>Every session is a fresh pair of streams. Re-invoke old ones instantly and pick up exactly where you left off. Research on one topic never pollutes another.</p>
+    <p class="big" data-capture="Nothing bleeds between projects.">Nothing bleeds between projects.</p>
+  </section>
+
+  <section id="depth" class="rv">
+    <div class="eyebrow"><b>06</b> · DEPTH</div>
+    <h2>Not an app. A surface.</h2>
+    <div class="cards">
+      <div class="card"><h3><span>MODE / QUAD</span>Four-direction routing</h3><p>Throw information spatially in four directions. Categorize at the speed of a wrist flick.</p></div>
+      <div class="card"><h3><span>MODE / SYNC</span>Live fork of your thinking</h3><p>Dump raw into one pane; a synced twin mirrors it live — and you edit the twin freely. Lossless capture and lossy curation, simultaneously.</p></div>
+      <div class="card"><h3><span>MODE / PROGRAM</span>Panes are slots</h3><p>Reminders, progress, alarms, agent output. Your machine writes to your peripheral vision.</p></div>
+    </div>
+    <p class="big" data-capture="Your machine writes to your peripheral vision.">Panes aren't editors. They're programmable slots in your attention.</p>
+  </section>
+
+  <section id="usp" class="rv">
+    <div class="eyebrow"><b>07</b> · WHY IT WINS</div>
+    <h2>Built for how attention actually behaves.</h2>
+    <div class="cards">
+      <div class="card"><h3>Zero focus steal</h3><p>Non-activating panels. Your cursor never leaves the reading flow.</p></div>
+      <div class="card"><h3>One-gesture capture</h3><p>Highlight + arrow = capture and classify in a single reflex.</p></div>
+      <div class="card"><h3>Peripheral ACK</h3><p>Cascade + glow. Delivery confirmed without a glance.</p></div>
+      <div class="card"><h3>Session isolation</h3><p>Namespaces for attention. Git-branch semantics for focus.</p></div>
+      <div class="card"><h3>Local-first markdown</h3><p>Raw .md on your disk. No cloud, no lock-in, no latency.</p></div>
+      <div class="card"><h3>Programmable surfaces</h3><p>A stdout for ambient awareness. Any process can target a pane.</p></div>
+    </div>
+  </section>
+
+  <section id="manifesto" class="rv">
+    <div class="eyebrow"><b>08</b> · MANIFESTO</div>
+    <p class="big" data-capture="Attention is the asset. Everything else is logistics.">Attention is the asset. Everything else is logistics.</p>
+    <p>We're not building another notes app. Notes apps are storage-first. Limbic Notes is flow-first: a routing fabric for attention, where screen real-estate becomes cognitive slots and hotkeys become the routing table. tmux for thought.</p>
+  </section>
+
+
+
+<!--SIM-MARKUP-START-->
+<div id="ln-sim">
+  <div class="ls-wrap">
+  <div class="ls-intro">
+    <div class="eyebrow"><b>LIMBIC NOTES</b> · LIVE SIMULATOR</div>
+    <h2>Read. Highlight. <em>Throw.</em></h2>
+    <p class="ls-lede">The middle is your <strong>material</strong> — whatever you're reading right now. Two <strong>notebooks</strong> flank it on each side. Highlight a line that hits, press one arrow key, and it lands in that notebook with a timestamp while your eyes stay on the page. Done capturing? Fold the material away and keep only your notebooks. And because you choose when each notebook reminds you, you review in your order — never all four at once.</p>
+    <div class="ls-steps"><span><b>1</b> highlight in the material</span><span><b>2</b> throw it with an arrow key</span><span><b>3</b> fold & review on your schedule</span></div>
+    <div class="ls-concept">
+      <div class="cstep"><span class="ico">🖍️</span><div><b>1 · HIGHLIGHT</b><span>Select any line inside the material — the page you're reading in the center.</span></div></div>
+      <div class="cstep"><span class="ico">⌨️</span><div><b>2 · THROW</b><span>Press one arrow key. The highlight flies to the notebook in that direction — Keep ↑ · Easy → · Hard ↓ · Later ←.</span></div></div>
+      <div class="cstep"><span class="ico">⏰</span><div><b>3 · YOUR ORDER</b><span>Set a reminder on any notebook. Review one at a time, when you choose — never all four at once.</span></div></div>
+    </div>
+  </div>
+  <div class="ls-head">
+    <div>
+      <div class="ls-tabs" id="ls-tabs">
+        <button data-mode="pair">PAIR</button><button data-mode="quad" class="on">QUAD</button><button data-mode="sync">SYNC</button><button data-mode="program">PROGRAM</button>
+      </div>
+      <p id="ls-desc"></p>
+    </div>
+    <div>
+      <div class="ls-srow">
+        <select id="ls-sessions" title="sessions"></select>
+        <button class="ls-btn" id="ls-new">+ New</button>
+        <button class="ls-btn" id="ls-sound">🔇</button>
+        <button class="ls-btn" id="ls-copy">Copy .md</button>
+        <button class="ls-btn" id="ls-dl">Download</button>
+      </div>
+    </div>
+  </div>
+  <div id="ls-grid">
+    <div class="ls-read" id="ls-mat">
+      <div class="ls-mat-head">
+        <span class="ls-mat-title">THE MATERIAL</span>
+        <span class="ls-mat-sub" id="ls-mat-sub">sample essay · highlight anything</span>
+        <button class="ls-btn" id="ls-fold">— fold</button>
+      </div>
+      <div class="ls-mat-body" id="ls-mat-body">
+      <h3>The Anatomy of a Broken Flow</h3>
+      <div class="by">SAMPLE MATERIAL · 4 MIN · HIGHLIGHT ANYTHING</div>
+      <p>Every reader knows the moment: a sentence lands, and you want to keep it. So you highlight it, copy it, switch apps, hunt for the window, scroll to the bottom, paste, type a timestamp, and switch back. Eight moves. One broken flow state.</p>
+      <p>Repeat that forty times in a research session and you have not taken notes — you have paid a tax. <strong>You don't lose focus in one big crash. You lose it in forty small taxes.</strong> The reading never gets the chance to become thinking.</p>
+      <blockquote>Attention is the asset. Everything else is logistics.</blockquote>
+      <p>Now imagine the opposite. The sentence lands. You highlight it. You press one arrow key. The text flies to a notebook at the edge of your eye, lands with a soft glow, and you never leave the next sentence. Capture and sorting collapsed into one physical reflex.</p>
+      <p>The trick is spatial. Top-left for what you love, top-right for what's easy, bottom-right for what's hard, bottom-left for later. <strong>Sorting stops being a decision and becomes a direction.</strong></p>
+      <ul>
+        <li>A quiet glow confirms delivery — you feel it, you don't read it.</li>
+        <li>Sessions keep projects apart, so nothing bleeds.</li>
+        <li>One notebook can mirror another live, while you edit the twin freely.</li>
+        <li>Notebooks are slots: reminders, clocks and stats can live where notes live.</li>
+      </ul>
+      <p>This is the whole idea: your reading stays in the middle, your notebooks wait at the sides, and your keyboard does the filing. The draft builds itself in your peripheral vision. <em>Now stop reading about it. Highlight something and throw it.</em></p>
+      </div>
+    </div>
+    <div id="ls-panes" style="display:contents"></div>
+  </div>
+  <div class="ls-real">real-product shape — slim side panels beside whatever app you’re working in · nothing covered · no screen wasted</div>
+  <div class="ls-status">
+    <span id="ls-count">0 captures</span><span id="ls-vel">0/min</span><span id="ls-hint">highlight in the material, then throw with ↑ → ↓ ←</span>
+  </div>
+  </div>
+  <div class="ls-touch" id="ls-touch"></div>
+  <div id="ls-rempop"></div>
+  <div id="ls-toast"></div>
+  <div class="ls-coach hide" id="ls-coach">
+    <div class="card">
+      <h4>30-second orientation</h4>
+      <ol>
+        <li>Your reading lives in the middle — the <strong>material</strong>.</li>
+        <li>Highlight any sentence, press <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>←</kbd> — it flies into that notebook.</li>
+        <li>Click a notebook's name to rename it. Click ⏰ to set a review reminder.</li>
+        <li><strong>— fold</strong> collapses the material so notebooks take the whole stage. Modes top-right: PAIR · QUAD · SYNC · PROGRAM.</li>
+      </ol>
+      <button class="go" id="ls-go">START THROWING →</button>
+    </div>
+  </div>
+</div>
+<!--SIM-MARKUP-END-->
+
+  <section id="cta" class="rv" data-final>
+    <div class="eyebrow"><b>09</b> · FIRST BUILD</div>
+    <h2>Feel it compiled.</h2>
+    <p>The native macOS build is in development. Leave an email — get the first build before anyone else.</p>
+    <form id="wl">
+      <input type="email" placeholder="you@fastreader.com" required>
+      <button type="submit">Get the first build</button>
+    </form>
+  </section>
+
+  <footer>LIMBIC NOTES · LOCAL-FIRST · BUILT FOR READERS WHO MOVE FAST</footer>
+</main>
+
+<!--SIM-SCRIPT-START-->
+<script>
+(function(){
+'use strict';
+var LS='limbic_sim_v2',COACH='limbic_sim_coach';
+var $=function(s){return document.querySelector(s)};
+var ROUTE={quad:{ArrowUp:'A',ArrowRight:'B',ArrowDown:'C',ArrowLeft:'D'},
+pair:{ArrowUp:'A',ArrowDown:'C'},sync:{ArrowUp:'A'},
+program:{ArrowUp:'A',ArrowRight:'B',ArrowDown:'C',ArrowLeft:'D'}};
+var GLYPH={quad:{A:'↑',B:'→',C:'↓',D:'←'},pair:{A:'↑',C:'↓'},sync:{A:'↑',C:'⇄'},program:{A:'↑',B:'→',C:'↓',D:'←'}};
+var DESC={pair:'PAIR — two notebooks beside your material. ↑ throws to the top one, ↓ to the bottom. The original reflex.',
+quad:'QUAD — material in the middle, two notebooks on each side. ↑ top-left · → top-right · ↓ bottom-right · ← bottom-left. Sorting becomes a direction.',
+sync:'SYNC — ↑ dumps raw into the top notebook. The bottom one mirrors it live; type your own layer underneath it.',
+program:'PROGRAM — notebooks as slots. Arrows still throw into notebooks; some slots run live widgets: clock, stats, reminders.'};
+var TICKS=['standup in 10 min — wrap this thread','hydrate. yes, now.','re-read the hard pile before drafting','ship it today','eyes 20ft away, 20s'];
+var DEF={A:'Keep',B:'Easy',C:'Hard',D:'Later'};
+var KEYS=['ArrowUp','ArrowRight','ArrowDown','ArrowLeft'];
+var state=load(),intervals=[];
+function load(){try{var s=JSON.parse(localStorage.getItem(LS));if(s&&s.sessions&&s.cur&&s.sessions[s.cur])return s;}catch(e){}
+var id='s'+Date.now().toString(36);var st={cur:id,mode:'quad',sound:false,folded:false,sessions:{}};st.sessions[id]=mk('Session 1');return st;}
+function mk(n){return{name:n,created:Date.now(),labels:{A:DEF.A,B:DEF.B,C:DEF.C,D:DEF.D},panes:{A:[],B:[],C:[],D:[]},rem:{A:0,B:0,C:0,D:0},edits:''};}
+function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
+function ses(){return state.sessions[state.cur];}
+function stamp(){return new Date().toLocaleTimeString('en-GB',{hour12:false});}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function inSim(sel){var n=sel?sel.anchorNode:null;return !!n&&document.getElementById('ln-sim').contains(n);}
+function md(s){return esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code>$1</code>');}
+function panesFor(m){return(m==='pair'||m==='sync')?['A','C']:['A','B','C','D'];}
+function small(){return window.innerWidth<960;}
+function layoutCfg(){
+var m=state.mode,c=state.folded;
+if(small())return(m==='pair'||m==='sync')?{cols:'1fr',areas:'"m" "a" "c"',div:[]}:{cols:'1fr',areas:'"m" "a" "b" "d" "c"',div:[]};
+if(m==='quad'||m==='program')return c?{cols:'1fr 1fr',areas:'"m m" "a b" "d c"'}
+:{cols:'minmax(170px,1fr) 1px minmax(0,2.3fr) 1px minmax(170px,1fr)',areas:'"a va m vb b" "d va m vb c"',div:[ 'va','vb' ]};
+return c?{cols:'1fr 1fr',areas:'"m m" "a c"'}:{cols:'minmax(0,2.3fr) 1px minmax(220px,1fr)',areas:'"m v a" "m v c"',div:[ 'v' ]};
+}
+function capNode(b,anim){var d=document.createElement('div');d.className='cap'+(anim?' in':'');
+d.innerHTML='<span class="t">**['+b.t+']**</span> '+md(b.text);return d;}
+function fullbleed(){var el=document.getElementById('ln-sim');if(!el)return;el.style.width='100vw';el.style.marginLeft='0';var l=el.getBoundingClientRect().left;if(l)el.style.marginLeft=(-l)+'px';}
+function clearInt(){intervals.forEach(clearInterval);intervals=[];}
+function renderAll(){
+fullbleed();
+clearInt();
+var m=state.mode;
+$('#ls-desc').textContent=DESC[m];
+document.querySelectorAll('#ls-tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.mode===m);});
+var sel=$('#ls-sessions');sel.innerHTML='';
+Object.keys(state.sessions).forEach(function(id){var o=document.createElement('option');o.value=id;o.textContent=state.sessions[id].name;sel.appendChild(o);});
+sel.value=state.cur;
+applyFold();buildGrid();buildTouch();updateMeta();updateRems();
+if(m==='program')startWidgets();
+if(m==='sync')wireEdits();
+}
+function applyFold(){
+var mat=$('#ls-mat');mat.classList.toggle('min',state.folded);
+$('#ls-grid').classList.toggle('folded',state.folded);
+$('#ls-fold').textContent=state.folded?'+ unfold':'— fold';
+$('#ls-mat-sub').textContent=state.folded?('folded · '+panesTotal()+' captures so far'):'sample essay · highlight anything';
+}
+function buildGrid(){
+var cfg=layoutCfg(),grid=$('#ls-grid');
+grid.style.gridTemplateColumns=cfg.cols;grid.style.gridTemplateAreas=cfg.areas;
+$('#ls-mat').style.gridArea='m';
+var wrap=$('#ls-panes');wrap.innerHTML='';
+(cfg.div||[]).forEach(function(g){var d=document.createElement('div');d.className='ls-div';d.style.gridArea=g;wrap.appendChild(d);});
+panesFor(state.mode).forEach(function(p){
+var pane=document.createElement('section');pane.className='ls-pane';pane.dataset.pane=p;pane.style.gridArea=p.toLowerCase();
+var h=document.createElement('header');
+h.innerHTML='<span class="ls-key">'+GLYPH[state.mode][p]+'</span>';
+var lab=document.createElement('span');lab.className='ls-label';lab.contentEditable='true';lab.spellcheck=false;lab.textContent=ses().labels[p];lab.title='click to rename';
+lab.addEventListener('blur',function(){ses().labels[p]=lab.textContent.trim()||DEF[p];save();});
+lab.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();lab.blur();}});
+var rem=document.createElement('button');rem.className='ls-rem';rem.textContent='⏰';rem.title='review reminder';
+rem.addEventListener('click',function(ev){ev.stopPropagation();openRemPop(p,rem);});
+var remb=document.createElement('span');remb.className='ls-remb';remb.dataset.remb=p;
+var n=document.createElement('span');n.className='ls-n';n.dataset.n=p;
+h.appendChild(lab);h.appendChild(rem);h.appendChild(remb);h.appendChild(n);pane.appendChild(h);
+if(state.mode==='program'&&(p==='B'||p==='D')){var w=document.createElement('div');w.className='ls-widget';w.id='ls-w-'+p;pane.appendChild(w);}
+else{var f=document.createElement('div');f.className='ls-feed';f.dataset.feed=p;
+var src=(state.mode==='sync'&&p==='C')?'A':p;
+ses().panes[src].forEach(function(b){f.appendChild(capNode(b,false));});
+pane.appendChild(f);
+if(state.mode==='sync'&&p==='C'){var ed=document.createElement('div');ed.className='ls-edits';ed.contentEditable='true';ed.dataset.edits='1';ed.textContent=ses().edits;pane.appendChild(ed);}}
+wrap.appendChild(pane);});
+}
+function wireEdits(){var ed=document.querySelector('#ln-sim [data-edits]');if(ed)ed.addEventListener('input',function(){ses().edits=ed.textContent;save();});}
+function startWidgets(){
+var wb=$('#ls-w-B'),wd=$('#ls-w-D');
+if(wb)intervals.push(setInterval(function(){var now=new Date();var el=Math.floor((Date.now()-ses().created)/60000);
+wb.innerHTML='<div class="big">'+now.toLocaleTimeString('en-GB',{hour12:false})+'</div><div class="sub">session elapsed: '+el+' min</div>';},1000));
+var ti=0;if(wd){var show=function(){wd.innerHTML='<div class="sub">REMINDER FEED · scripted</div><div class="tick">'+TICKS[ti%TICKS.length]+'</div>';ti++;};show();intervals.push(setInterval(show,4000));}
+}
+function panesTotal(){var ps=ses().panes;return ps.A.length+ps.B.length+ps.C.length+ps.D.length;}
+function appendBlock(p,b,anim){
+var feed=document.querySelector('#ln-sim [data-feed="'+p+'"]');if(!feed)return;
+feed.appendChild(capNode(b,anim));feed.scrollTop=feed.scrollHeight;}
+function ack(p){var pane=document.querySelector('#ln-sim .ls-pane[data-pane="'+p+'"]');if(!pane)return;
+pane.classList.add('ack');setTimeout(function(){pane.classList.remove('ack');},900);}
+function updateMeta(){
+['A','B','C','D'].forEach(function(p){var n=document.querySelector('#ln-sim [data-n="'+p+'"]');if(n)n.textContent=ses().panes[p].length;});
+var tot=panesTotal();$('#ls-count').textContent=tot+' capture'+(tot===1?'':'s')+' · '+ses().name;
+var now=Date.now(),v=0;['A','B','C','D'].forEach(function(p){ses().panes[p].forEach(function(b){if(now-b.at<60000)v++;});});
+$('#ls-vel').textContent=v+'/min';
+if(state.folded)$('#ls-mat-sub').textContent='folded · '+tot+' captures so far';
+}
+var toastT=null;function toast(msg){var t=$('#ls-toast');t.textContent=msg;t.classList.add('show');
+clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},2800);}
+function fmtRem(ms){var m=Math.round(ms/60000);if(m<1)return'<1m';if(m<60)return m+'m';var h=Math.round(m/60);if(h<24)return h+'h';return Math.round(h/24)+'d';}
+function updateRems(){var now=Date.now();['A','B','C','D'].forEach(function(p){var el=document.querySelector('#ln-sim [data-remb="'+p+'"]');if(!el)return;
+var r=ses().rem[p]||0;el.textContent=r>now?'⏰'+fmtRem(r-now):'';});}
+function openRemPop(p,btn){var pop=$('#ls-rempop');var now=Date.now();
+var tom=new Date();tom.setDate(tom.getDate()+1);tom.setHours(9,0,0,0);
+var opts=[['in 10 min',now+6e5],['in 1 hour',now+36e5],['tomorrow 9am',tom.getTime()],['clear',0]];
+pop.innerHTML='';opts.forEach(function(o){var b=document.createElement('button');b.textContent=o[0];
+b.addEventListener('click',function(){ses().rem[p]=o[1];save();updateRems();pop.classList.remove('show');
+toast(o[1]?('⏰ '+ses().labels[p]+' will remind you '+o[0]):('reminder cleared for '+ses().labels[p]));});pop.appendChild(b);});
+var r=btn.getBoundingClientRect();pop.style.left=Math.min(window.innerWidth-170,r.left)+'px';pop.style.top=(r.bottom+8)+'px';
+pop.classList.toggle('show');}
+document.addEventListener('click',function(e){if(!e.target.closest('#ls-rempop')&&!e.target.closest('.ls-rem'))$('#ls-rempop').classList.remove('show');});
+intervals.push(setInterval(function(){var now=Date.now();var fired=false;
+['A','B','C','D'].forEach(function(p){var r=ses().rem[p]||0;if(r&&r<=now){ses().rem[p]=0;fired=true;
+ack(p);tick();toast('⏰ '+ses().labels[p]+' is ready — '+ses().panes[p].length+' captures waiting. Review when you like.');}});
+if(fired)save();updateRems();},15000));
+var AC=null;function tick(){if(!state.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=1500;g.gain.setValueAtTime(.07,AC.currentTime);
+g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.09);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.1);}catch(e){}}
+function flashSource(sel){try{var r=sel.getRangeAt(0);var m=document.createElement('mark');m.className='ls-flash';
+r.surroundContents(m);setTimeout(function(){var par=m.parentNode;while(m.firstChild)par.insertBefore(m.firstChild,m);par.removeChild(m);},650);}catch(e){}}
+function capture(key){
+var sel=window.getSelection();var txt=sel?sel.toString().trim():'';if(!txt||!inSim(sel))return false;
+var target=ROUTE[state.mode][key];if(!target)return false;
+var b={t:stamp(),text:txt,at:Date.now()};
+ses().panes[target].push(b);save();
+flashSource(sel);appendBlock(target,b,true);
+if(state.mode==='sync')appendBlock('C',b,true);
+ack(target);tick();updateMeta();
+sel.removeAllRanges();hideCoach();return true;}
+function buildTouch(){var t=$('#ls-touch');t.innerHTML='';
+KEYS.forEach(function(k){if(!ROUTE[state.mode][k])return;var b=document.createElement('button');b.textContent=GLYPH.quad[k];
+b.addEventListener('click',function(){capture(k);});t.appendChild(b);});}
+function hideCoach(){$('#ls-coach').classList.add('hide');try{localStorage.setItem(COACH,'1');}catch(e){}}
+document.addEventListener('keydown',function(e){
+var a=document.activeElement;
+if(a&&(a.isContentEditable||/INPUT|TEXTAREA|SELECT/.test(a.tagName)))return;
+if(KEYS.indexOf(e.key)<0)return;
+var sel=window.getSelection();if(!sel||!sel.toString().trim()||!inSim(sel))return;
+e.preventDefault();capture(e.key);});
+document.addEventListener('selectionchange',function(){
+var sel=window.getSelection();var on=sel&&sel.toString().trim().length>0&&inSim(sel);
+$('#ls-touch').classList.toggle('show',on);
+$('#ls-hint').textContent=on?'throw it: ↑ → ↓ ←':'highlight in the material, then throw with ↑ → ↓ ←';});
+document.querySelectorAll('#ls-tabs button').forEach(function(b){b.addEventListener('click',function(){state.mode=b.dataset.mode;save();renderAll();});});
+$('#ls-sessions').addEventListener('change',function(){state.cur=this.value;save();renderAll();});
+$('#ls-new').addEventListener('click',function(){var id='s'+Date.now().toString(36);
+state.sessions[id]=mk('Session '+(Object.keys(state.sessions).length+1));state.cur=id;save();renderAll();});
+$('#ls-sound').addEventListener('click',function(){state.sound=!state.sound;this.textContent=state.sound?'🔊':'🔇';save();});
+$('#ls-fold').addEventListener('click',function(){state.folded=!state.folded;save();renderAll();});
+window.addEventListener('resize',function(){renderAll();});
+function buildMD(){var s=ses();var out='# Limbic Notes — '+s.name+'\n_mode: '+state.mode+' · exported '+stamp()+'_\n';
+panesFor(state.mode).forEach(function(p){out+='\n## '+GLYPH[state.mode][p]+' '+s.labels[p]+'\n';
+s.panes[p].forEach(function(b){out+='- **['+b.t+']** '+b.text+'\n';});});
+if(state.mode==='sync'&&s.edits)out+='\n## ⇄ your layer\n'+s.edits+'\n';return out;}
+$('#ls-copy').addEventListener('click',function(){var btn=this;navigator.clipboard.writeText(buildMD()).then(function(){btn.textContent='copied ✓';setTimeout(function(){btn.textContent='Copy .md';},1200);});});
+$('#ls-dl').addEventListener('click',function(){var blob=new Blob([buildMD()],{type:'text/markdown'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=ses().name.replace(/\s+/g,'_')+'.md';a.click();});
+$('#ls-go').addEventListener('click',hideCoach);
+try{if(!localStorage.getItem(COACH))$('#ls-coach').classList.remove('hide');}catch(e){}
+renderAll();
+})();
+</script>
+<!--SIM-SCRIPT-END-->
+<script>
+(function(){
+  var feed=document.getElementById('feed'), pane=document.getElementById('pane'),
+      mcount=document.getElementById('mcount'), bar=document.getElementById('focusbar'),
+      count=0, start=null, done=false;
+
+  // scroll progress
+  addEventListener('scroll',function(){
+    var h=document.documentElement;
+    document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  },{passive:true});
+
+  // reveal on scroll
+  var rv=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');rv.unobserve(e.target);}})},{threshold:.2});
+  document.querySelectorAll('.rv').forEach(function(el){rv.observe(el)});
+
+  // alt-tab tax: drain focus as steps reveal
+  var steps=document.querySelectorAll('[data-step]'), shown=0;
+  var so=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting&&!e.target.classList.contains('on')){
+      e.target.classList.add('on'); shown++;
+      bar.style.width=Math.max(100-shown*11,12)+'%';
+      so.unobserve(e.target);
+    }})},{threshold:.6});
+  steps.forEach(function(s){so.observe(s)});
+
+  // the meta-demo: auto-capture key lines as you read them
+  function stamp(){return new Date().toLocaleTimeString('en-GB',{hour12:false});}
+  function push(text,sum){
+    if(!start)start=Date.now();
+    count++;
+    var d=document.createElement('div'); d.className='cap'+(sum?' sum':'');
+    d.innerHTML='<span class="t">'+(sum?'Σ ':'↧ ')+stamp()+'</span>'+text;
+    feed.appendChild(d);
+    while(feed.children.length>8)feed.removeChild(feed.firstChild);
+    feed.scrollTop=feed.scrollHeight;
+    mcount.textContent='● '+count+' CAPTURED';
+    if(!sum&&pane){pane.classList.remove('glow');void pane.offsetWidth;pane.classList.add('glow');}
+  }
+  var co=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){push(e.target.getAttribute('data-capture'));co.unobserve(e.target);}
+  })},{threshold:.8});
+  document.querySelectorAll('[data-capture]').forEach(function(el){co.observe(el)});
+
+  // closing summary when reader reaches the end
+  var fo=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting&&!done){done=true;
+      var secs=Math.round((Date.now()-start)/1000);
+      push('You captured '+count+' key lines in '+secs+'s — without stopping once. That\'s the product.',true);
+      fo.disconnect();}
+  })},{threshold:.5});
+  fo.observe(document.querySelector('[data-final]'));
+
+  // keycaps light up on real arrow presses
+  var map={ArrowUp:['k-up','k-up2'],ArrowDown:['k-down','k-down2'],ArrowLeft:['k-left'],ArrowRight:['k-right']};
+  addEventListener('keydown',function(e){
+    (map[e.key]||[]).forEach(function(id){
+      var k=document.getElementById(id); if(!k)return;
+      k.classList.add('pressed'); setTimeout(function(){k.classList.remove('pressed')},160);
+    });
+  });
+
+  // waitlist
+  document.getElementById('wl').addEventListener('submit',function(e){
+    e.preventDefault();
+    var em=this.querySelector('input').value;
+    try{var w=JSON.parse(localStorage.getItem('fs_waitlist')||'[]');w.push({em:em,at:Date.now()});localStorage.setItem('fs_waitlist',JSON.stringify(w));}catch(_){}
+    this.innerHTML='<p style="color:var(--accent);font-weight:600">You\'re in. First build lands in your inbox. ↧</p>';
+  });
+})();
+</script>
+</body>
+</html>

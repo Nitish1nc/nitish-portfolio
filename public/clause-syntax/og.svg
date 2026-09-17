@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09090b"/>
+      <stop offset="0.55" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="arc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="0.85" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="980" cy="120" r="200" fill="#6366f1" opacity="0.12"/>
+  <circle cx="180" cy="520" r="160" fill="#8b5cf6" opacity="0.1"/>
+  <text x="80" y="100" font-family="system-ui, sans-serif" font-size="20" fill="#a1a1aa" letter-spacing="0.14em">NITISH CHAUHAN</text>
+  <text x="80" y="460" font-family="Georgia, serif" font-size="54" fill="#fafafa">Why Some Writing Sounds Like Talking</text>
+  <text x="80" y="520" font-family="system-ui, sans-serif" font-size="26" fill="#a78bfa">Prosodic Cognitive Simulation</text>
+  <text x="80" y="565" font-family="system-ui, sans-serif" font-size="18" fill="#71717a">www.nitishchauhan.com/clause-syntax</text>
+  <path d="M520 280 L640 280" stroke="rgba(255,255,255,0.22)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="640" y1="252" x2="640" y2="308" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+  <path d="M700 280 C 800 220, 900 220, 1000 260 S 1100 300, 1120 270" fill="none" stroke="url(#arc)" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="1120" cy="270" r="9" fill="#8b5cf6"/>
+</svg>

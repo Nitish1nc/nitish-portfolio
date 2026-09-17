@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>The Chat Window Isn't the Brain: Face vs Engine in AI Tools - NitishLabs</title>
+ <meta name="description" content="The chat app is the face. The agent layer is the engine. Keep messaging. Architecture beats tool tribalism." />
+ <meta name="theme-color" content="#09090b" />
+ <link rel="canonical" href="https://labs.nitishchauhan.com/posts/hermes-openwebui-middleware.html" />
+ <meta property="og:title" content="The Chat Window Isn't the Brain: Face vs Engine in AI Tools" />
+ <meta property="og:description" content="The chat app is the face. The agent layer is the engine. Keep messaging. Architecture beats tool tribalism." />
+ <meta property="og:url" content="https://labs.nitishchauhan.com/posts/hermes-openwebui-middleware.html" />
+ <meta property="og:type" content="article" />
+ <meta property="og:image" content="https://labs.nitishchauhan.com/posts/hermes-openwebui-middleware/carousel/cover.png" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="The Chat Window Isn't the Brain: Face vs Engine in AI Tools" />
+ <meta name="twitter:description" content="The chat app is the face. The agent layer is the engine. Keep messaging. Architecture beats tool tribalism." />
+ <meta name="twitter:image" content="https://labs.nitishchauhan.com/posts/hermes-openwebui-middleware/carousel/cover.png" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../assets/tailwind.css?v=20260807p" />
+ <link rel="stylesheet" href="../assets/labs.css?v=20260807p" />
+</head>
+<body class="antialiased">
+ <div data-labs-nav data-labs-variant="article"></div>
+
+ 
+
+ <main class="pt-24 pb-24">
+ <article class="max-w-3xl mx-auto px-6">
+ <header class="article-header">
+ <div class="meta-row">
+ <span class="meta-chip">Experiments</span>
+ <span>Jul 20, 2026</span>
+ <span class="meta-sep">·</span>
+ <span>Nitish Chauhan</span>
+ </div>
+ <h1 class="heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-5 leading-[1.15]">
+ The Chat Window Isn't the Brain: Face vs Engine in AI Tools
+ </h1>
+ <p class="text-lg text-zinc-400 leading-relaxed">
+ Open WebUI is more of an interface. Hermes is more on the middleware side. End of day, people tool out what they like - architecture still decides who wins.
+ </p>
+ </header>
+
+ <figure class="post-cover" data-labs-cover="hermes-openwebui-middleware/carousel" data-labs-cover-alt="The Chat Window Isn't the Brain: Face vs Engine in AI Tools" data-labs-loading="eager" aria-label="Post cover"></figure>
+
+
+
+ <div class="prose-labs">
+ <p>
+ Tool debates get noisy because people compare layers as if they were peers. Nitish Chauhan's working distinction is cleaner: Open WebUI is primarily a face / session interface. Hermes is the agentic loop, memory, and tool-execution middleware. You can run either alone. You can also stack them.
+ </p>
+
+ <h2>The stack, without mystique</h2>
+ <pre>Phone / browser / Telegram
+ ↓
+ Open WebUI (face)
+ ↓ OpenAI-compatible API
+ Hermes (brains + tools + memory)
+ ↓
+ VPS / files / shell / search</pre>
+ <p>
+ Prompt lands in the UI. UI posts to Hermes. Hermes decides whether to use tools, executes, and streams results back. Same agent, better surface area.
+ </p>
+
+ <h2>Where it sits on a real VPS</h2>
+ <p>
+ If you already own a domain, a VPS, Nextcloud, and a Hermes agent on Telegram, Open WebUI does not replace the whole world. It becomes another door into the same brain - usually on a subdomain, behind HTTPS, next to your other services.
+ </p>
+ <ul>
+ <li><strong class="text-zinc-300">Hermes:</strong> persistent agent, tools, memory, multi-channel gateway.</li>
+ <li><strong class="text-zinc-300">Open WebUI:</strong> richer history, uploads, structured sessions, desktop-grade chat.</li>
+ <li><strong class="text-zinc-300">Telegram:</strong> fast, low-friction mobile pings. Keep it if it earns its keep.</li>
+ <li><strong class="text-zinc-300">Nextcloud:</strong> files and sync. Different job. Same real estate.</li>
+ </ul>
+ <blockquote>
+ You do not need to delete Telegram to get a better interface. Channels can coexist.
+ </blockquote>
+
+ <h2>Mobile reality check</h2>
+ <p>
+ On Android, a native client like Conduit often feels better than a browser wrapper: WebSocket streaming, cleaner auth storage, share-sheet into prompts, voice call mode. The PWA remains a solid fallback and usually tracks new Open WebUI features faster. Voice mode does not magically burn extra LLM tokens by itself - speech becomes text first - but external STT/TTS providers can add separate costs, and chat UIs that spawn follow-up suggestion calls can inflate session usage.
+ </p>
+
+ <table>
+ <thead>
+ <tr><th>Layer</th><th>Job</th><th>Failure mode</th></tr>
+ </thead>
+ <tbody>
+ <tr><td>Interface</td><td>Human access</td><td>Pretty chat, weak agent</td></tr>
+ <tr><td>Middleware</td><td>Tools + memory + loop</td><td>Powerful brain, clumsy door</td></tr>
+ <tr><td>Infra</td><td>VPS, HTTPS, storage</td><td>Cool stack, unreachable phone</td></tr>
+ </tbody>
+ </table>
+
+ <h2>The NitishLabs take</h2>
+ <p>
+ People will tool out what they like. Fine. Just do not confuse the face with the nervous system. Build the middleware once. Attach interfaces based on context: Telegram for quick hits, WebUI for deep work, native mobile when the browser starts fighting you. That is systems thinking applied to agent UX - not another loyalty test for a logo.
+ </p>
+ </div>
+
+ 
+ </article>
+ </main>
+ <div data-labs-footer data-labs-variant="article"></div>
+
+ <script src="../assets/covers.js?v=20260807p"></script>
+ <script src="../assets/shell.js?v=20260807p"></script>
+</body>
+</html>

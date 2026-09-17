@@ -1,0 +1,48 @@
+{
+ "brand": "NitishLabs",
+ "updated": "2026-08-07",
+ "pinnedIdeas": [
+ {
+ "title": "Mental Models Reality Engine",
+ "excerpt": "Make the math feel real: flip what the brain expects against cold statistical reality until the gap is hard to unsee. Current priority interactive for Nitish Chauhan.",
+ "tag": "mental-models",
+ "whyItMatters": "The ten models are scaffolding. The product is the visceral flip - and a reusable template for any model.",
+ "sourceNote": "Library Final - Mental Models Visceral Math; Labs reality-engine/"
+ },
+ {
+ "title": "Cognitive Output Exceeds Execution Capacity",
+ "excerpt": "The core NitishLabs constraint: insight generation outruns packaging, shipping, and return loops. Hundreds of chats and voice dumps stay private not from laziness, but because publishing one idea can feel like amputating the rest of the tree.",
+ "tag": "systems",
+ "whyItMatters": "The bottleneck isn’t motivation - it’s closed-loop architecture so exploration can land without killing the generator.",
+ "sourceNote": "Context/00_START_HERE.md; Cognitive-OS-Checkpoint notes/🤔-Whats-Nitish-Up-To-2026-06-23.md"
+ },
+ {
+ "title": "Human Systems Strategist (Not Consultancy Theatre)",
+ "excerpt": "Positioning locked: executive thinking partner / systems coach for individuals. Sell sessions where one reframe changes how someone sees their system - not B2B deliverables, fluff coaching worksheets, or motivational slogans.",
+ "tag": "positioning",
+ "whyItMatters": "What I’m building toward: spatial/systems facilitation with psychology + AI tooling. Sprints over slow linear advice.",
+ "sourceNote": "Cognitive-OS-Checkpoint/checkpoints/002-voice-pivot/CHECKPOINT-002.md; NitishLife/memory/full/human-systems-engineer.md"
+ },
+ {
+ "title": "Exploration First, Packaging Second",
+ "excerpt": "Tell Nitish Chauhan to sit and write a post and the system resists. Give four days of free exploration and he produces a month of material. Agents compile and distribute; they don't replace the wild pass.",
+ "tag": "workflow",
+ "whyItMatters": "Wrong order looks like inconsistency. Right order is a production advantage - design the calendar around that wiring.",
+ "sourceNote": "Cognitive-OS-Checkpoint notes/🤔-Whats-Nitish-Up-To-2026-06-23.md; CHECKPOINT-002.md (single-person risk / agent compile)"
+ },
+ {
+ "title": "Deliberate Structure for Diving Into the Unknown",
+ "excerpt": "Feature videos bore you out of using the tool; Reddit locks you to one story. The fix: treat tool features as nodes, map human problems they solve, then sample many processes that share that node - capability branching with feedback, not isolated chamber brainstorming.",
+ "tag": "learning",
+ "whyItMatters": "A portable method for tool mastery and creative transfer without inefficient wander or process-course tunnel vision.",
+ "sourceNote": "Downloads/ChatGPT-20.2 Process vs Capability Learning.txt"
+ },
+ {
+ "title": "Integrity Skills ≠ Attraction Skills",
+ "excerpt": "Boundaries, values, and an internal code of conduct are teachable systems properties - and they are not the same skill stack as warmth, playfulness, or relational ease. Romantic outcome is a poor final exam for either.",
+ "tag": "mental-models",
+ "whyItMatters": "Keeps relationship / masculinity content professional and falsifiable: document principles while growing expression, instead of equating moral clarity with social proof.",
+ "sourceNote": "Downloads/ChatGPT-20.6 Truth about love and relationships.md (high-level framing only)"
+ }
+ ]
+}

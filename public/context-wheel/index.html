@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context Wheel, a radial app switcher for macOS</title>
+<meta name="description" content="Feel the tax of the app strip, then ride the wheel. A live simulation of Context Wheel, a radial app switcher for macOS.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nitish Chauhan">
+<meta property="og:title" content="Context Wheel, a radial app switcher for macOS">
+<meta property="og:description" content="Feel the tax of the app strip, then ride the wheel.">
+<meta property="og:url" content="https://www.nitishchauhan.com/context-wheel/">
+<meta property="og:image" content="https://www.nitishchauhan.com/context-wheel/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Context Wheel, a radial app switcher for macOS">
+<meta name="twitter:image" content="https://www.nitishchauhan.com/context-wheel/og-image.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="toast"></div>
+
+<header id="act-hero">
+  <p class="kicker">a radial app switcher for macOS</p>
+  <h1>You switch apps a hundred times a day.</h1>
+  <p class="lede">Every switch is a small tax: hold, scan, tap, release, hope. Feel the tax for five rounds, then meet the wheel that ends it.</p>
+  <button id="hero-cta" class="cta">Take the five-round tab test</button>
+  <p class="scroll-cue">scroll</p>
+</header>
+
+<section id="act-game">
+  <h2>Act 1, the tab tax</h2>
+  <p class="section-lede">Hold Option to summon the strip. Each tap of Tab steps the highlight. Release to commit, exactly like the real thing. Land on the app named above the strip. Five rounds, and we count everything.</p>
+  <div class="game-shell">
+    <div class="hud">
+      <span id="hud-round">round 0 of 5</span>
+      <span id="hud-presses">tab presses 0</span>
+      <span id="hud-misses">misses 0</span>
+      <span id="hud-time">0.0s</span>
+    </div>
+    <div class="target">land on <canvas id="target-icon"></canvas> <b id="target-name"></b></div>
+    <div id="game-panel" class="panel"></div>
+    <div id="game-nudge" class="nudge"></div>
+    <div class="game-controls">
+      <button id="game-start" class="cta small">start the test</button>
+      <button id="game-hold" class="hold">HOLD, like Option</button>
+      <button id="game-tab" class="hold">tap, like Tab</button>
+      <button id="game-stop" class="ghost">stop</button>
+    </div>
+    <div id="game-end" class="end hidden">
+      <h3>The bill</h3>
+      <p class="end-stats"><b id="end-presses">0</b> tab presses · <b id="end-misses">0</b> misses · <b id="end-time">0</b> seconds</p>
+      <p id="end-line"></p>
+      <button id="game-exit" class="cta small">show me the way out</button>
+    </div>
+  </div>
+</section>
+
+<section id="act-essay">
+  <h2>Act 2, why the strip feels bad</h2>
+  <div class="essay-grid">
+    <div class="stage-wrap">
+      <div id="stage">
+        <div id="stage-hub"><b id="stage-hub-letter"></b><span id="stage-hub-name"></span></div>
+        <div id="stage-chip"></div>
+      </div>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="0">
+        <h3>The strip is a queue, not a map.</h3>
+        <p>Order follows recency, so the positions reshuffle on every use. Your fingers never learn a place, because the place never stays.</p>
+      </div>
+      <div class="beat" data-step="1">
+        <h3>Every switch is a counted tax.</h3>
+        <p>Nine apps in a line means up to eight taps to reach the last one. The strip makes you pay distance in keypresses.</p>
+      </div>
+      <div class="beat" data-step="2">
+        <h3>A circle has no ends.</h3>
+        <p>Put the same nine apps on a ring and every app sits one short move from you. Hub topology: stable angles, equal distance, and the wheel turns to meet your hand.</p>
+      </div>
+      <div class="beat" data-step="3">
+        <h3>One key, one app.</h3>
+        <p>Pin a badge to every app and switching becomes recognition, not recall. You stop counting presses. You press the key and arrive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="act-sim">
+  <h2>Act 3, ride the wheel</h2>
+  <p class="section-lede">Press Fn, or tap the button, to open the wheel over a mock desktop. Move the pointer and the wheel turns to meet you. Scroll to spin. A badge key or a click lands you. Esc puts it away.</p>
+  <div id="sim-desktop">
+    <div class="menubar"><span class="menu-dot"></span> context wheel sim</div>
+    <div class="win focus" data-app="chrome" style="left:6%; top:10%;">
+      <div class="win-bar"><i></i><i></i><i></i><b>Chrome</b></div>
+      <div class="win-body"></div>
+    </div>
+    <div class="win" data-app="obsidian" style="left:50%; top:18%;">
+      <div class="win-bar"><i></i><i></i><i></i><b>Obsidian</b></div>
+      <div class="win-body vault"></div>
+    </div>
+    <div class="win" data-app="terminal" style="left:24%; top:48%;">
+      <div class="win-bar"><i></i><i></i><i></i><b>Terminal</b></div>
+      <div class="win-body term"></div>
+    </div>
+    <canvas id="wheel-canvas"></canvas>
+  </div>
+  <div class="sim-bar">
+    <button id="sim-open" class="cta small">open the wheel, Fn</button>
+    <span class="hint">move to spin · scroll to turn · badge key or click lands · Esc closes</span>
+    <button id="badge-toggle" class="ghost">badges: 1</button>
+  </div>
+</section>
+
+<section id="act-close">
+  <h2 class="brand">Context Wheel</h2>
+  <p class="lede">Nine recent apps on a ring, a badge on every icon, and a wheel that comes to you. Built on Hammerspoon for macOS. This page is a live simulation of the real module.</p>
+  <p class="fine">prototype by Nitish Chauhan · the macOS build opens on Ctrl+Alt+Space · nitishchauhan.com</p>
+</section>
+
+<div id="mod-drawer">
+  <button id="mod-pill">modules</button>
+  <ul id="mod-list"></ul>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/apps.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/wheel.js"></script>
+<script src="js/render.js"></script>
+<script src="js/game.js"></script>
+<script src="js/scroll.js"></script>
+<script src="js/input.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
