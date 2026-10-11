@@ -9,15 +9,35 @@
   <title>Thinking things through</title>
   <meta name="description" content="A personal prototype. A desk that remembers where each card started, where you tried it, and where you left it.">
   <meta name="theme-color" content="#f2f0ea">
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("desk-theme");
+        var color = { dusk: "#e7e2f2", night: "#1c1b18", grove: "#e7eee4" };
+        if (color[theme]) {
+          document.documentElement.dataset.theme = theme;
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", color[theme]);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f2f0ea'/%3E%3Crect x='7' y='8' width='12' height='9' rx='2' fill='%23ece7f5' stroke='%23d8d4ca'/%3E%3Crect x='13' y='15' width='12' height='9' rx='2' fill='%23f4efe4' stroke='%23d8d4ca'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/desk.css">
+  <link rel="stylesheet" href="css/desk.css?v=3">
 </head>
 <body>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
   <header id="topbar">
     <p class="who">Nitish Chauhan</p>
-    <p class="mark">Prototype</p>
+    <div class="tools">
+      <p class="mark">Prototype</p>
+      <div class="themes" role="radiogroup" aria-label="Theme">
+        <button type="button" role="radio" data-theme="paper" aria-checked="true" aria-label="Paper" title="Paper"><i></i></button>
+        <button type="button" role="radio" data-theme="dusk" aria-checked="false" aria-label="Dusk" title="Dusk"><i></i></button>
+        <button type="button" role="radio" data-theme="night" aria-checked="false" aria-label="Night" title="Night"><i></i></button>
+        <button type="button" role="radio" data-theme="grove" aria-checked="false" aria-label="Grove" title="Grove"><i></i></button>
+      </div>
+    </div>
   </header>
 
   <div class="layout">
@@ -150,6 +170,6 @@
   <noscript>
     <p class="noscript">This prototype moves the cards with a script.</p>
   </noscript>
-  <script src="js/desk.js"></script>
+  <script src="js/desk.js?v=3"></script>
 </body>
 </html>

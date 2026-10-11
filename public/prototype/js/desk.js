@@ -53,7 +53,6 @@ let lock = null;
 let drag = null;
 let tidying = false;
 let tidyTimer = 0;
-let shown = { note: [360, 200], pdf: [400, 340], idea: [740, 120] };
 let near = false;
 let briefKey = "";
 let raf = 0;
@@ -124,51 +123,176 @@ function membersFor(t) {
   return ["note", "pdf"];
 }
 
-function setXY(el, x, y, animate) {
+function setPx(el, left, top, animate) {
+  const write = () => {
+    el.style.left = left + "px";
+    el.style.top = top + "px";
+  };
   const wasLive = el.classList.contains("is-live");
   if (!animate || reduce) {
     el.classList.add("is-live");
-    el.style.setProperty("--x", x);
-    el.style.setProperty("--y", y);
+    write();
     return;
   }
   el.classList.remove("is-live");
-  if (wasLive) {
-    requestAnimationFrame(() => {
-      el.style.setProperty("--x", x);
-      el.style.setProperty("--y", y);
-    });
-  } else {
-    el.style.setProperty("--x", x);
-    el.style.setProperty("--y", y);
-  }
+  if (wasLive) requestAnimationFrame(write);
+  else write();
 }
 
-function box(x, y) {
-  const w = board.clientWidth;
-  const h = board.clientHeight;
-  const cw = cards.note.offsetWidth;
-  const ch = cards.note.offsetHeight;
+function cardSize() {
+  return { w: cards.note.offsetWidth, h: cards.note.offsetHeight };
+}
+
+function pxFrom(x, y) {
+  const size = cardSize();
+  const bw = board.clientWidth;
+  const bh = board.clientHeight;
   return {
-    left: (x / 1000) * (w - cw),
-    top: (y / 560) * (h - ch),
-    width: cw,
-    height: ch,
+    left: (x / 1000) * Math.max(bw - size.w, 0),
+    top: (y / 560) * Math.max(bh - size.h, 0),
+    width: size.w,
+    height: size.h,
   };
 }
 
-function placeHalo(names, pose, animate) {
-  const boxes = names.map((name) => box(pose[name][0], pose[name][1]));
-  const pad = board.clientWidth < 580 ? 10 : 22;
-  const left = Math.min(...boxes.map((b) => b.left)) - pad;
-  const top = Math.min(...boxes.map((b) => b.top)) - pad;
-  const right = Math.max(...boxes.map((b) => b.left + b.width)) + pad;
-  const bottom = Math.max(...boxes.map((b) => b.top + b.height)) + pad;
+function overlaps(a, b, gap) {
+  const xPen = Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left);
+  const yPen = Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top);
+  return xPen + gap > 0 && yPen + gap > 0;
+}
+
+/* The design y maps into (board height - card height), so a short board
+   collapses a vertical pile into overlapping text. Push the later card
+   until a real gap remains, then shift the group back inside the board. */
+function separate(items, gap) {
+  for (let pass = 0; pass < 4; pass++) {
+    const list = items.slice().sort((a, b) => a.top - b.top || a.left - b.left);
+    let moved = false;
+    for (let i = 0; i < list.length; i++) {
+      for (let j = 0; j < i; j++) {
+        const a = list[j];
+        const b = list[i];
+        const xPen = Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left);
+        const yPen = Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top);
+        const xNeed = xPen + gap;
+        const yNeed = yPen + gap;
+        if (xNeed <= 0 || yNeed <= 0) continue;
+        if (yNeed <= xNeed) b.top += yNeed;
+        else if (b.left >= a.left) b.left += xNeed;
+        else a.left += xNeed;
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+}
+
+function fitInside(items, margin) {
+  const bw = board.clientWidth;
+  const bh = board.clientHeight;
+  if (!items.length || bw < 1 || bh < 1) return;
+  let minL = Math.min(...items.map((i) => i.left));
+  let maxR = Math.max(...items.map((i) => i.left + i.width));
+  let minT = Math.min(...items.map((i) => i.top));
+  let maxB = Math.max(...items.map((i) => i.top + i.height));
+  const roomX = bw - margin * 2;
+  const roomY = bh - margin * 2;
+  if (maxR - minL > roomX && maxR > minL) {
+    const scale = roomX / (maxR - minL);
+    const mid = (minL + maxR) / 2;
+    items.forEach((i) => {
+      const c = i.left + i.width / 2;
+      i.left = mid + (c - mid) * scale - i.width / 2;
+    });
+  } else {
+    if (minL < margin) items.forEach((i) => { i.left += margin - minL; });
+    maxR = Math.max(...items.map((i) => i.left + i.width));
+    if (maxR > bw - margin) items.forEach((i) => { i.left -= maxR - (bw - margin); });
+  }
+  minT = Math.min(...items.map((i) => i.top));
+  maxB = Math.max(...items.map((i) => i.top + i.height));
+  if (maxB - minT > roomY && maxB > minT) {
+    const scale = roomY / (maxB - minT);
+    const mid = (minT + maxB) / 2;
+    items.forEach((i) => {
+      const c = i.top + i.height / 2;
+      i.top = mid + (c - mid) * scale - i.height / 2;
+    });
+  } else {
+    if (minT < margin) items.forEach((i) => { i.top += margin - minT; });
+    maxB = Math.max(...items.map((i) => i.top + i.height));
+    if (maxB > bh - margin) items.forEach((i) => { i.top -= maxB - (bh - margin); });
+  }
+  items.forEach((i) => {
+    i.left = clamp(i.left, 0, Math.max(0, bw - i.width));
+    i.top = clamp(i.top, 0, Math.max(0, bh - i.height));
+  });
+}
+
+function clearGhost(box, blockers) {
+  const gap = 14;
+  const bw = board.clientWidth;
+  const bh = board.clientHeight;
+  const fits = (left, top) => {
+    if (left < 0 || top < 0 || left + box.width > bw + 0.5 || top + box.height > bh + 0.5) return false;
+    const candidate = { left, top, width: box.width, height: box.height };
+    return !blockers.some((card) => overlaps(candidate, card, gap));
+  };
+  if (fits(box.left, box.top)) return { ...box };
+  const minT = Math.min(...blockers.map((card) => card.top));
+  const maxB = Math.max(...blockers.map((card) => card.top + card.height));
+  const minL = Math.min(...blockers.map((card) => card.left));
+  const maxR = Math.max(...blockers.map((card) => card.left + card.width));
+  const options = [
+    { left: box.left, top: minT - box.height - gap },
+    { left: box.left, top: maxB + gap },
+    { left: minL - box.width - gap, top: box.top },
+    { left: maxR + gap, top: box.top },
+    { left: maxR + gap, top: maxB - box.height },
+    { left: minL - box.width - gap, top: minT },
+    { left: 0, top: 0 },
+    { left: bw - box.width, top: 0 },
+    { left: 0, top: bh - box.height },
+    { left: bw - box.width, top: bh - box.height },
+  ];
+  let best = null;
+  let bestD = Infinity;
+  for (const option of options) {
+    const left = clamp(option.left, 0, Math.max(0, bw - box.width));
+    const top = clamp(option.top, 0, Math.max(0, bh - box.height));
+    if (!fits(left, top)) continue;
+    const dist = Math.hypot(left - box.left, top - box.top);
+    if (dist < bestD) {
+      best = { left, top, width: box.width, height: box.height };
+      bestD = dist;
+    }
+  }
+  if (best) return best;
+  return {
+    left: clamp(box.left, 0, Math.max(0, bw - box.width)),
+    top: clamp(box.top, 0, Math.max(0, bh - box.height)),
+    width: box.width,
+    height: box.height,
+  };
+}
+
+function placeHalo(names, boxes, animate) {
+  const found = names.map((name) => boxes[name]).filter(Boolean);
+  if (!found.length) return;
+  const pad = board.clientWidth < 580 ? 10 : 16;
+  let left = Math.min(...found.map((b) => b.left)) - pad;
+  let top = Math.min(...found.map((b) => b.top)) - pad;
+  let right = Math.max(...found.map((b) => b.left + b.width)) + pad;
+  let bottom = Math.max(...found.map((b) => b.top + b.height)) + pad;
+  left = Math.max(4, left);
+  top = Math.max(4, top);
+  right = Math.min(board.clientWidth - 4, right);
+  bottom = Math.min(board.clientHeight - 4, bottom);
   halo.classList.toggle("is-live", !animate || reduce);
   halo.style.left = left + "px";
   halo.style.top = top + "px";
-  halo.style.width = right - left + "px";
-  halo.style.height = bottom - top + "px";
+  halo.style.width = Math.max(0, right - left) + "px";
+  halo.style.height = Math.max(0, bottom - top) + "px";
 }
 
 function timeLabel(t) {
@@ -279,31 +403,56 @@ function render() {
     pose.pdf = map.place.pdf.slice();
     pose.idea = map.place.idea.slice();
   }
-  if (drag) pose.idea = shown.idea.slice();
 
-  setXY(cards.note, pose.note[0], pose.note[1], !follow);
-  setXY(cards.pdf, pose.pdf[0], pose.pdf[1], !follow);
-  setXY(cards.idea, pose.idea[0], pose.idea[1], !follow && !drag);
-  shown = { note: pose.note.slice(), pdf: pose.pdf.slice(), idea: pose.idea.slice() };
+  const items = ["note", "pdf", "idea"].map((name) => ({ name, ...pxFrom(pose[name][0], pose[name][1]) }));
+  if (showLink) items.push({ name: "link", ...pxFrom(map.place.link[0], map.place.link[1]) });
+  if (drag) {
+    const ideaItem = items.find((item) => item.name === "idea");
+    ideaItem.left = drag.left;
+    ideaItem.top = drag.top;
+  }
+  const loose = drag ? items.filter((item) => item.name !== "idea") : items;
+  const onTrail = (section === "trail" || lock) && !tidying;
+  const haloOn = onTrail || section === "group" || section === "ask" || section === "close" || Boolean(drag && near);
+  separate(loose, 14);
+  fitInside(loose, haloOn ? (narrow ? 12 : 18) : 8);
+  if (drag) {
+    const size = cardSize();
+    const ideaItem = items.find((item) => item.name === "idea");
+    ideaItem.left = clamp(drag.left, 0, Math.max(0, board.clientWidth - size.w));
+    ideaItem.top = clamp(drag.top, 0, Math.max(0, board.clientHeight - size.h));
+  }
+
+  const boxes = {};
+  items.forEach((item) => { boxes[item.name] = item; });
+  ["note", "pdf", "idea"].forEach((name) => {
+    const box = boxes[name];
+    cards[name].style.zIndex = name === "idea" && drag ? "6" : String(4 + Math.round((board.clientHeight - box.top) / 4));
+    setPx(cards[name], box.left, box.top, name === "idea" ? !follow && !drag : !follow);
+  });
 
   link.classList.toggle("is-shown", showLink);
-  const linkAt = showLink ? map.place.link : map.link;
-  setXY(cards.link, linkAt[0], showLink ? linkAt[1] : linkAt[1] - 90, showLink);
+  if (showLink) {
+    cards.link.style.zIndex = "5";
+    setPx(cards.link, boxes.link.left, boxes.link.top, !follow);
+  } else {
+    const parked = pxFrom(map.link[0], map.link[1] - 90);
+    setPx(cards.link, parked.left, parked.top, false);
+  }
 
-  const onTrail = (section === "trail" || lock) && !tidying;
   const g0 = onTrail ? (t <= 0.5 ? t / 0.5 : Math.max(0, 1 - (t - 0.5) / 0.4)) * 0.72 : 0;
   const g1 = onTrail ? (t <= 0.5 ? 0 : (t - 0.5) / 0.5) * 0.72 : 0;
-  ghostStart.style.setProperty("--x", map.started.idea[0]);
-  ghostStart.style.setProperty("--y", map.started.idea[1]);
-  ghostTried.style.setProperty("--x", map.tried.idea[0]);
-  ghostTried.style.setProperty("--y", map.tried.idea[1]);
-  ghostStart.classList.toggle("is-live", follow);
-  ghostTried.classList.toggle("is-live", follow);
+  const blockers = ["note", "pdf", "idea"].map((name) => boxes[name]);
+  if (showLink) blockers.push(boxes.link);
+  const gStart = clearGhost(pxFrom(map.started.idea[0], map.started.idea[1]), blockers);
+  const gTried = clearGhost(pxFrom(map.tried.idea[0], map.tried.idea[1]), g0 > 0.05 ? blockers.concat([gStart]) : blockers);
+  setPx(ghostStart, gStart.left, gStart.top, !follow);
+  setPx(ghostTried, gTried.left, gTried.top, !follow);
   ghostStart.style.opacity = String(g0);
   ghostTried.style.opacity = String(g1);
 
   const names = membersFor(t);
-  placeHalo(names, pose, !follow);
+  placeHalo(names, boxes, !follow);
   document.body.classList.toggle("is-near", Boolean(drag && near));
   document.body.classList.toggle("is-locked", Boolean(lock));
 
@@ -311,7 +460,14 @@ function render() {
   idea.classList.toggle("is-stamped", stampOn);
   if (stampOn) {
     const storyT = lock || section === "trail" ? t : 0.5;
-    const point = drag ? pose.idea : poseAt(STORY, storyT).idea;
+    let point = poseAt(STORY, storyT).idea;
+    if (drag) {
+      const size = cardSize();
+      point = [
+        (drag.left / Math.max(board.clientWidth - size.w, 1)) * 1000,
+        (drag.top / Math.max(board.clientHeight - size.h, 1)) * 560,
+      ];
+    }
     stampEl.textContent = stampText(point, storyT);
   }
 
@@ -342,17 +498,6 @@ function requestRender() {
   });
 }
 
-function pointFromEvent(event) {
-  const rect = board.getBoundingClientRect();
-  const cw = cards.note.offsetWidth;
-  const ch = cards.note.offsetHeight;
-  const px = event.clientX - rect.left - drag.ox;
-  const py = event.clientY - rect.top - drag.oy;
-  const x = clamp((px / Math.max(rect.width - cw, 1)) * 1000, 0, 1000);
-  const y = clamp((py / Math.max(rect.height - ch, 1)) * 560, 0, 560);
-  return [x, y];
-}
-
 function clamp(n, a, b) {
   return Math.min(b, Math.max(a, n));
 }
@@ -361,11 +506,13 @@ idea.addEventListener("pointerdown", (event) => {
   if (event.button !== undefined && event.button !== 0) return;
   tidying = false;
   clearTimeout(tidyTimer);
-  const rect = board.getBoundingClientRect();
-  const current = box(shown.idea[0], shown.idea[1]);
+  const rect = idea.getBoundingClientRect();
+  const boardRect = board.getBoundingClientRect();
   drag = {
-    ox: event.clientX - rect.left - current.left,
-    oy: event.clientY - rect.top - current.top,
+    ox: event.clientX - rect.left,
+    oy: event.clientY - rect.top,
+    left: rect.left - boardRect.left,
+    top: rect.top - boardRect.top,
   };
   idea.setPointerCapture(event.pointerId);
   idea.classList.add("is-dragging");
@@ -374,12 +521,14 @@ idea.addEventListener("pointerdown", (event) => {
 
 idea.addEventListener("pointermove", (event) => {
   if (!drag) return;
-  shown.idea = pointFromEvent(event);
-  const ideaBox = box(shown.idea[0], shown.idea[1]);
-  const noteBox = box(shown.note[0], shown.note[1]);
-  const dx = ideaBox.left + ideaBox.width / 2 - (noteBox.left + noteBox.width / 2);
-  const dy = ideaBox.top + ideaBox.height / 2 - (noteBox.top + noteBox.height / 2);
-  near = Math.hypot(dx, dy) < Math.max(ideaBox.width, ideaBox.height) * 0.9;
+  const rect = board.getBoundingClientRect();
+  const size = cardSize();
+  drag.left = clamp(event.clientX - rect.left - drag.ox, 0, Math.max(0, rect.width - size.w));
+  drag.top = clamp(event.clientY - rect.top - drag.oy, 0, Math.max(0, rect.height - size.h));
+  const noteRect = cards.note.getBoundingClientRect();
+  const dx = rect.left + drag.left + size.w / 2 - (noteRect.left + noteRect.width / 2);
+  const dy = rect.top + drag.top + size.h / 2 - (noteRect.top + noteRect.height / 2);
+  near = Math.hypot(dx, dy) < Math.max(size.w, size.h) * 0.9;
   requestRender();
 });
 
@@ -447,4 +596,26 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 chapters.forEach((chapter) => revealObserver.observe(chapter));
 
+const THEME_COLOR = { paper: "#f2f0ea", dusk: "#e7e2f2", night: "#1c1b18", grove: "#e7eee4" };
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+const themeButtons = [...document.querySelectorAll(".themes button")];
+
+function applyTheme(name) {
+  const theme = THEME_COLOR[name] ? name : "paper";
+  if (theme === "paper") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = theme;
+  themeMeta.setAttribute("content", THEME_COLOR[theme]);
+  themeButtons.forEach((button) => {
+    button.setAttribute("aria-checked", String(button.dataset.theme === theme));
+  });
+  try { localStorage.setItem("desk-theme", theme); } catch (e) {}
+}
+
+document.querySelector(".themes").addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  applyTheme(button.dataset.theme);
+});
+
+applyTheme(document.documentElement.dataset.theme || "paper");
 render();
