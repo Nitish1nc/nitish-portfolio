@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <base href="/prototype/">
+  <link rel="canonical" href="https://www.nitishchauhan.com/prototype/">
+  <meta property="og:url" content="https://www.nitishchauhan.com/prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thinking things through</title>
+  <meta name="description" content="A personal prototype. A desk that remembers where each card started, where you tried it, and where you left it.">
+  <meta name="theme-color" content="#f2f0ea">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f2f0ea'/%3E%3Crect x='7' y='8' width='12' height='9' rx='2' fill='%23ece7f5' stroke='%23d8d4ca'/%3E%3Crect x='13' y='15' width='12' height='9' rx='2' fill='%23f4efe4' stroke='%23d8d4ca'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/desk.css">
+</head>
+<body>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header id="topbar">
+    <p class="who">Nitish Chauhan</p>
+    <p class="mark">Prototype</p>
+  </header>
+
+  <div class="layout">
+    <aside class="stage-col" id="stage-col">
+      <div class="window" id="window">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="wtitle">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5A1.5 1.5 0 0 1 3.5 3h3l1.2 1.5H12.5A1.5 1.5 0 0 1 14 6v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-8Z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            Thinking things through
+          </p>
+          <button class="tidy" id="tidy" type="button">Tidy</button>
+        </div>
+        <div class="viewport">
+          <div class="board" id="board">
+            <div class="halo" id="halo" aria-hidden="true"></div>
+            <div class="ghost" id="ghost-start" style="--x:720;--y:100" aria-hidden="true"><span>20:00</span></div>
+            <div class="ghost" id="ghost-tried" style="--x:380;--y:40" aria-hidden="true"><span>20:16</span></div>
+
+            <article class="card pdf" id="card-pdf" style="--x:400;--y:340">
+              <div class="card-face">
+                <div class="grip" aria-hidden="true"></div>
+                <p class="kind">PDF</p>
+                <p class="title">Linear algebra · Chapter 2</p>
+                <p class="text">The chapter that stayed.</p>
+              </div>
+            </article>
+
+            <article class="card note" id="card-note" style="--x:360;--y:200">
+              <div class="card-face">
+                <div class="grip" aria-hidden="true"></div>
+                <p class="kind">Note</p>
+                <p class="title">Why don’t<br>eigenvectors turn?</p>
+                <p class="text">Keep the question. The answer can wait.</p>
+              </div>
+            </article>
+
+            <article class="card idea" id="card-idea" style="--x:740;--y:120">
+              <div class="card-face">
+                <div class="grip" aria-hidden="true"></div>
+                <p class="nudge" id="nudge">Drag</p>
+                <p class="kind">Idea</p>
+                <p class="title">A thought,<br>still taking shape</p>
+                <p class="text">Maybe a concept makes more sense when I can see it.</p>
+                <p class="stamp" id="stamp" aria-hidden="true"></p>
+              </div>
+            </article>
+
+            <article class="card link" id="card-link" style="--x:72;--y:160">
+              <div class="card-face">
+                <div class="grip" aria-hidden="true"></div>
+                <p class="kind">Link</p>
+                <p class="title">Visual explanation</p>
+                <p class="text">It can land before it belongs anywhere.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p class="status" id="status" aria-live="polite">Settled. The note stayed with the chapter.</p>
+      </div>
+
+      <div class="control" role="group" aria-label="Session points">
+        <button type="button" data-stop="started" aria-pressed="false">Started</button>
+        <button type="button" data-stop="tried" aria-pressed="false">Tried</button>
+        <button type="button" data-stop="left" aria-pressed="true">Left</button>
+      </div>
+      <p class="hint">Scroll the session, or press 1, 2, 3. Drag the idea. It returns.</p>
+    </aside>
+
+    <main class="story" id="story">
+      <section class="chapter is-in" data-section="desk" id="desk">
+        <p class="index">01</p>
+        <p class="kicker">The desk</p>
+        <h1>A desk that remembers where each card started, where you tried it, and where you left it.</h1>
+        <p class="lede">Personal prototype. Sample cards. One board.</p>
+      </section>
+
+      <section class="chapter" data-section="place" id="place">
+        <p class="index reveal">02</p>
+        <h2 class="reveal">Place it before you name it.</h2>
+        <p class="lede reveal">Drop a note, a file, or a link before you choose a folder.</p>
+      </section>
+
+      <section class="chapter chapter-trail" data-section="trail" id="trail">
+        <div class="pin">
+          <p class="index reveal">03</p>
+          <h2 class="reveal">Started, tried, left.</h2>
+          <p class="lede reveal">The middle point is the placement you later undid.</p>
+          <div class="beats">
+            <button type="button" data-stop="started">Started. The note is on the left. The chapter waits.</button>
+            <button type="button" data-stop="tried">Tried. The idea sits with the question.</button>
+            <button type="button" data-stop="left">Left. The idea is put back. The note stays.</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" data-section="group" id="group">
+        <p class="index reveal">04</p>
+        <h2 class="reveal">Leave a group, or put a card back.</h2>
+        <p class="lede reveal">Cards that stay together are the group. A card you return stays out of it.</p>
+      </section>
+
+      <section class="chapter" data-section="ask" id="ask">
+        <p class="index reveal">05</p>
+        <h2 class="reveal">Ask the pile.</h2>
+        <p class="lede reveal">The brief uses the cards that stayed, and it names the card you set aside.</p>
+        <div class="brief reveal" id="brief">
+          <p class="brief-kicker">What the AI reads</p>
+          <div class="brief-body" id="brief-body"></div>
+        </div>
+      </section>
+
+      <section class="chapter chapter-close" data-section="close" id="close">
+        <p class="index reveal">06</p>
+        <h2 class="reveal">What this desk does</h2>
+        <ol class="sell">
+          <li class="reveal"><span>01</span>Place it before you name it.</li>
+          <li class="reveal"><span>02</span>Come back to the live patch.</li>
+          <li class="reveal"><span>03</span>Leave a group, or put a card back.</li>
+          <li class="reveal"><span>04</span>Ask the pile.</li>
+        </ol>
+        <footer class="colophon reveal">
+          <p>Nitish Chauhan</p>
+          <p>Personal prototype. Sample cards. Nothing here is saved.</p>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <noscript>
+    <p class="noscript">This prototype moves the cards with a script.</p>
+  </noscript>
+  <script src="js/desk.js"></script>
+</body>
+</html>
