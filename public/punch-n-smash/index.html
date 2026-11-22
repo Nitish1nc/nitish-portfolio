@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Punch n Smash</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper-bg: #FAF5EC;
+      --paper-dot: #E3DACB;
+      --ink: #1E1B18;
+      --accent: #E85D3F;
+      --calm-bg: #DCE8E0;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--paper-bg);
+      background-image: radial-gradient(var(--paper-dot) 1.5px, transparent 1.5px);
+      background-size: 22px 22px;
+      color: var(--ink);
+      overflow: hidden;
+      touch-action: none;
+      transition: background-color 0.8s ease;
+    }
+    .font-display {
+      font-family: 'Fredoka', 'Inter', sans-serif;
+    }
+    .font-mono-tech {
+      font-family: 'Space Mono', monospace;
+    }
+    .ink-card {
+      background: #FFFDF9;
+      border: 2.5px solid #1E1B18;
+      box-shadow: 4px 4px 0px #1E1B18;
+    }
+    .ink-card-sm {
+      background: #FFFDF9;
+      border: 2px solid #1E1B18;
+      box-shadow: 2.5px 2.5px 0px #1E1B18;
+    }
+    .ink-btn {
+      border: 2.5px solid #1E1B18;
+      box-shadow: 3px 3px 0px #1E1B18;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+    }
+    .ink-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #1E1B18;
+    }
+    .tighten-vignette {
+      background: radial-gradient(circle at 50% 48%, transparent 38%, rgba(30, 27, 24, 0.36) 100%);
+    }
+    @keyframes gentleBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .bob-slow {
+      animation: gentleBob 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between relative overflow-hidden">
+
+  <!-- TENSION VIGNETTE (Tightens subtly while holding) -->
+  <div id="vignetteLayer" class="pointer-events-none fixed inset-0 z-10 tighten-vignette opacity-0 transition-opacity duration-150"></div>
+
+  <!-- ================= TOP HUD ================= -->
+  <header class="relative z-20 w-full max-w-5xl mx-auto px-3 sm:px-5 pt-2.5 sm:pt-3 flex flex-col gap-2">
+    <!-- Top Bar: Identity, Target, Glove Skin, Audio, Config -->
+    <div class="ink-card rounded-2xl px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Title & Lore Stats -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-[#E85D3F] border-2 border-[#1E1B18] flex items-center justify-center text-lg shadow-[2px_2px_0px_#1E1B18]">
+          🥊
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="font-display font-bold text-sm sm:text-base text-[#1E1B18] leading-none">
+              Punch n Smash
+            </h1>
+          </div>
+          <div class="text-[11px] text-stone-600 font-medium mt-0.5 flex items-center gap-2">
+            <span>Streak: <strong id="streakLabel" class="text-[#E85D3F]">1 day 🔥</strong></span>
+            <span class="text-stone-400">•</span>
+            <span>Patience: <strong class="text-[#2F6B4F]">∞</strong></span>
+            <span class="hidden sm:inline text-stone-400">• Grudge: <strong id="grudgeLabel">0</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Selectors & Utility Buttons -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <label class="ink-card-sm rounded-xl px-2 py-1 text-xs flex items-center gap-1 cursor-pointer bg-[#FFFDF9]">
+          <span class="text-stone-500 hidden sm:inline font-semibold">Bag:</span>
+          <select id="personaSelect" class="bg-transparent font-display font-semibold text-[#1E1B18] focus:outline-none cursor-pointer">
+            <option value="buddy">😌 Unbothered Buddy</option>
+            <option value="monday">😭 Monday Morning</option>
+            <option value="boss">👔 Micromanager Boss</option>
+            <option value="ex">👻 That One Ex</option>
+          </select>
+        </label>
+
+        <label class="ink-card-sm rounded-xl px-2 py-1 text-xs flex items-center gap-1 cursor-pointer bg-[#FFFDF9]">
+          <span class="text-stone-500 hidden sm:inline font-semibold">Skin:</span>
+          <select id="skinSelect" class="bg-transparent font-display font-semibold text-[#1E1B18] focus:outline-none cursor-pointer">
+            <option value="classic">🥊 Classic Red</option>
+            <option value="girly">💅 Girly Sparkle</option>
+            <option value="spiked">⚡ Spiked Punk</option>
+            <option value="fluffy">☁️ Fluffy Cloud</option>
+          </select>
+        </label>
+
+        <button id="chickenBtn" type="button" title="Rubber Chicken Hit"
+                class="ink-btn rounded-xl px-2.5 py-1 bg-[#FDE68A] hover:bg-[#FCD34D] text-xs font-display font-bold flex items-center gap-1">
+          <span>🐔</span>
+          <span class="hidden lg:inline">Squeak</span>
+        </button>
+
+        <button id="muteBtn" type="button" title="Toggle Sound"
+                class="ink-btn rounded-xl px-2.5 py-1 bg-white hover:bg-stone-100 text-xs font-display font-bold flex items-center gap-1">
+          <span id="muteIcon">🔊</span>
+          <span id="muteText" class="hidden md:inline">Sound</span>
+        </button>
+
+        <button id="configBtn" type="button" title="Open feelGoodConfig.js"
+                class="ink-btn rounded-xl px-2.5 py-1 bg-[#E0E7FF] hover:bg-[#C7D2FE] text-xs font-mono-tech font-bold flex items-center gap-1">
+          <span>🎛️</span>
+          <span class="hidden sm:inline">Config</span>
+        </button>
+
+        <button id="calmNowBtn" type="button" title="Jump to Calm-Down"
+                class="ink-btn rounded-xl px-2.5 py-1 bg-[#D1FAE5] hover:bg-[#A7F3D0] text-xs font-display font-bold flex items-center gap-1">
+          <span>🌿</span>
+          <span class="hidden sm:inline">Exhale</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Second Row: Release Valve (Mood Meter) + Combo Rhythm -->
+    <div class="ink-card rounded-2xl px-3.5 py-2.5 grid grid-cols-12 gap-3 items-center">
+      <!-- Mood Meter -->
+      <div class="col-span-8 sm:col-span-9 flex flex-col gap-1.5">
+        <div class="flex items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="font-mono-tech text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-stone-200 border border-[#1E1B18]">
+              Release Valve
+            </span>
+            <span id="moodBadge" class="font-display font-bold text-xs sm:text-sm text-[#1E1B18] truncate">
+              Mildly Annoyed 😒
+            </span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="decayToast" class="hidden text-[11px] font-semibold text-[#E85D3F] animate-pulse">
+              The anger is coming back... 👀
+            </span>
+            <span id="moodPct" class="font-mono-tech font-bold text-xs text-[#1E1B18]">0%</span>
+          </div>
+        </div>
+
+        <!-- Meter Bar with Threshold Ticks -->
+        <div class="w-full h-4 bg-[#EAE2D3] rounded-full border-2 border-[#1E1B18] overflow-hidden relative p-0.5">
+          <div class="absolute inset-y-0 left-[30%] w-0.5 bg-[#1E1B18]/25 z-10" title="30% Releasing"></div>
+          <div class="absolute inset-y-0 left-[70%] w-0.5 bg-[#1E1B18]/25 z-10" title="70% Peak"></div>
+          <div class="absolute inset-y-0 left-[95%] w-0.5 bg-[#2F6B4F]/60 z-10" title="95% Catharsis"></div>
+          <div id="moodFill"
+               class="h-full rounded-full transition-all duration-150 ease-out"
+               style="width: 0%; background: linear-gradient(90deg, #94A3B8, #F2B705, #E85D3F);"></div>
+        </div>
+      </div>
+
+      <!-- Combo Box -->
+      <div class="col-span-4 sm:col-span-3 border-l-2 border-[#1E1B18]/15 pl-3 flex flex-col items-end justify-center">
+        <div class="flex items-baseline gap-1.5">
+          <span class="font-mono-tech text-[10px] font-bold uppercase text-stone-500">Combo</span>
+          <span id="comboNum" class="font-display font-bold text-xl sm:text-2xl text-[#1E1B18] leading-none">0×</span>
+          <span id="comboMult" class="font-mono-tech text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FDE68A] border border-[#1E1B18]">1.0x</span>
+        </div>
+        <div id="comboTier" class="text-[11px] font-display font-semibold text-stone-500 truncate max-w-full">
+          Tap or hold to start 🎯
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CENTER STAGE (CANVAS) ================= -->
+  <main id="stageWrap" class="relative flex-1 w-full flex items-center justify-center overflow-hidden z-10">
+    <canvas id="stageCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+    <!-- Floating Comedy Banner -->
+    <div id="gagBanner"
+         class="pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 z-20 ink-card-sm rounded-full px-4 py-1.5 text-xs sm:text-sm font-display font-bold text-[#1E1B18] opacity-0 scale-90 transition-all duration-150 whitespace-nowrap">
+      Tip: it's not about them. It's about you. 🥊
+    </div>
+
+    <!-- Live Charge Meter Pill (Shows while holding) -->
+    <div id="chargePill"
+         class="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 z-20 ink-card rounded-2xl px-4 py-2 opacity-0 transition-opacity duration-100 flex items-center gap-3">
+      <div class="flex flex-col">
+        <span id="chargeLabel" class="font-display font-bold text-xs text-[#E85D3F] uppercase">
+          Winding Up Hook (1.0×)
+        </span>
+        <span class="text-[10px] font-medium text-stone-600">
+          Swipe ↑ Uppercut (1.4×) • Swipe ↔ Hook (1.0×) • Release!
+        </span>
+      </div>
+      <div class="w-24 h-3 bg-[#EAE2D3] rounded-full border-2 border-[#1E1B18] overflow-hidden">
+        <div id="chargeMeter" class="h-full bg-[#E85D3F] w-0"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= BOTTOM INPUT ZONE: GLOVE PADS ================= -->
+  <footer class="relative z-20 w-full max-w-4xl mx-auto px-3 sm:px-5 pb-3 pt-1">
+    <div class="ink-card rounded-2xl p-2.5 sm:p-3 flex flex-col gap-2">
+      <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-stone-600 font-medium">
+        <span><strong>Tap & Hold</strong> any glove (or anywhere on stage) to build force. <strong>Swipe</strong> while holding to change angle!</span>
+        <span class="hidden sm:inline font-mono-tech text-[10px] text-stone-500">[J] Jab • [H] Hook • [U / Space] Uppercut</span>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 sm:gap-3">
+        <button id="padJab" data-type="jab" type="button"
+                class="ink-btn rounded-xl bg-[#E0F2FE] hover:bg-[#BAE6FD] p-2.5 sm:p-3 text-left flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-bold text-sm sm:text-base text-[#1E1B18]">Jab</span>
+              <span class="font-mono-tech text-[10px] font-bold px-1.5 py-0.5 rounded bg-white border border-[#1E1B18]">0.7×</span>
+            </div>
+            <p class="text-[11px] text-stone-600 mt-0.5 leading-tight">Quick tap • Tiny flinch</p>
+          </div>
+          <span class="text-2xl sm:text-3xl">🥊</span>
+        </button>
+
+        <button id="padHook" data-type="hook" type="button"
+                class="ink-btn rounded-xl bg-[#FEF3C7] hover:bg-[#FDE68A] p-2.5 sm:p-3 text-left flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-bold text-sm sm:text-base text-[#1E1B18]">Hook</span>
+              <span class="font-mono-tech text-[10px] font-bold px-1.5 py-0.5 rounded bg-white border border-[#1E1B18]">1.0×</span>
+            </div>
+            <p class="text-[11px] text-stone-600 mt-0.5 leading-tight">Hold / swipe ↔ • Stagger</p>
+          </div>
+          <span class="text-2xl sm:text-3xl">💥</span>
+        </button>
+
+        <button id="padUppercut" data-type="uppercut" type="button"
+                class="ink-btn rounded-xl bg-[#FFE4E6] hover:bg-[#FECDD3] p-2.5 sm:p-3 text-left flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-bold text-sm sm:text-base text-[#1E1B18]">Uppercut</span>
+              <span class="font-mono-tech text-[10px] font-bold px-1.5 py-0.5 rounded bg-white border border-[#1E1B18]">1.4×</span>
+            </div>
+            <p class="text-[11px] text-stone-600 mt-0.5 leading-tight">Long hold / ↑ • Spin & daze</p>
+          </div>
+          <span class="text-2xl sm:text-3xl">🚀</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= ARRIVAL MODAL ================= -->
+  <div id="startModal" class="fixed inset-0 z-40 bg-[#1E1B18]/55 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="ink-card max-w-md w-full rounded-3xl p-6 text-center flex flex-col gap-4">
+      <div class="w-16 h-16 rounded-2xl bg-[#E85D3F] border-2 border-[#1E1B18] shadow-[3px_3px_0px_#1E1B18] mx-auto flex items-center justify-center text-3xl bob-slow">
+        🥊
+      </div>
+      <div>
+        <span class="font-mono-tech text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#FDE68A] border border-[#1E1B18]">
+          Punch n Smash
+        </span>
+        <h2 class="font-display font-bold text-2xl sm:text-3xl text-[#1E1B18] mt-2">
+          Safe Space. Heavy Thuds.
+        </h2>
+        <p class="text-xs sm:text-sm text-stone-600 mt-1.5 leading-relaxed">
+          Not a fighting game. No timer, no losing, and your buddy <strong>never fights back</strong>. Just release the pressure until the room softens.
+        </p>
+      </div>
+
+      <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-2xl p-3.5 text-left text-xs space-y-1.5">
+        <div class="font-display font-bold text-[#1E1B18]">
+          🥊 How It Flows
+        </div>
+        <p class="text-stone-600 text-[11px]">• <strong>Hold & Release:</strong> Hold longer for a heavier punch.</p>
+        <p class="text-stone-600 text-[11px]">• <strong>Swipe or Tap:</strong> Quick jabs, side hooks, or rising uppercuts.</p>
+        <p class="text-stone-600 text-[11px]">• <strong>Unwind:</strong> Let it all out until the room softens into chai & calm ☕🌿</p>
+      </div>
+
+      <div class="text-xs italic font-medium text-stone-700 bg-[#E0F2FE] border-2 border-[#1E1B18] rounded-xl py-2 px-3">
+        "Tip: it's not about them. It's about you. 🥊"
+      </div>
+
+      <button id="beginBtn" type="button"
+              class="ink-btn w-full py-3.5 rounded-2xl bg-[#E85D3F] hover:bg-[#DC4C2E] text-white font-display font-bold text-base cursor-pointer">
+        Let It Out Safely 🥊✨
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= CONFIG DRAWER (feelGoodConfig.js) ================= -->
+  <div id="configDrawer" class="hidden fixed inset-0 z-50 bg-[#1E1B18]/50 backdrop-blur-sm items-center justify-center p-4">
+    <div class="ink-card max-w-lg w-full rounded-3xl p-5 sm:p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b-2 border-[#1E1B18]/15 pb-3">
+        <div>
+          <h3 class="font-mono-tech font-bold text-base text-[#1E1B18]">🎛️ feelGoodConfig.js</h3>
+          <p class="font-mono-tech text-[11px] text-stone-500">// if this feels bad, it's your fault, not mine</p>
+        </div>
+        <button id="closeCfgBtn" type="button" class="ink-btn w-8 h-8 rounded-xl bg-stone-100 font-bold text-sm flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-xl p-3">
+          <div class="flex justify-between font-mono-tech font-bold mb-1">
+            <span>HOLD_MAX</span>
+            <span id="cfgHoldVal" class="text-[#E85D3F]">2.0s</span>
+          </div>
+          <input id="cfgHold" type="range" min="0.6" max="3.0" step="0.1" value="2.0" class="w-full accent-[#E85D3F] cursor-pointer">
+        </div>
+
+        <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-xl p-3">
+          <div class="flex justify-between font-mono-tech font-bold mb-1">
+            <span>COMBO_WINDOW</span>
+            <span id="cfgComboVal" class="text-[#E85D3F]">1.5s</span>
+          </div>
+          <input id="cfgCombo" type="range" min="0.8" max="3.5" step="0.1" value="1.5" class="w-full accent-[#E85D3F] cursor-pointer">
+        </div>
+
+        <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-xl p-3">
+          <div class="flex justify-between font-mono-tech font-bold mb-1">
+            <span>METER_DECAY (Idle Delay)</span>
+            <span id="cfgDecayVal" class="text-[#E85D3F]">3.0s</span>
+          </div>
+          <input id="cfgDecay" type="range" min="1.5" max="8.0" step="0.5" value="3.0" class="w-full accent-[#E85D3F] cursor-pointer">
+        </div>
+
+        <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-xl p-3">
+          <div class="flex justify-between font-mono-tech font-bold mb-1">
+            <span>MAX_CHAOS</span>
+            <span id="cfgChaosVal" class="text-[#E85D3F]">11 (because 10 isn't enough 🤣)</span>
+          </div>
+          <input id="cfgChaos" type="range" min="1" max="15" step="1" value="11" class="w-full accent-[#E85D3F] cursor-pointer">
+        </div>
+
+        <div class="bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-xl p-3">
+          <div class="flex justify-between font-mono-tech font-bold mb-1">
+            <span>METER_FILL_SPEED</span>
+            <span id="cfgSpeedVal" class="text-[#2F6B4F]">1.0×</span>
+          </div>
+          <input id="cfgSpeed" type="range" min="0.5" max="3.0" step="0.25" value="1.0" class="w-full accent-[#2F6B4F] cursor-pointer">
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t-2 border-[#1E1B18]/15">
+        <button id="resetCfgBtn" type="button" class="ink-btn px-3 py-2 rounded-xl bg-stone-100 text-xs font-display font-bold">Reset Defaults</button>
+        <div class="flex items-center gap-2">
+          <button id="test95Btn" type="button" class="ink-btn px-3 py-2 rounded-xl bg-[#FEF3C7] text-xs font-display font-bold">Jump to 95%</button>
+          <button id="doneCfgBtn" type="button" class="ink-btn px-4 py-2 rounded-xl bg-[#1E1B18] text-white text-xs font-display font-bold">Save & Play</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CALM-DOWN & BREATHING OVERLAY ================= -->
+  <div id="calmOverlay" class="hidden fixed inset-0 z-30 pointer-events-none flex flex-col items-center justify-between p-4 sm:p-6">
+    <!-- Top Gentle Prompt -->
+    <div class="pointer-events-auto mt-14 sm:mt-16 ink-card rounded-3xl px-6 py-4 max-w-md w-full text-center bg-[#FFFDF9]/95">
+      <div class="font-mono-tech text-[11px] font-bold uppercase tracking-wider text-[#2F6B4F]">
+        🌿 Catharsis Unlocked • 100% Released
+      </div>
+      <h2 class="font-display font-bold text-xl sm:text-2xl text-[#1E1B18] mt-1">
+        You did it. The vibes are immaculate now.
+      </h2>
+      <p class="text-xs sm:text-sm text-stone-600 mt-1">
+        "You okay? Let it go. We don't talk about what happened here."
+      </p>
+    </div>
+
+    <!-- Bottom Guided Breathing + Chai + Stats -->
+    <div class="pointer-events-auto ink-card rounded-3xl p-5 max-w-md w-full text-center flex flex-col items-center gap-3 mb-3 bg-[#FFFDF9]/95">
+      <div class="flex items-center justify-between w-full text-xs font-semibold text-stone-600">
+        <span id="breathCycleText" class="font-mono-tech text-[#2F6B4F]">Cycle 1 / 3 (4s in, 4s out)</span>
+        <span>☕ Chai Ready</span>
+      </div>
+
+      <!-- Expanding Organic Breathing Circle -->
+      <div class="relative w-28 h-28 flex items-center justify-center my-1">
+        <div id="breathHalo"
+             class="absolute inset-0 rounded-full bg-[#A7F3D0] border-2 border-[#1E1B18] transition-transform duration-[4000ms] ease-in-out scale-75"></div>
+        <div class="relative z-10 w-20 h-20 rounded-full bg-[#FFFDF9] border-2 border-[#1E1B18] flex flex-col items-center justify-center">
+          <span id="breathWord" class="font-display font-bold text-sm text-[#1E1B18]">Inhale...</span>
+          <span id="breathSec" class="font-mono-tech text-[11px] text-[#2F6B4F] font-bold">4s</span>
+        </div>
+      </div>
+
+      <div class="w-full grid grid-cols-3 gap-2 bg-[#FAF5EC] border-2 border-[#1E1B18] rounded-2xl p-2.5 text-xs">
+        <div>
+          <div class="text-[10px] text-stone-500 font-semibold">Hits</div>
+          <div id="endHits" class="font-display font-bold text-sm text-[#1E1B18]">0</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-stone-500 font-semibold">Best Combo</div>
+          <div id="endCombo" class="font-display font-bold text-sm text-[#E85D3F]">0×</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-stone-500 font-semibold">Peak Force</div>
+          <div id="endForce" class="font-display font-bold text-sm text-[#2F6B4F]">0%</div>
+        </div>
+      </div>
+
+      <div class="font-display font-semibold text-xs text-stone-700">
+        "Same time tomorrow?" 👍☕
+      </div>
+
+      <div class="flex items-center gap-2.5 w-full">
+        <button id="chaiBtn" type="button"
+                class="ink-btn flex-1 py-2.5 px-3 rounded-xl bg-[#FEF3C7] hover:bg-[#FDE68A] font-display font-bold text-xs sm:text-sm cursor-pointer">
+          Sip Virtual Chai ☕
+        </button>
+        <button id="againBtn" type="button"
+                class="ink-btn flex-1 py-2.5 px-3 rounded-xl bg-[#4F8A6E] hover:bg-[#3F735A] text-white font-display font-bold text-xs sm:text-sm cursor-pointer">
+          Fresh Session 🥊
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= GAME ENGINE ================= -->
+  <script>
+    // =======================================================================
+    // feelGoodConfig.js — Tunable Constants
+    // =======================================================================
+    // if this feels bad, it's your fault, not mine
+    const feelGoodConfig = {
+      HOLD_MIN: 0.2,
+      HOLD_MAX: 2.0,
+      COMBO_WINDOW: 1.5,
+      METER_DECAY: 3.0,
+      CATHARSIS_THRESHOLD: 100,
+      SHAKE_SCALE: 0.14,
+      MAX_CHAOS: 11, // because 10 isn't enough 🤣
+      METER_FILL_SPEED: 1.0,
+      CHICKEN_CHANCE: 0.10,
+      SIGN_CHANCE: 0.15,
+      TYPE_MULT: {
+        jab: 0.7,
+        hook: 1.0,
+        uppercut: 1.4
+      }
+    };
+
+    const PERSONAS = {
+      buddy: {
+        name: "Unbothered Buddy",
+        body: "#4F8A6E",
+        belly: "#A7F3D0",
+        head: "#FDE68A",
+        prop: "bandana",
+        quotes: [
+          "It's fine, keep going. 👍",
+          "I volunteered for this. Hit away!",
+          "Infinite patience, zero grudge.",
+          "Better me than your inbox!",
+          "Nice follow-through!"
+        ]
+      },
+      monday: {
+        name: "Monday Morning 😭",
+        body: "#475569",
+        belly: "#CBD5E1",
+        head: "#BAE6FD",
+        prop: "bells",
+        quotes: [
+          "BEEP BEEP! 6:00 AM! ⏰",
+          "47 unread emails waiting...",
+          "The coffee pot is empty.",
+          "5 days till Friday 😭",
+          "Quick 8:30 AM sync?"
+        ]
+      },
+      boss: {
+        name: "Micromanager Boss",
+        body: "#312E81",
+        belly: "#E0E7FF",
+        head: "#FECDD3",
+        prop: "tie",
+        quotes: [
+          "Just circling back...",
+          "Per my last email 👀",
+          "Let's take this offline.",
+          "Need this EOD please.",
+          "Can you jump on a quick call?"
+        ]
+      },
+      ex: {
+        name: "That One Ex",
+        body: "#6D28D9",
+        belly: "#EDE9FE",
+        head: "#DDD6FE",
+        prop: "shades",
+        quotes: [
+          "Read 3 weeks ago ✓✓",
+          "Hey stranger, u up? 👀",
+          "I'm just finding myself rn.",
+          "Mercury is in retrograde.",
+          "Wait, you're still mad?"
+        ]
+      }
+    };
+
+    const SWEET_HURT_LINES = [
+      "Ow! Okay, okay, I deserved that 😅",
+      "Oof—my bad! Sorry!! 🙏",
+      "Agh! Fair enough, go ahead.",
+      "Yikes, that actually stung 😭",
+      "Okay I'm sorry, please spare me 🥺",
+      "Whoops—yeah, I walked into that.",
+      "Ow!! Look, I apologize, alright?",
+      "Oof... okay I hear you loud & clear."
+    ];
+
+    const SALTY_TAUNT_LINES = [
+      "Wait… was that supposed to hurt? 😏",
+      "My grandma taps harder than that.",
+      "Is that all? I'm barely even smudged.",
+      "Cute. Did you warm up first? 💅",
+      "Zero damage. Try putting your back into it.",
+      "Still standing, bestie. Next! 👀"
+    ];
+
+    const SKINS = {
+      classic: { main: "#E85D3F", shade: "#B9381E", cuff: "#FFFDF9", accent: "#F2B705", tag: "classic" },
+      girly:   { main: "#EC4899", shade: "#9D174D", cuff: "#FDF2F8", accent: "#FDE047", tag: "girly" },
+      spiked:  { main: "#292524", shade: "#0C0A09", cuff: "#E85D3F", accent: "#F5F5F4", tag: "spiked" },
+      fluffy:  { main: "#BAE6FD", shade: "#38BDF8", cuff: "#FFFFFF", accent: "#FFFFFF", tag: "fluffy" }
+    };
+
+    // =======================================================================
+    // DATA MODEL
+    // =======================================================================
+    const player = {
+      skin: "classic",
+      gloveType: "hook",
+      holding: false,
+      holdStart: 0,
+      holdSec: 0,
+      startX: 0,
+      startY: 0,
+      side: "right",
+      force: 0,
+      forceChicken: false
+    };
+
+    const character = {
+      persona: "buddy",
+      state: "IDLE", // IDLE -> FLINCH -> STAGGER -> WOBBLE -> RECOVER -> IDLE
+      subType: "none",
+      timer: 0,
+      x: 0, y: 0, vx: 0, vy: 0,
+      rot: 0, vRot: 0,
+      sx: 1, sy: 1,
+      spin: 0,
+      stars: 0,
+      idleSec: 0,
+      onPhone: false,
+      quote: "It's fine, keep going. 👍",
+      quoteTimer: 3.5,
+      signText: "",
+      signTimer: 0,
+      thumbsUp: false,
+      chai: false,
+      chaiSips: 0,
+      grudgeLevel: 0, // exists strictly for the lore 😌
+      patience: Infinity
+    };
+
+    const moodMeter = {
+      value: 0,
+      comboCount: 0,
+      comboTimer: 0,
+      idleSinceHit: 0,
+      hits: 0,
+      bestCombo: 0,
+      maxForce: 0,
+      streak: 1
+    };
+
+    const world = {
+      gameState: "START", // START -> PLAYING -> CALM
+      shake: 0,
+      shakeX: 0,
+      shakeY: 0,
+      hitStop: 0,
+      particles: [],
+      bubbles: [],
+      confetti: [],
+      soundOn: true,
+      breathCycle: 1,
+      breathPhase: "INHALE",
+      breathSec: 4.0,
+      punchAnim: { active: false, side: "right", type: "hook", p: 0 }
+    };
+
+    try {
+      const s = localStorage.getItem("vent_hydrogen_streak");
+      if (s) moodMeter.streak = Math.max(1, parseInt(s, 10) || 1);
+    } catch (e) {}
+
+    // =======================================================================
+    // WEB AUDIO SYNTHESIZER
+    // =======================================================================
+    let actx = null;
+    let windOsc = null;
+    let windGain = null;
+
+    function ensureAudio() {
+      if (!actx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) actx = new AC();
+      }
+      if (actx && actx.state === "suspended") actx.resume();
+    }
+
+    function startWindupAudio() {
+      if (!world.soundOn) return;
+      ensureAudio();
+      if (!actx) return;
+      stopWindupAudio();
+      try {
+        const t = actx.currentTime;
+        windOsc = actx.createOscillator();
+        windGain = actx.createGain();
+        windOsc.type = "triangle";
+        windOsc.frequency.setValueAtTime(105, t);
+        windOsc.frequency.exponentialRampToValueAtTime(340, t + feelGoodConfig.HOLD_MAX);
+        windGain.gain.setValueAtTime(0.001, t);
+        windGain.gain.linearRampToValueAtTime(0.07, t + 0.12);
+        windOsc.connect(windGain);
+        windGain.connect(actx.destination);
+        windOsc.start(t);
+      } catch (e) {}
+    }
+
+    function stopWindupAudio() {
+      if (windOsc) { try { windOsc.stop(); windOsc.disconnect(); } catch (e) {} windOsc = null; }
+      if (windGain) { try { windGain.disconnect(); } catch (e) {} windGain = null; }
+    }
+
+    function playImpactAudio(force, isChicken) {
+      if (!world.soundOn) return;
+      ensureAudio();
+      if (!actx) return;
+      const t = actx.currentTime;
+
+      if (isChicken) {
+        const o1 = actx.createOscillator();
+        const o2 = actx.createOscillator();
+        const g = actx.createGain();
+        o1.type = "sawtooth";
+        o2.type = "square";
+        o1.frequency.setValueAtTime(890, t);
+        o1.frequency.exponentialRampToValueAtTime(450, t + 0.14);
+        o1.frequency.exponentialRampToValueAtTime(660, t + 0.28);
+        o1.frequency.exponentialRampToValueAtTime(320, t + 0.54);
+        o2.frequency.setValueAtTime(905, t);
+        o2.frequency.exponentialRampToValueAtTime(325, t + 0.54);
+        g.gain.setValueAtTime(0.15, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.56);
+        o1.connect(g); o2.connect(g); g.connect(actx.destination);
+        o1.start(t); o2.start(t);
+        o1.stop(t + 0.58); o2.stop(t + 0.58);
+        return;
+      }
+
+      if (force < 30) {
+        const o = actx.createOscillator();
+        const g = actx.createGain();
+        o.type = "sine";
+        o.frequency.setValueAtTime(250, t);
+        o.frequency.exponentialRampToValueAtTime(95, t + 0.11);
+        g.gain.setValueAtTime(0.2, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t); o.stop(t + 0.13);
+      } else {
+        const o = actx.createOscillator();
+        const g = actx.createGain();
+        o.type = force > 65 ? "triangle" : "sine";
+        o.frequency.setValueAtTime(145 + force * 1.3, t);
+        o.frequency.exponentialRampToValueAtTime(34, t + 0.25);
+        g.gain.setValueAtTime(Math.min(0.55, 0.2 + force / 190), t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.27);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t); o.stop(t + 0.29);
+
+        const len = Math.floor(actx.sampleRate * 0.13);
+        const buf = actx.createBuffer(1, len, actx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (len * 0.35));
+        const src = actx.createBufferSource();
+        src.buffer = buf;
+        const flt = actx.createBiquadFilter();
+        flt.type = "bandpass";
+        flt.frequency.setValueAtTime(750 + force * 11, t);
+        const ng = actx.createGain();
+        ng.gain.setValueAtTime(Math.min(0.42, force / 180), t);
+        ng.gain.exponentialRampToValueAtTime(0.01, t + 0.13);
+        src.connect(flt); flt.connect(ng); ng.connect(actx.destination);
+        src.start(t);
+      }
+    }
+
+    function playCalmChime() {
+      if (!world.soundOn) return;
+      ensureAudio();
+      if (!actx) return;
+      const t = actx.currentTime;
+      [261.63, 329.63, 392.0, 493.88].forEach((freq, i) => {
+        const o = actx.createOscillator();
+        const g = actx.createGain();
+        o.type = "sine";
+        o.frequency.setValueAtTime(freq, t + i * 0.09);
+        g.gain.setValueAtTime(0.001, t + i * 0.09);
+        g.gain.linearRampToValueAtTime(0.055, t + i * 0.09 + 0.45);
+        g.gain.exponentialRampToValueAtTime(0.0008, t + 4.0);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t + i * 0.09); o.stop(t + 4.1);
+      });
+    }
+
+    // =======================================================================
+    // DOM ELEMENTS
+    // =======================================================================
+    const canvas = document.getElementById("stageCanvas");
+    const ctx = canvas.getContext("2d");
+    const stageWrap = document.getElementById("stageWrap");
+    const vignetteLayer = document.getElementById("vignetteLayer");
+
+    const streakLabel = document.getElementById("streakLabel");
+    const grudgeLabel = document.getElementById("grudgeLabel");
+    const personaSelect = document.getElementById("personaSelect");
+    const skinSelect = document.getElementById("skinSelect");
+    const chickenBtn = document.getElementById("chickenBtn");
+    const muteBtn = document.getElementById("muteBtn");
+    const muteIcon = document.getElementById("muteIcon");
+    const muteText = document.getElementById("muteText");
+    const configBtn = document.getElementById("configBtn");
+    const calmNowBtn = document.getElementById("calmNowBtn");
+
+    const moodBadge = document.getElementById("moodBadge");
+    const decayToast = document.getElementById("decayToast");
+    const moodPct = document.getElementById("moodPct");
+    const moodFill = document.getElementById("moodFill");
+    const comboNum = document.getElementById("comboNum");
+    const comboMult = document.getElementById("comboMult");
+    const comboTier = document.getElementById("comboTier");
+
+    const gagBanner = document.getElementById("gagBanner");
+    const chargePill = document.getElementById("chargePill");
+    const chargeLabel = document.getElementById("chargeLabel");
+    const chargeMeter = document.getElementById("chargeMeter");
+
+    const startModal = document.getElementById("startModal");
+    const beginBtn = document.getElementById("beginBtn");
+
+    const configDrawer = document.getElementById("configDrawer");
+    const closeCfgBtn = document.getElementById("closeCfgBtn");
+    const doneCfgBtn = document.getElementById("doneCfgBtn");
+    const resetCfgBtn = document.getElementById("resetCfgBtn");
+    const test95Btn = document.getElementById("test95Btn");
+
+    const calmOverlay = document.getElementById("calmOverlay");
+    const breathCycleText = document.getElementById("breathCycleText");
+    const breathHalo = document.getElementById("breathHalo");
+    const breathWord = document.getElementById("breathWord");
+    const breathSec = document.getElementById("breathSec");
+    const endHits = document.getElementById("endHits");
+    const endCombo = document.getElementById("endCombo");
+    const endForce = document.getElementById("endForce");
+    const chaiBtn = document.getElementById("chaiBtn");
+    const againBtn = document.getElementById("againBtn");
+
+    streakLabel.textContent = `${moodMeter.streak} day${moodMeter.streak > 1 ? "s" : ""} 🔥`;
+
+    // =======================================================================
+    // RESIZE
+    // =======================================================================
+    let W = 800, H = 500;
+    function resizeStage() {
+      const r = stageWrap.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(300, r.width);
+      H = Math.max(250, r.height);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeStage);
+
+    // =======================================================================
+    // GAG BANNER
+    // =======================================================================
+    let gagTimeout = null;
+    function popGag(text, bgHex = "#FFFDF9") {
+      gagBanner.textContent = text;
+      gagBanner.style.backgroundColor = bgHex;
+      gagBanner.classList.remove("opacity-0", "scale-90");
+      gagBanner.classList.add("opacity-100", "scale-100");
+      if (gagTimeout) clearTimeout(gagTimeout);
+      gagTimeout = setTimeout(() => {
+        gagBanner.classList.remove("opacity-100", "scale-100");
+        gagBanner.classList.add("opacity-0", "scale-90");
+      }, 2100);
+    }
+
+    // =======================================================================
+    // CORE PUNCH LOGIC
+    // =======================================================================
+    function comboMultiplier(c) {
+      if (c >= 10) return 2.0;
+      if (c >= 6) return 1.5;
+      if (c >= 3) return 1.2;
+      return 1.0;
+    }
+
+    function spawnJuice(cx, cy, force, type) {
+      const chaos = feelGoodConfig.MAX_CHAOS / 10;
+      const count = Math.floor((6 + force / 7) * chaos);
+      for (let i = 0; i < count; i++) {
+        const star = force > 45 && i % 3 === 0;
+        const ang = -Math.PI * 0.85 + Math.random() * Math.PI * 0.7;
+        const spd = (120 + Math.random() * 230) * (0.6 + force / 110);
+        world.particles.push({
+          x: cx + (Math.random() - 0.5) * 32,
+          y: cy + (Math.random() - 0.5) * 32,
+          vx: Math.cos(ang) * spd + (Math.random() - 0.5) * 130,
+          vy: Math.sin(ang) * spd - (type === "uppercut" ? 130 : 40),
+          size: star ? 8 + Math.random() * 5 : 4 + Math.random() * 3.5,
+          star,
+          color: star ? "#F2B705" : "#38BDF8",
+          life: 0,
+          maxLife: 0.65 + Math.random() * 0.4,
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 8
+        });
+      }
+
+      const words = force > 75
+        ? ["THWACK!", "POW!", "WHAM!", "BOOM!"]
+        : force > 35
+          ? ["BAM!", "OOF!", "SMACK!", "BOP!"]
+          : ["boop", "tap", "pat", "poke"];
+      world.bubbles.push({
+        text: words[Math.floor(Math.random() * words.length)],
+        x: cx + (Math.random() - 0.5) * 70,
+        y: cy - 45 - Math.random() * 25,
+        scale: 0.3,
+        targetScale: force > 70 ? 1.32 : force > 35 ? 1.05 : 0.85,
+        rot: (Math.random() - 0.5) * 0.35,
+        color: force > 70 ? "#E85D3F" : force > 35 ? "#F2B705" : "#38BDF8",
+        life: 0,
+        maxLife: 0.65
+      });
+    }
+
+    function spawnConfetti() {
+      const cols = ["#E85D3F", "#F2B705", "#4F8A6E", "#38BDF8", "#EC4899"];
+      for (let i = 0; i < 65; i++) {
+        world.confetti.push({
+          x: Math.random() * W,
+          y: -15 - Math.random() * 100,
+          vx: (Math.random() - 0.5) * 150,
+          vy: 140 + Math.random() * 200,
+          size: 6 + Math.random() * 6,
+          color: cols[i % cols.length],
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 9,
+          life: 0,
+          maxLife: 2.3 + Math.random() * 1.1
+        });
+      }
+    }
+
+    function landPunch(holdSec, type) {
+      if (world.gameState === "CALM") return;
+      if (world.gameState === "START") {
+        world.gameState = "PLAYING";
+        startModal.classList.add("hidden");
+      }
+
+      const minH = feelGoodConfig.HOLD_MIN;
+      const maxH = feelGoodConfig.HOLD_MAX;
+      let norm = 0.16;
+      if (holdSec > minH) {
+        norm = 0.18 + 0.82 * Math.min(1.0, (holdSec - minH) / Math.max(0.1, maxH - minH));
+      }
+      const mult = feelGoodConfig.TYPE_MULT[type] || 1.0;
+      const force = Math.min(100, Math.max(8, Math.round(norm * 100 * mult)));
+      player.force = force;
+
+      player.side = player.side === "right" ? "left" : "right";
+      world.punchAnim = { active: true, side: player.side, type, p: 0 };
+
+      // Combo
+      moodMeter.comboCount = moodMeter.comboTimer > 0 ? moodMeter.comboCount + 1 : 1;
+      moodMeter.comboTimer = feelGoodConfig.COMBO_WINDOW;
+      moodMeter.idleSinceHit = 0;
+      decayToast.classList.add("hidden");
+
+      const cMult = comboMultiplier(moodMeter.comboCount);
+      moodMeter.hits += 1;
+      if (moodMeter.comboCount > moodMeter.bestCombo) moodMeter.bestCombo = moodMeter.comboCount;
+      if (force > moodMeter.maxForce) moodMeter.maxForce = force;
+
+      // Mood Meter Gain
+      const gain = (force * 0.088) * cMult * feelGoodConfig.METER_FILL_SPEED;
+      moodMeter.value = Math.min(feelGoodConfig.CATHARSIS_THRESHOLD, moodMeter.value + gain);
+
+      if (moodMeter.comboCount >= 10 && moodMeter.comboCount % 10 === 0) {
+        spawnConfetti();
+      }
+
+      // Character State Machine (overlapping hits interrupt)
+      character.idleSec = 0;
+      character.onPhone = false;
+      const dir = player.side === "left" ? 1 : -1;
+
+      if (force < 30) {
+        character.state = "FLINCH";
+        character.timer = 0.3;
+        character.vx = dir * (95 + force * 2.5);
+        character.vy = type === "uppercut" ? -85 : -25;
+        character.vRot = dir * 2.8;
+        character.sx = 1.14;
+        character.sy = 0.88;
+      } else if (force < 60) {
+        character.state = "STAGGER";
+        character.timer = 0.6;
+        character.vx = dir * (185 + force * 3.2);
+        character.vy = type === "uppercut" ? -160 : -55;
+        character.vRot = dir * 5.2;
+        character.sx = 1.24;
+        character.sy = 0.78;
+      } else if (force < 85) {
+        character.state = "STAGGER";
+        character.subType = "big";
+        character.timer = 0.9;
+        character.vx = dir * (270 + force * 3.6);
+        character.vy = type === "uppercut" ? -230 : -90;
+        character.vRot = dir * 7.2;
+        character.stars = 3;
+        character.sx = 1.34;
+        character.sy = 0.70;
+      } else {
+        character.state = "WOBBLE";
+        character.timer = 1.3;
+        character.vx = dir * 360;
+        character.vy = type === "uppercut" ? -280 : -120;
+        character.vRot = dir * 9.0;
+        character.stars = 5;
+        character.sx = 1.44;
+        character.sy = 0.62;
+      }
+
+      if (Math.random() < feelGoodConfig.SIGN_CHANCE || moodMeter.hits === 5) {
+        const signs = ["worth it 😭", "10/10 form 👏", "keep going 👍", "i felt that 💀"];
+        character.signText = signs[Math.floor(Math.random() * signs.length)];
+        character.signTimer = 2.0;
+      }
+
+      // Immediate hurt/apologetic vs provocative/salty response (not every hit, random oscillation)
+      if (Math.random() < 0.62) {
+        const useSweet = force >= 55 ? (Math.random() < 0.65) : (Math.random() < 0.45);
+        const pool = useSweet ? SWEET_HURT_LINES : SALTY_TAUNT_LINES;
+        character.quote = pool[Math.floor(Math.random() * pool.length)];
+        character.quoteTimer = 2.6;
+      } else {
+        character.quoteTimer = 0;
+      }
+
+      // Hit-stop & Shake
+      if (force > 70) world.hitStop = 0.05;
+      const chaos = feelGoodConfig.MAX_CHAOS / 10;
+      world.shake = force > 50 ? (force / 10) * feelGoodConfig.SHAKE_SCALE * 10 * chaos : (force / 25) * chaos;
+
+      // Haptics
+      try { if (navigator.vibrate) navigator.vibrate(Math.min(120, Math.round(force * 0.9))); } catch (e) {}
+
+      // Audio
+      const isChicken = player.forceChicken || Math.random() < feelGoodConfig.CHICKEN_CHANCE;
+      player.forceChicken = false;
+      playImpactAudio(force, isChicken);
+
+      // Particles
+      spawnJuice(W * 0.5 + character.x * 0.35, H * 0.46 + character.y * 0.35, force, type);
+
+      // Funny Callouts
+      if (isChicken) {
+        popGag("🐔 SQUAWK!! Occasional Rubber Chicken Hit!", "#FDE68A");
+      } else if (force >= 90) {
+        popGag("💥 THAT ONE HAD EMOTIONAL DAMAGE", "#FECDD3");
+      } else if (holdSec >= feelGoodConfig.HOLD_MAX * 0.85 && holdSec <= feelGoodConfig.HOLD_MAX * 1.15) {
+        popGag("🤌 PERFECT. Chef's kiss.", "#D1FAE5");
+      } else if (force < 24) {
+        popGag("💅 bro that was a love tap", "#E0F2FE");
+      }
+
+      syncHud();
+      if (moodMeter.value >= feelGoodConfig.CATHARSIS_THRESHOLD) {
+        enterCalmSequence();
+      }
+    }
+
+    function enterCalmSequence() {
+      if (world.gameState === "CALM") return;
+      world.gameState = "CALM";
+      player.holding = false;
+      stopWindupAudio();
+      chargePill.classList.remove("opacity-100");
+      chargePill.classList.add("opacity-0");
+      vignetteLayer.style.opacity = "0";
+
+      moodMeter.streak += 1;
+      try { localStorage.setItem("vent_hydrogen_streak", String(moodMeter.streak)); } catch (e) {}
+      streakLabel.textContent = `${moodMeter.streak} days 🔥`;
+
+      character.state = "IDLE";
+      character.timer = 0;
+      character.stars = 0;
+      character.spin = 0;
+      character.thumbsUp = true;
+      character.chai = true;
+      character.quote = "We don't talk about what happened here. 👍☕";
+      character.quoteTimer = 999;
+
+      document.body.style.backgroundColor = "#DCE8E0";
+
+      endHits.textContent = String(moodMeter.hits);
+      endCombo.textContent = `${moodMeter.bestCombo}×`;
+      endForce.textContent = `${moodMeter.maxForce}%`;
+
+      world.breathCycle = 1;
+      world.breathPhase = "INHALE";
+      world.breathSec = 4.0;
+      calmOverlay.classList.remove("hidden");
+      syncBreathingUI(true);
+      playCalmChime();
+    }
+
+    function syncBreathingUI(changed) {
+      breathCycleText.textContent = world.breathCycle <= 3
+        ? `Cycle ${world.breathCycle} / 3 (4s in, 4s out)`
+        : `3 Cycles Complete • Anchored 🌿`;
+      breathWord.textContent = world.breathPhase === "INHALE" ? "Inhale..." : "Exhale...";
+      breathSec.textContent = `${Math.ceil(world.breathSec)}s`;
+      if (changed) {
+        if (world.breathPhase === "INHALE") {
+          breathHalo.classList.remove("scale-75");
+          breathHalo.classList.add("scale-125");
+        } else {
+          breathHalo.classList.remove("scale-125");
+          breathHalo.classList.add("scale-75");
+        }
+      }
+    }
+
+    function resetGame() {
+      world.gameState = "PLAYING";
+      moodMeter.value = 0;
+      moodMeter.comboCount = 0;
+      moodMeter.comboTimer = 0;
+      moodMeter.idleSinceHit = 0;
+      moodMeter.hits = 0;
+      moodMeter.bestCombo = 0;
+      moodMeter.maxForce = 0;
+
+      character.state = "IDLE";
+      character.thumbsUp = false;
+      character.chai = false;
+      character.chaiSips = 0;
+      character.stars = 0;
+      character.quote = PERSONAS[character.persona].quotes[0];
+      character.quoteTimer = 4.0;
+
+      calmOverlay.classList.add("hidden");
+      decayToast.classList.add("hidden");
+      syncHud();
+      popGag("Fresh session! Let it out whenever you're ready 🥊");
+    }
+
+    function syncHud() {
+      const p = Math.round(moodMeter.value);
+      moodPct.textContent = `${p}%`;
+      moodFill.style.width = `${p}%`;
+
+      if (p >= 100) {
+        moodBadge.textContent = "You did it. The vibes are immaculate now. ✨";
+      } else if (p >= 95) {
+        moodBadge.textContent = "Catharsis Unlocked 🔓";
+        if (world.gameState !== "CALM") document.body.style.backgroundColor = "#FBE4D8";
+      } else if (p >= 70) {
+        moodBadge.textContent = "WHO HURT YOU? 🔥";
+        if (world.gameState !== "CALM") document.body.style.backgroundColor = "#FCE8D5";
+      } else if (p >= 30) {
+        moodBadge.textContent = "Okay Now I'm Mad 😤";
+        if (world.gameState !== "CALM") document.body.style.backgroundColor = "#FAF0DF";
+      } else {
+        moodBadge.textContent = "Mildly Annoyed 😒";
+        if (world.gameState !== "CALM") document.body.style.backgroundColor = "#FAF5EC";
+      }
+
+      const c = moodMeter.comboCount;
+      comboNum.textContent = `${c}×`;
+      comboMult.textContent = `${comboMultiplier(c).toFixed(1)}x`;
+      if (c >= 10) comboTier.textContent = "THERAPY WHO? 🎉";
+      else if (c >= 6) comboTier.textContent = "Unhinged ⚡";
+      else if (c >= 3) comboTier.textContent = "Spicy 🔥";
+      else if (c >= 1) comboTier.textContent = "Nice 👍";
+    }
+
+    // =======================================================================
+    // INPUT HANDLERS
+    // =======================================================================
+    function startHold(x, y, type) {
+      if (world.gameState === "CALM") return;
+      if (world.gameState === "START") {
+        world.gameState = "PLAYING";
+        startModal.classList.add("hidden");
+      }
+      player.holding = true;
+      player.holdStart = performance.now();
+      player.holdSec = 0;
+      player.gloveType = type || "hook";
+      player.startX = x;
+      player.startY = y;
+      chargePill.classList.remove("opacity-0");
+      chargePill.classList.add("opacity-100");
+      startWindupAudio();
+    }
+
+    function trackSwipe(x, y) {
+      if (!player.holding) return;
+      const dx = x - player.startX;
+      const dy = y - player.startY;
+      if (Math.hypot(dx, dy) > 28) {
+        if (dy < -24 && Math.abs(dy) >= Math.abs(dx) * 0.75) player.gloveType = "uppercut";
+        else if (Math.abs(dx) > 25) player.gloveType = "hook";
+        else player.gloveType = "jab";
+      }
+    }
+
+    function endHold() {
+      if (!player.holding) return;
+      player.holding = false;
+      stopWindupAudio();
+      chargePill.classList.remove("opacity-100");
+      chargePill.classList.add("opacity-0");
+      vignetteLayer.style.opacity = "0";
+      const dur = (performance.now() - player.holdStart) / 1000;
+      landPunch(dur, player.gloveType);
+    }
+
+    canvas.addEventListener("pointerdown", (e) => { e.preventDefault(); startHold(e.clientX, e.clientY, "jab"); });
+    window.addEventListener("pointermove", (e) => { if (player.holding) trackSwipe(e.clientX, e.clientY); });
+    window.addEventListener("pointerup", () => { if (player.holding) endHold(); });
+    window.addEventListener("pointercancel", () => { if (player.holding) endHold(); });
+
+    ["padJab", "padHook", "padUppercut"].forEach((id) => {
+      const el = document.getElementById(id);
+      const t = el.getAttribute("data-type");
+      el.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        startHold(e.clientX, e.clientY, t);
+      });
+    });
+
+    let heldKey = null;
+    window.addEventListener("keydown", (e) => {
+      if (e.repeat || !configDrawer.classList.contains("hidden")) return;
+      const k = e.key.toLowerCase();
+      if (k === "j" || k === "arrowleft") { heldKey = k; startHold(W/2, H/2, "jab"); }
+      else if (k === "h" || k === "arrowright") { heldKey = k; startHold(W/2, H/2, "hook"); }
+      else if (k === "u" || k === " " || k === "arrowup") { e.preventDefault(); heldKey = k; startHold(W/2, H/2, "uppercut"); }
+    });
+    window.addEventListener("keyup", (e) => {
+      const k = e.key.toLowerCase();
+      if (player.holding && (k === heldKey || k === " " || k === "j" || k === "h" || k === "u" || k.startsWith("arrow"))) {
+        heldKey = null;
+        endHold();
+      }
+    });
+
+    // =======================================================================
+    // UI BUTTON LISTENERS
+    // =======================================================================
+    beginBtn.addEventListener("click", () => {
+      ensureAudio();
+      world.gameState = "PLAYING";
+      startModal.classList.add("hidden");
+      popGag("Hold & release to punch! Buddy never fights back 😌", "#D1FAE5");
+    });
+
+    personaSelect.addEventListener("change", (e) => {
+      character.persona = e.target.value;
+      const p = PERSONAS[character.persona];
+      character.quote = p.quotes[0];
+      character.quoteTimer = 3.5;
+      popGag(`Target switched: ${p.name}`);
+    });
+
+    skinSelect.addEventListener("change", (e) => {
+      player.skin = e.target.value;
+      popGag(`Equipped ${skinSelect.options[skinSelect.selectedIndex].text} 🥊`, "#FFE4E6");
+    });
+
+    chickenBtn.addEventListener("click", () => {
+      player.forceChicken = true;
+      landPunch(0.65, "hook");
+    });
+
+    muteBtn.addEventListener("click", () => {
+      world.soundOn = !world.soundOn;
+      muteIcon.textContent = world.soundOn ? "🔊" : "🔇";
+      muteText.textContent = world.soundOn ? "Sound" : "Muted";
+      if (!world.soundOn) stopWindupAudio();
+    });
+
+    calmNowBtn.addEventListener("click", () => {
+      ensureAudio();
+      startModal.classList.add("hidden");
+      moodMeter.value = 100;
+      syncHud();
+      enterCalmSequence();
+    });
+
+    chaiBtn.addEventListener("click", () => {
+      character.chaiSips += 1;
+      character.quote = character.chaiSips % 2 === 1
+        ? "Warm masala chai fixes 40% of life's problems. ☕✨"
+        : "Slow breath in, slow breath out. You're good. 🌿";
+      playCalmChime();
+      popGag("☕ Sipped virtual chai. +100 Inner Peace.", "#FEF3C7");
+    });
+
+    againBtn.addEventListener("click", resetGame);
+
+    // Config Controls
+    const cfgHold = document.getElementById("cfgHold");
+    const cfgHoldVal = document.getElementById("cfgHoldVal");
+    const cfgCombo = document.getElementById("cfgCombo");
+    const cfgComboVal = document.getElementById("cfgComboVal");
+    const cfgDecay = document.getElementById("cfgDecay");
+    const cfgDecayVal = document.getElementById("cfgDecayVal");
+    const cfgChaos = document.getElementById("cfgChaos");
+    const cfgChaosVal = document.getElementById("cfgChaosVal");
+    const cfgSpeed = document.getElementById("cfgSpeed");
+    const cfgSpeedVal = document.getElementById("cfgSpeedVal");
+
+    configBtn.addEventListener("click", () => { configDrawer.classList.remove("hidden"); configDrawer.classList.add("flex"); });
+    function closeCfg() { configDrawer.classList.add("hidden"); configDrawer.classList.remove("flex"); }
+    closeCfgBtn.addEventListener("click", closeCfg);
+    doneCfgBtn.addEventListener("click", closeCfg);
+
+    cfgHold.addEventListener("input", (e) => { feelGoodConfig.HOLD_MAX = parseFloat(e.target.value); cfgHoldVal.textContent = `${feelGoodConfig.HOLD_MAX.toFixed(1)}s`; });
+    cfgCombo.addEventListener("input", (e) => { feelGoodConfig.COMBO_WINDOW = parseFloat(e.target.value); cfgComboVal.textContent = `${feelGoodConfig.COMBO_WINDOW.toFixed(1)}s`; });
+    cfgDecay.addEventListener("input", (e) => { feelGoodConfig.METER_DECAY = parseFloat(e.target.value); cfgDecayVal.textContent = `${feelGoodConfig.METER_DECAY.toFixed(1)}s`; });
+    cfgChaos.addEventListener("input", (e) => {
+      feelGoodConfig.MAX_CHAOS = parseInt(e.target.value, 10);
+      cfgChaosVal.textContent = feelGoodConfig.MAX_CHAOS === 11 ? "11 (because 10 isn't enough 🤣)" : String(feelGoodConfig.MAX_CHAOS);
+    });
+    cfgSpeed.addEventListener("input", (e) => { feelGoodConfig.METER_FILL_SPEED = parseFloat(e.target.value); cfgSpeedVal.textContent = `${feelGoodConfig.METER_FILL_SPEED.toFixed(2)}×`; });
+
+    resetCfgBtn.addEventListener("click", () => {
+      feelGoodConfig.HOLD_MAX = 2.0; feelGoodConfig.COMBO_WINDOW = 1.5; feelGoodConfig.METER_DECAY = 3.0; feelGoodConfig.MAX_CHAOS = 11; feelGoodConfig.METER_FILL_SPEED = 1.0;
+      cfgHold.value = "2.0"; cfgHoldVal.textContent = "2.0s";
+      cfgCombo.value = "1.5"; cfgComboVal.textContent = "1.5s";
+      cfgDecay.value = "3.0"; cfgDecayVal.textContent = "3.0s";
+      cfgChaos.value = "11"; cfgChaosVal.textContent = "11 (because 10 isn't enough 🤣)";
+      cfgSpeed.value = "1.0"; cfgSpeedVal.textContent = "1.0×";
+    });
+
+    test95Btn.addEventListener("click", () => {
+      moodMeter.value = 95;
+      syncHud();
+      closeCfg();
+      popGag("Meter set to 95% — one punch to Catharsis! 🔓", "#D1FAE5");
+    });
+
+    // =======================================================================
+    // SIMULATION UPDATE
+    // =======================================================================
+    let lastMs = performance.now();
+    function tick(dt) {
+      if (world.hitStop > 0) { world.hitStop -= dt; return; }
+
+      if (player.holding) {
+        player.holdSec = (performance.now() - player.holdStart) / 1000;
+        const r = Math.min(1.0, player.holdSec / feelGoodConfig.HOLD_MAX);
+        chargeMeter.style.width = `${Math.round(r * 100)}%`;
+        chargeLabel.textContent = `Winding Up ${player.gloveType.toUpperCase()} (${feelGoodConfig.TYPE_MULT[player.gloveType]}×) • ${Math.round(r * 100)}%`;
+        vignetteLayer.style.opacity = String(Math.min(0.85, r * 0.85));
+      }
+
+      if (world.gameState === "PLAYING") {
+        if (moodMeter.comboTimer > 0) {
+          moodMeter.comboTimer -= dt;
+          if (moodMeter.comboTimer <= 0) {
+            const lost = moodMeter.comboCount;
+            moodMeter.comboCount = 0;
+            moodMeter.comboTimer = 0;
+            if (lost >= 3) {
+              comboTier.textContent = "and... you lost it. classic. 🙃";
+              popGag("🙃 and... you lost the combo. classic.");
+            } else {
+              comboTier.textContent = "Find your rhythm 🎯";
+            }
+            syncHud();
+          }
+        }
+
+        moodMeter.idleSinceHit += dt;
+        if (moodMeter.idleSinceHit > feelGoodConfig.METER_DECAY && moodMeter.value > 0 && moodMeter.value < 100) {
+          decayToast.classList.remove("hidden");
+          moodMeter.value = Math.max(0, moodMeter.value - 2.6 * dt);
+          syncHud();
+        } else {
+          decayToast.classList.add("hidden");
+        }
+      }
+
+      if (world.gameState === "CALM" && world.breathCycle <= 3) {
+        world.breathSec -= dt;
+        if (world.breathSec <= 0) {
+          if (world.breathPhase === "INHALE") {
+            world.breathPhase = "EXHALE"; world.breathSec = 4.0; syncBreathingUI(true);
+          } else {
+            world.breathCycle += 1;
+            if (world.breathCycle <= 3) {
+              world.breathPhase = "INHALE"; world.breathSec = 4.0; syncBreathingUI(true);
+            } else {
+              breathCycleText.textContent = "All 3 Cycles Complete • Anchored 🌿";
+              breathWord.textContent = "Calm 🌿";
+              breathSec.textContent = "✓";
+            }
+          }
+        } else {
+          syncBreathingUI(false);
+        }
+      }
+
+      // Spring Physics
+      const k = character.state === "WOBBLE" ? 65 : 135;
+      const d = character.state === "WOBBLE" ? 5.5 : 10.5;
+      character.vx += (-k * character.x - d * character.vx) * dt;
+      character.vy += (-k * character.y - d * character.vy) * dt;
+      character.x += character.vx * dt;
+      character.y += character.vy * dt;
+
+      character.vRot += (-125 * character.rot - 9.5 * character.vRot) * dt;
+      character.rot = Math.max(-5.5, Math.min(5.5, character.rot + character.vRot * dt));
+      character.spin = 0;
+      character.sx += (1 - character.sx) * Math.min(1, dt * 12);
+      character.sy += (1 - character.sy) * Math.min(1, dt * 12);
+
+      if (character.timer > 0) {
+        character.timer -= dt;
+        if (character.timer <= 0) {
+          if (character.state !== "RECOVER" && character.state !== "IDLE") {
+            character.state = "RECOVER";
+            character.timer = 0.22;
+            character.sx = 0.92; character.sy = 1.08;
+          } else {
+            character.state = "IDLE";
+            character.subType = "none";
+            character.stars = 0;
+            if (character.quoteTimer <= 0 && Math.random() < 0.45) {
+              const pool = Math.random() < 0.5 ? SWEET_HURT_LINES : SALTY_TAUNT_LINES;
+              character.quote = pool[Math.floor(Math.random() * pool.length)];
+              character.quoteTimer = 2.5;
+            }
+          }
+        }
+      }
+
+      if (character.state === "IDLE" && world.gameState === "PLAYING") {
+        character.idleSec += dt;
+        if (character.idleSec > 4.2 && !player.holding) character.onPhone = true;
+      }
+      if (character.signTimer > 0) character.signTimer -= dt;
+      if (character.quoteTimer > 0 && world.gameState !== "CALM") character.quoteTimer -= dt;
+
+      // Screen Shake
+      if (world.shake > 0.1) {
+        world.shakeX = (Math.random() - 0.5) * 2 * world.shake;
+        world.shakeY = (Math.random() - 0.5) * 2 * world.shake;
+        world.shake *= Math.pow(0.015, dt);
+      } else if (moodMeter.value >= 70 && world.gameState === "PLAYING") {
+        world.shakeX = (Math.random() - 0.5) * 1.6;
+        world.shakeY = (Math.random() - 0.5) * 1.6;
+      } else {
+        world.shakeX = 0; world.shakeY = 0;
+      }
+
+      if (world.punchAnim.active) {
+        world.punchAnim.p += dt * 5.4;
+        if (world.punchAnim.p >= 1) world.punchAnim.active = false;
+      }
+
+      for (let i = world.particles.length - 1; i >= 0; i--) {
+        const p = world.particles[i];
+        p.life += dt;
+        if (p.life >= p.maxLife) { world.particles.splice(i, 1); continue; }
+        const ts = p.star ? 0.9 : 0.72;
+        p.vy += 510 * dt * ts;
+        p.x += p.vx * dt * ts;
+        p.y += p.vy * dt * ts;
+        p.rot += p.vRot * dt;
+      }
+      for (let i = world.bubbles.length - 1; i >= 0; i--) {
+        const b = world.bubbles[i];
+        b.life += dt;
+        if (b.life >= b.maxLife) { world.bubbles.splice(i, 1); continue; }
+        b.scale += (b.targetScale - b.scale) * Math.min(1, dt * 18);
+        b.y -= 26 * dt;
+      }
+      for (let i = world.confetti.length - 1; i >= 0; i--) {
+        const c = world.confetti[i];
+        c.life += dt;
+        if (c.life >= c.maxLife) { world.confetti.splice(i, 1); continue; }
+        c.x += c.vx * dt + Math.sin(c.life * 6) * 32 * dt;
+        c.y += c.vy * dt;
+        c.rot += c.vRot * dt;
+      }
+    }
+
+    // =======================================================================
+    // RENDERING (ROLY-POLY INK-STYLE CHARACTER + GLOVES + JUICE)
+    // =======================================================================
+    function rRect(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + w, y, x + w, y + h, r);
+      c.arcTo(x + w, y + h, x, y + h, r);
+      c.arcTo(x, y + h, x, y, r);
+      c.arcTo(x, y, x + w, y, r);
+      c.closePath();
+    }
+
+    function drawStar(c, cx, cy, pts, rOut, rIn, fill, stroke) {
+      let rot = (Math.PI / 2) * 3;
+      const step = Math.PI / pts;
+      c.beginPath();
+      c.moveTo(cx, cy - rOut);
+      for (let i = 0; i < pts; i++) {
+        c.lineTo(cx + Math.cos(rot) * rOut, cy + Math.sin(rot) * rOut); rot += step;
+        c.lineTo(cx + Math.cos(rot) * rIn, cy + Math.sin(rot) * rIn); rot += step;
+      }
+      c.closePath();
+      c.fillStyle = fill;
+      c.fill();
+      if (stroke) { c.strokeStyle = stroke; c.lineWidth = 2; c.stroke(); }
+    }
+
+    function renderBuddy(t) {
+      const p = PERSONAS[character.persona];
+      const bx = W * 0.5;
+      const by = H * 0.51;
+
+      const wave = Math.sin(t * (world.gameState === "CALM" ? 1.4 : 2.6));
+      const sway = character.state === "IDLE" ? Math.sin(t * 1.4) * 5 : 0;
+      const bob = character.state === "IDLE" ? wave * 4 : 0;
+
+      const cx = bx + character.x + sway;
+      const cy = by + character.y + bob;
+
+      // Ground mat + soft shadow
+      ctx.save();
+      ctx.fillStyle = "rgba(30, 27, 24, 0.14)";
+      ctx.beginPath();
+      ctx.ellipse(bx + character.x * 0.45, by + 114, 78, 16, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Weighted Roly-Poly Base Ring
+      ctx.fillStyle = "#E5DEC9";
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(bx, by + 110, 48, 13, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Spring coil tether
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 6;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(bx, by + 108);
+      ctx.quadraticCurveTo(bx + character.x * 0.35, by + 72, cx, cy + 56);
+      ctx.stroke();
+      ctx.restore();
+
+      // Buddy Local Space
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(character.rot * 0.08 + character.spin);
+      const bsx = character.state === "IDLE" ? 1 + wave * 0.02 : 1;
+      const bsy = character.state === "IDLE" ? 1 - wave * 0.02 : 1;
+      ctx.scale(character.sx * bsx, character.sy * bsy);
+
+      // Pear-shaped Roly-Poly Body
+      ctx.fillStyle = p.body;
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(-48, -10);
+      ctx.bezierCurveTo(-56, 45, -42, 72, 0, 72);
+      ctx.bezierCurveTo(42, 72, 56, 45, 48, -10);
+      ctx.bezierCurveTo(42, -32, -42, -32, -48, -10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Belly Patch
+      ctx.fillStyle = p.belly;
+      ctx.beginPath();
+      ctx.ellipse(0, 26, 30, 32, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      if (p.prop === "tie") {
+        ctx.fillStyle = "#E85D3F";
+        ctx.beginPath();
+        ctx.moveTo(0, -14); ctx.lineTo(9, 16); ctx.lineTo(0, 28); ctx.lineTo(-9, 16); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+      }
+
+      // Arms
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+
+      // Left arm
+      ctx.beginPath();
+      if (character.thumbsUp) {
+        ctx.moveTo(-46, 4); ctx.quadraticCurveTo(-78, -12, -72, -32); ctx.stroke();
+        ctx.font = "28px sans-serif"; ctx.fillText("👍", -88, -36);
+      } else if (character.state === "WOBBLE" || character.subType === "big") {
+        const flail = Math.sin(t * 22) * 26;
+        ctx.moveTo(-46, 4); ctx.quadraticCurveTo(-84, -20 + flail, -92, -45 - flail); ctx.stroke();
+      } else {
+        ctx.moveTo(-46, 6); ctx.quadraticCurveTo(-66, 26, -56, 48); ctx.stroke();
+      }
+
+      // Right arm
+      ctx.beginPath();
+      if (character.chai) {
+        ctx.moveTo(46, 4); ctx.quadraticCurveTo(78, -4, 74, -20); ctx.stroke();
+        ctx.font = "30px sans-serif"; ctx.fillText("☕", 60, -24);
+      } else if (character.onPhone) {
+        ctx.moveTo(46, 8); ctx.quadraticCurveTo(74, -6, 56, -26); ctx.stroke();
+        ctx.save();
+        ctx.translate(56, -36); ctx.rotate(-0.18);
+        ctx.fillStyle = "#1E1B18";
+        rRect(ctx, -10, -16, 20, 30, 4); ctx.fill();
+        ctx.fillStyle = "#38BDF8";
+        rRect(ctx, -7, -12, 14, 22, 2); ctx.fill();
+        ctx.restore();
+      } else if (character.signTimer > 0) {
+        ctx.moveTo(46, 4); ctx.quadraticCurveTo(80, -10, 86, -34); ctx.stroke();
+        ctx.save();
+        ctx.translate(90, -60); ctx.rotate(0.1);
+        ctx.fillStyle = "#FEF3C7"; ctx.strokeStyle = "#1E1B18"; ctx.lineWidth = 2.5;
+        rRect(ctx, -48, -18, 96, 34, 8); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#1E1B18"; ctx.font = "bold 12px 'Fredoka', sans-serif"; ctx.textAlign = "center";
+        ctx.fillText(character.signText, 0, 4);
+        ctx.restore();
+      } else {
+        ctx.moveTo(46, 6); ctx.quadraticCurveTo(66, 26, 56, 48); ctx.stroke();
+      }
+
+      // Head
+      ctx.save();
+      ctx.translate(0, -52);
+      ctx.rotate(character.state === "IDLE" ? Math.sin(t * 1.7) * 0.04 : character.rot * 0.05);
+
+      ctx.fillStyle = p.head;
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 42, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Cheeks
+      ctx.fillStyle = "rgba(232, 93, 63, 0.35)";
+      ctx.beginPath();
+      ctx.ellipse(-22, 8, 8, 5, 0, 0, Math.PI * 2);
+      ctx.ellipse(22, 8, 8, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (p.prop === "bandana") {
+        ctx.fillStyle = "#E85D3F";
+        rRect(ctx, -40, -26, 80, 12, 4); ctx.fill(); ctx.stroke();
+      } else if (p.prop === "bells") {
+        ctx.fillStyle = "#F2B705";
+        ctx.beginPath(); ctx.arc(-26, -36, 10, Math.PI, 0); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.arc(26, -36, 10, Math.PI, 0); ctx.fill(); ctx.stroke();
+      }
+
+      // Face Expressions
+      ctx.fillStyle = "#1E1B18";
+      ctx.strokeStyle = "#1E1B18";
+      ctx.lineWidth = 3.2;
+      ctx.lineCap = "round";
+
+      if (character.state === "IDLE" || character.state === "RECOVER") {
+        if (p.prop === "shades" && !character.thumbsUp) {
+          rRect(ctx, -28, -14, 24, 13, 3); ctx.fill();
+          rRect(ctx, 4, -14, 24, 13, 3); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(-4, -8); ctx.lineTo(4, -8); ctx.stroke();
+        } else if (Math.sin(t * 3.1) > 0.96 || world.gameState === "CALM") {
+          ctx.beginPath(); ctx.arc(-14, -6, 6, 0.1 * Math.PI, 0.9 * Math.PI); ctx.stroke();
+          ctx.beginPath(); ctx.arc(14, -6, 6, 0.1 * Math.PI, 0.9 * Math.PI); ctx.stroke();
+        } else {
+          ctx.beginPath(); ctx.arc(-14, -7, 4.8, 0, Math.PI * 2); ctx.arc(14, -7, 4.8, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.beginPath(); ctx.arc(0, 8, 10, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+      } else if (character.state === "FLINCH") {
+        ctx.beginPath();
+        ctx.moveTo(-20, -12); ctx.lineTo(-10, -7); ctx.lineTo(-20, -2);
+        ctx.moveTo(20, -12); ctx.lineTo(10, -7); ctx.lineTo(20, -2);
+        ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 11, 5.5, 0, Math.PI * 2); ctx.stroke();
+      } else if (character.state === "STAGGER") {
+        ctx.fillStyle = "#FFFFFF";
+        ctx.beginPath(); ctx.arc(-15, -8, 8.5, 0, Math.PI * 2); ctx.arc(15, -8, 8.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#1E1B18";
+        ctx.beginPath(); ctx.arc(-13, -8, 3.2, 0, Math.PI * 2); ctx.arc(17, -8, 3.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, 14, 11, 7, 0, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(-20, -12); ctx.lineTo(-10, -2); ctx.moveTo(-10, -12); ctx.lineTo(-20, -2);
+        ctx.moveTo(10, -12); ctx.lineTo(20, -2); ctx.moveTo(20, -12); ctx.lineTo(10, -2);
+        ctx.stroke();
+        ctx.fillStyle = "#FB7185";
+        rRect(ctx, -2, 11, 11, 13, 5); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-12, 11); ctx.lineTo(14, 11); ctx.stroke();
+      }
+
+      // Orbiting Dizzy Stars
+      if (character.stars > 0) {
+        for (let i = 0; i < character.stars; i++) {
+          const a = t * 5.5 + (i * Math.PI * 2) / character.stars;
+          drawStar(ctx, Math.cos(a) * 50, -40 + Math.sin(a) * 13, 5, 8.5, 4, "#F2B705", "#1E1B18");
+        }
+      }
+
+      ctx.restore(); // head
+      ctx.restore(); // buddy
+
+      // Speech Bubble
+      if (character.quoteTimer > 0 && character.quote) {
+        ctx.save();
+        const qx = cx;
+        const qy = Math.max(46, cy - 122);
+        ctx.font = "700 12.5px 'Inter', sans-serif";
+        const tw = ctx.measureText(character.quote).width;
+        const bw = Math.min(W - 28, tw + 26);
+        const bh = 32;
+        ctx.fillStyle = "#FFFDF9";
+        ctx.strokeStyle = "#1E1B18";
+        ctx.lineWidth = 2.5;
+        rRect(ctx, qx - bw / 2, qy - bh / 2, bw, bh, 14);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#1E1B18";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(character.quote, qx, qy);
+        ctx.restore();
+      }
+    }
+
+    function renderGloves(t) {
+      if (world.gameState === "CALM") return;
+      const sk = SKINS[player.skin] || SKINS.classic;
+      const spread = Math.min(160, W * 0.28);
+      const baseY = H - 56;
+
+      ["left", "right"].forEach((side) => {
+        const isL = side === "left";
+        const s = isL ? -1 : 1;
+        let gx = W * 0.5 + s * spread;
+        let gy = baseY + Math.sin(t * 3 + (isL ? 0 : 1.4)) * 4;
+        let rot = s * -0.2;
+        let sx = 1, sy = 1;
+
+        const nextSide = player.side === "right" ? "left" : "right";
+        if (player.holding && side === nextSide) {
+          const r = Math.min(1.0, player.holdSec / feelGoodConfig.HOLD_MAX);
+          gx += s * (20 * r) + (Math.random() - 0.5) * r * 5;
+          gy += 24 * r + (Math.random() - 0.5) * r * 5;
+          rot += s * (-0.32 * r);
+          sx = 1 + r * 0.2; sy = 1 + r * 0.2;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(gx, gy, 52, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * r);
+          ctx.strokeStyle = r > 0.8 ? "#E85D3F" : "#F2B705";
+          ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.stroke();
+          ctx.restore();
+        }
+
+        if (world.punchAnim.active && world.punchAnim.side === side) {
+          const p = world.punchAnim.p;
+          const curve = p < 0.35 ? p / 0.35 : 1 - (p - 0.35) / 0.65;
+          const tx = W * 0.5 + character.x * 0.4;
+          const ty = H * 0.48 + character.y * 0.4;
+          if (world.punchAnim.type === "hook") {
+            gx = gx + (tx - gx) * curve + s * Math.sin(curve * Math.PI) * 85;
+            gy = gy + (ty - gy) * curve;
+            rot = s * -1.05 * curve;
+          } else if (world.punchAnim.type === "uppercut") {
+            gx = gx + (tx - gx) * curve;
+            gy = gy + (ty - 28 - gy) * curve + Math.sin(curve * Math.PI) * 52;
+            rot = 0;
+          } else {
+            gx = gx + (tx - gx) * curve;
+            gy = gy + (ty - gy) * curve;
+          }
+          if (p > 0.22 && p < 0.48) { sx = 1.3; sy = 0.76; }
+        }
+
+        ctx.save();
+        ctx.translate(gx, gy); ctx.rotate(rot); ctx.scale(sx, sy);
+        ctx.strokeStyle = "#1E1B18"; ctx.lineWidth = 3;
+
+        // Cuff
+        ctx.fillStyle = sk.cuff;
+        rRect(ctx, -23, 15, 46, 20, 7); ctx.fill(); ctx.stroke();
+
+        // Main Fist
+        ctx.fillStyle = sk.main;
+        ctx.beginPath(); ctx.arc(0, -6, 35, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        // Thumb
+        ctx.fillStyle = sk.shade;
+        ctx.beginPath(); ctx.arc(isL ? 25 : -25, -2, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        if (sk.tag === "spiked") {
+          ctx.fillStyle = "#F5F5F4";
+          [-16, 0, 16].forEach((px) => {
+            ctx.beginPath(); ctx.moveTo(px - 5, -38); ctx.lineTo(px, -51); ctx.lineTo(px + 5, -38); ctx.closePath();
+            ctx.fill(); ctx.stroke();
+          });
+        } else if (sk.tag === "girly") {
+          drawStar(ctx, 0, -8, 4, 11, 4.5, "#FDE047", "#1E1B18");
+        } else if (sk.tag === "fluffy") {
+          ctx.fillStyle = "#FFFFFF";
+          ctx.beginPath(); ctx.arc(-15, -28, 11, 0, Math.PI * 2); ctx.arc(0, -32, 13, 0, Math.PI * 2); ctx.arc(15, -28, 11, 0, Math.PI * 2);
+          ctx.fill(); ctx.stroke();
+        }
+        ctx.restore();
+      });
+    }
+
+    function renderEffects() {
+      world.particles.forEach((p) => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - p.life / p.maxLife);
+        ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        if (p.star) drawStar(ctx, 0, 0, 5, p.size, p.size * 0.45, p.color, "#1E1B18");
+        else {
+          ctx.fillStyle = p.color; ctx.strokeStyle = "#1E1B18"; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(0, 0, p.size, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        }
+        ctx.restore();
+      });
+
+      world.bubbles.forEach((b) => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - b.life / b.maxLife);
+        ctx.translate(b.x, b.y); ctx.rotate(b.rot); ctx.scale(b.scale, b.scale);
+        drawStar(ctx, 0, 0, 9, 42, 26, "#FEF08A", "#1E1B18");
+        ctx.font = "900 21px 'Fredoka', sans-serif";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.strokeStyle = "#1E1B18"; ctx.lineWidth = 4.5;
+        ctx.strokeText(b.text, 0, 0);
+        ctx.fillStyle = b.color;
+        ctx.fillText(b.text, 0, 0);
+        ctx.restore();
+      });
+
+      world.confetti.forEach((c) => {
+        ctx.save();
+        ctx.translate(c.x, c.y); ctx.rotate(c.rot);
+        ctx.fillStyle = c.color; ctx.strokeStyle = "#1E1B18"; ctx.lineWidth = 1;
+        ctx.fillRect(-c.size / 2, -c.size / 4, c.size, c.size / 2);
+        ctx.strokeRect(-c.size / 2, -c.size / 4, c.size, c.size / 2);
+        ctx.restore();
+      });
+    }
+
+    // =======================================================================
+    // MAIN LOOP
+    // =======================================================================
+    let raf = null;
+    function frame(now) {
+      const dt = Math.min(0.05, (now - lastMs) / 1000);
+      lastMs = now;
+      tick(dt);
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.save();
+      ctx.translate(world.shakeX, world.shakeY);
+      renderBuddy(now / 1000);
+      renderGloves(now / 1000);
+      renderEffects();
+      ctx.restore();
+
+      raf = requestAnimationFrame(frame);
+    }
+
+    window.onload = () => {
+      resizeStage();
+      syncHud();
+      if (raf) cancelAnimationFrame(raf);
+      lastMs = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+  </script>
+</body>
+</html>
