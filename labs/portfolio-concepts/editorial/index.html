@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nitish Chauhan | Strategy, Content & Product</title>
+  <meta name="description" content="Portfolio of Nitish Chauhan: Technical Content Strategist, Systems Thinker, and HCI Builder.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #090a0f;
+      --surface: #12151c;
+      --surface-hover: #1a1e28;
+      --border: rgba(232, 226, 210, 0.1);
+      --ink: #ece7dc;
+      --muted: #9a9486;
+      --dim: #5e5a52;
+      --accent: #e8b86d;
+      --accent-dim: rgba(232, 184, 109, 0.15);
+      --teal: #7dcec4;
+      --teal-dim: rgba(125, 206, 196, 0.15);
+      
+      --sans: 'Outfit', sans-serif;
+      --serif: 'Instrument Serif', serif;
+      --mono: 'IBM Plex Mono', monospace;
+      
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 15% 50%, rgba(232, 184, 109, 0.03), transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(125, 206, 196, 0.03), transparent 25%);
+    }
+
+    /* Typography */
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.1; margin-bottom: 0.5em; }
+    h1 { font-size: clamp(3rem, 6vw, 5rem); letter-spacing: -0.02em; }
+    h2 { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-top: 1.5em; }
+    h3 { font-size: 1.8rem; font-family: var(--sans); font-weight: 500; letter-spacing: -0.01em; }
+    p { font-size: 1.125rem; color: var(--muted); margin-bottom: 1.5em; max-width: 700px; }
+    strong { color: var(--ink); font-weight: 500; }
+    a { color: var(--teal); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent); }
+
+    .kicker {
+      font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: block;
+    }
+
+    /* Layout */
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 120px 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(9, 10, 15, 0.8); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; max-width: 1000px; margin: 0 auto;
+    }
+    .brand { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 0.9rem; color: var(--muted); }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* Hero */
+    .hero { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding-top: 80px; }
+    .hero p { font-size: 1.35rem; max-width: 650px; }
+
+    /* Grid Layouts */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; gap: 32px; } }
+
+    /* Cards */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px; transition: transform 0.3s var(--ease), background 0.3s;
+    }
+    .card:hover { transform: translateY(-4px); background: var(--surface-hover); }
+    
+    /* Interactive Simulator Zones (Density Allowed Here) */
+    .simulator-zone {
+      background: #000; border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-top: 24px;
+      position: relative; overflow: hidden; min-height: 200px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    /* Voice Cursor Sim */
+    .vc-radar {
+      width: 120px; height: 120px; border-radius: 50%;
+      border: 1px dashed var(--dim); position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vc-center {
+      width: 24px; height: 24px; background: var(--ink);
+      border-radius: 50%; box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      transition: transform 0.3s, background 0.3s; cursor: pointer;
+    }
+    .vc-center:hover { transform: scale(1.2); background: var(--accent); }
+    .vc-label {
+      position: absolute; font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+      opacity: 0.5; transition: opacity 0.3s;
+    }
+    .vc-radar:hover .vc-label { opacity: 1; }
+    
+    /* Metabolize Sim */
+    .met-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+    .met-pane { background: #0a0d12; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.8rem; color: var(--dim); }
+    .met-hl { background: var(--accent-dim); color: var(--accent); padding: 0 4px; border-radius: 2px; }
+    
+    /* Limbic Sim */
+    .limbic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 200px; }
+    .limbic-cell { aspect-ratio: 1; border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.75rem; color: var(--dim); }
+    .limbic-active { background: var(--teal-dim); color: var(--teal); border-color: var(--teal); }
+
+    /* Engagement Form */
+    .form-group { margin-bottom: 24px; }
+    label { display: block; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    select, input, textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--ink); padding: 16px; border-radius: 8px; font-family: var(--sans);
+      font-size: 1rem; transition: border-color 0.2s;
+    }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    .btn {
+      background: var(--ink); color: #000; font-family: var(--sans); font-weight: 500;
+      padding: 16px 32px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 1rem; transition: transform 0.2s, background 0.2s;
+    }
+    .btn:hover { background: var(--accent); transform: translateY(-2px); }
+
+    /* Footer */
+    footer { padding: 60px 0; text-align: center; font-family: var(--mono); font-size: 0.8rem; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="brand">Nitish Chauhan</div>
+      <div class="nav-links">
+        <a href="#about">Sync</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#engage">Engage</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <span class="kicker">Strategy · Content · Product</span>
+      <h1>I translate complex systems into human narratives.</h1>
+      <p>I build B2B marketing engines that convert, write technical content that respects human attention, and prototype cognitive workflows that eradicate friction. Based in Meerut, working globally.</p>
+    </section>
+
+    <!-- THE SYNC (About) -->
+    <section id="about">
+      <span class="kicker">01 · The Sync</span>
+      <h2>Who I am, minus the corporate jargon.</h2>
+      <div class="grid-2">
+        <div>
+          <p>If you're a Director of Product, a VP of Marketing, or a founder looking for a strategic partner, we need to sync on fundamentals first.</p>
+          <p>My background is in <strong>Psychology</strong>. I study how the human mind associates, retrieves, and experiences cognitive load. I apply that directly to software, marketing funnels, and content architecture.</p>
+        </div>
+        <div>
+          <p>For the past few years, I've been a Technical Content Strategist at <strong>Smartlead.ai</strong>. I don't just write fluff; I document the gritty architecture of B2B lead generation, sender reputations, DNS hygiene, and AI outreach tech stacks—the stuff founders are Googling in a panic at 2 AM.</p>
+          <p>I operate in short, intense creative sprints. I believe in eliminating attention residue, leveraging parallel agentic workflows, and building things that actually work.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERTISE -->
+    <section id="expertise">
+      <span class="kicker">02 · Domains</span>
+      <h2>Where I drive revenue and momentum.</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Technical Content & SEO</h3>
+          <p>I build content flywheels for B2B SaaS. From auditing SERP gaps to writing deep-dive case studies on scaling AI outreach agencies. I translate deeply technical features (like SPF/DKIM rotation and API endpoints) into compelling acquisition narratives.</p>
+        </div>
+        <div class="card">
+          <h3>Product Growth & Strategy</h3>
+          <p>A great product with a confusing narrative is a dead product. I map out user psychology, analyze interaction bottlenecks, and structure marketing funnels that align with how users actually want to buy and engage.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVIDENCE (Prototypes) -->
+    <section id="evidence">
+      <span class="kicker">03 · The Evidence</span>
+      <h2>How I think & build.</h2>
+      <p>I don't just strategize; I build. These are interactive HCI (Human-Computer Interaction) prototypes I designed to solve fundamental cognitive bottlenecks in modern workflows. They demonstrate my systems-thinking and execution velocity.</p>
+      
+      <div class="grid-2" style="margin-top: 48px;">
+        <!-- Voice Cursor -->
+        <div>
+          <h3>Voice Cursor</h3>
+          <p>Current voice AI forces you to memorize syntax. Voice Cursor anchors intent to physical motion. The center is neutral; moving outward dictates the command route.</p>
+          <div class="simulator-zone">
+            <div class="vc-radar">
+              <span class="vc-label" style="top:-20px;">Dictate</span>
+              <span class="vc-label" style="bottom:-20px;">Capture</span>
+              <span class="vc-label" style="right:-40px;">Command</span>
+              <span class="vc-label" style="left:-30px;">Ask AI</span>
+              <div class="vc-center"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Metabolize -->
+        <div>
+          <h3>Project Metabolize</h3>
+          <p>Notes apps encourage digital hoarding. Metabolize forces recursive compression, using spatial Y-axis memory to help the brain offload working memory instantly.</p>
+          <div class="simulator-zone">
+            <div class="met-split">
+              <div class="met-pane">
+                Source Document<br><br>
+                The brain needs <span class="met-hl">context before creation.</span>
+              </div>
+              <div class="met-pane" style="border-color: var(--teal-dim);">
+                Spatial Canvas<br><br>
+                <span class="met-hl">Context before creation.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 48px; max-width: 50%;">
+        <h3>Limbic Notes</h3>
+        <p>Eradicating the "Alt-Tab Tax." A routing fabric where screen edges become cognitive slots, letting you throw highlights to peripheral notebooks via arrow keys without leaving your reading flow.</p>
+        <div class="simulator-zone">
+          <div class="limbic-grid">
+            <div class="limbic-cell">NW</div>
+            <div class="limbic-cell limbic-active">N (Keep)</div>
+            <div class="limbic-cell">NE</div>
+            <div class="limbic-cell">W (Later)</div>
+            <div class="limbic-cell" style="border-radius: 50%; border-color: var(--dim);">Source</div>
+            <div class="limbic-cell">E (Hard)</div>
+            <div class="limbic-cell">SW</div>
+            <div class="limbic-cell">S (Drop)</div>
+            <div class="limbic-cell">SE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENGAGEMENT -->
+    <section id="engage">
+      <span class="kicker">04 · Initiation</span>
+      <h2>Let's frame the engagement.</h2>
+      <p>I prefer operating in focused, high-momentum sprints. Select your requirements below, and let's structure a timeline.</p>
+      
+      <div class="card" style="margin-top: 40px; background: transparent;">
+        <form onsubmit="event.preventDefault(); alert('Scope captured. (This is a prototype UI).');">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Primary Objective</label>
+              <select>
+                <option>B2B Content Strategy & Execution</option>
+                <option>Technical SEO & Funnel Audit</option>
+                <option>Product UI/UX & Narrative Alignment</option>
+                <option>Custom Systems/HCI Prototyping</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Preferred Cadence</label>
+              <select>
+                <option>2-to-3 Day Intense Sprint</option>
+                <option>2-Week Deep Dive</option>
+                <option>Monthly Strategic Retainer</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Current Bottleneck (Be direct)</label>
+            <textarea rows="4" placeholder="e.g., 'Our product is incredible, but our blog reads like a robot wrote it...'"></textarea>
+          </div>
+          <button class="btn" type="submit">Initiate Sync</button>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      Nitish Chauhan · 2026 · Built for momentum.
+    </footer>
+  </div>
+
+</body>
+</html>
