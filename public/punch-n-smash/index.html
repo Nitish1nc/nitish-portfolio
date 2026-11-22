@@ -517,25 +517,79 @@
       }
     };
 
-    const SWEET_HURT_LINES = [
-      "Ow! Okay, okay, I deserved that 😅",
-      "Oof—my bad! Sorry!! 🙏",
-      "Agh! Fair enough, go ahead.",
-      "Yikes, that actually stung 😭",
-      "Okay I'm sorry, please spare me 🥺",
-      "Whoops—yeah, I walked into that.",
-      "Ow!! Look, I apologize, alright?",
-      "Oof... okay I hear you loud & clear."
+    const POKE_LINES = [
+      "That was adorable. 😌",
+      "You call that a punch? 💅",
+      "Still standing. Your move. 🗿",
+      "Aww. You're mad. 😘",
+      "Is that your best one? 🤭",
+      "Hit me like you mean it. 😏",
+      "Wow. So scary. 👻",
+      "Again. I barely felt it. 🥱",
+      "Tickles. 🪶",
+      "My grandma hits harder. 👵",
+      "Was that a punch or a suggestion? 🤨",
+      "I'm literally unbothered. 😎",
+      "Do it again. I dare you. 😈",
+      "You paused. Scared? 🐔",
+      "Cute little tap. 🎀",
+      "I'm still pretty. 💋",
+      "That all you got, superstar? 🌟",
+      "Missed the drama. Try again. 🎭",
+      "Zero damage. Full confidence. 💪",
+      "You're blushing. Hit me. 😳",
+      "I felt a breeze. 🌬️",
+      "Pathetic. Iconic. Do another. 👑",
+      "Oh no. Anyway. 🙃",
+      "You swing like a polite email. 📧",
+      "I'm thriving, actually. 🌱",
+      "Harder. Entertain me. 🎪",
+      "That was a warm-up, right? 🔥",
+      "Still gorgeous. Still upright. 💃",
+      "You done, or just shy? 🫣",
+      "Again. Make it messy. 🎨"
     ];
 
-    const SALTY_TAUNT_LINES = [
-      "Wait… was that supposed to hurt? 😏",
-      "My grandma taps harder than that.",
-      "Is that all? I'm barely even smudged.",
-      "Cute. Did you warm up first? 💅",
-      "Zero damage. Try putting your back into it.",
-      "Still standing, bestie. Next! 👀"
+    const BREAK_LINES = [
+      "Ow ow ow, okay I'm done! 😭",
+      "Stop stop stop, I'm sorry! 🙏",
+      "Please, I take it back! 🥺",
+      "Okay okay, you win. Please stop. 🏳️",
+      "Mercy. Seriously. Mercy. 🤕",
+      "That one hurt. I'm sorry. 💥",
+      "Uncle! I apologize! 😅",
+      "I'm sorry! I was being a jerk! 🙇",
+      "MY FACE. MY POOR FACE. 😱",
+      "I regret everything! 😵",
+      "Timeout! Timeout! ⏱️",
+      "Okay I was talking too much! 🤐",
+      "Please, I have plans later! 📅",
+      "That rearranged my thoughts! 🧠",
+      "I yield! I yield! 🤲",
+      "Sorry sorry sorry sorry! 🔁",
+      "I saw my life flash. It was mid. 📸",
+      "Truce? I'll bring snacks. 🍪",
+      "You win. I'm just a pillow. 🛋️",
+      "I'll never poke again. Probably. 😇",
+      "My bones filed a complaint. 🦴",
+      "I'm sorry I existed so punchably! 🎯",
+      "Call a timeout. Call my mom. 📞",
+      "That was illegal and correct. ⚖️",
+      "I apologize to you and the room. 🏠",
+      "Okay! I'm delicate now! 🌷",
+      "Please spare the smile. It's rented. 😬",
+      "I take back the grandma comment! 👵",
+      "I'm done. Emotionally. Physically. Dramatically. 🎬",
+      "Hug? No? Fine. I'm sorry. 🤍"
     ];
+
+    function saySprinkle() {
+      const pool = Math.random() < 0.5 ? POKE_LINES : BREAK_LINES;
+      let line = pool[Math.floor(Math.random() * pool.length)];
+      if (line === character.quote) line = pool[Math.floor(Math.random() * pool.length)];
+      character.quote = line;
+      character.quoteTimer = 2.4;
+    }
 
     const SKINS = {
       classic: { main: "#E85D3F", shade: "#B9381E", cuff: "#FFFDF9", accent: "#F2B705", tag: "classic" },
@@ -977,12 +1031,9 @@
         character.signTimer = 2.0;
       }
 
-      // Immediate hurt/apologetic vs provocative/salty response (not every hit, random oscillation)
-      if (Math.random() < 0.62) {
-        const useSweet = force >= 55 ? (Math.random() < 0.65) : (Math.random() < 0.45);
-        const pool = useSweet ? SWEET_HURT_LINES : SALTY_TAUNT_LINES;
-        character.quote = pool[Math.floor(Math.random() * pool.length)];
-        character.quoteTimer = 2.6;
+      // A line on some hits only. Bucket is a coin flip, so a heavy hit can still smirk.
+      if (Math.random() < 0.34) {
+        saySprinkle();
       } else {
         character.quoteTimer = 0;
       }
@@ -1383,10 +1434,8 @@
             character.state = "IDLE";
             character.subType = "none";
             character.stars = 0;
-            if (character.quoteTimer <= 0 && Math.random() < 0.45) {
-              const pool = Math.random() < 0.5 ? SWEET_HURT_LINES : SALTY_TAUNT_LINES;
-              character.quote = pool[Math.floor(Math.random() * pool.length)];
-              character.quoteTimer = 2.5;
+            if (character.quoteTimer <= 0 && Math.random() < 0.16) {
+              saySprinkle();
             }
           }
         }
@@ -1673,8 +1722,15 @@
         ctx.save();
         const qx = cx;
         const qy = Math.max(46, cy - 122);
-        ctx.font = "700 12.5px 'Inter', sans-serif";
-        const tw = ctx.measureText(character.quote).width;
+        const maxW = Math.max(120, W - 36);
+        let size = 12.5;
+        ctx.font = `700 ${size}px 'Inter', sans-serif`;
+        let tw = ctx.measureText(character.quote).width;
+        while (tw > maxW && size > 8) {
+          size -= 0.5;
+          ctx.font = `700 ${size}px 'Inter', sans-serif`;
+          tw = ctx.measureText(character.quote).width;
+        }
         const bw = Math.min(W - 28, tw + 26);
         const bh = 32;
         ctx.fillStyle = "#FFFDF9";
