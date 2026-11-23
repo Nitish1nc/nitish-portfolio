@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitish-Labs // Stop Begging for Jobs</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#FAF9F6',
+                        ink: '#111113',
+                        card: '#FFFFFF',
+                        limePop: '#D9F99D',
+                        limeBright: '#84CC16',
+                        electricBlue: '#2563EB',
+                        warmGray: '#F3F2EE',
+                        darkLab: '#141417'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Subtle playful dotted grid background for the lab aesthetic */
+        .lab-grid {
+            background-image: radial-gradient(#d4d4d8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Tactile neo-brutalist soft shadow for interactive cards */
+        .lab-card {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+        .lab-card:hover {
+            transform: translateY(-3px);
+        }
+        /* Blurred curiosity text effect */
+        .curiosity-blur {
+            filter: blur(5px);
+            user-select: none;
+            transition: filter 0.35s ease;
+        }
+        .curiosity-blur.peeked {
+            filter: blur(0px);
+            user-select: auto;
+        }
+    </style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased selection:bg-limePop selection:text-ink overflow-x-hidden">
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-paper/90 backdrop-blur-md border-b border-zinc-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <!-- Nitish-Labs Brand Mark -->
+            <a href="#" class="flex items-center space-x-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-ink text-limePop flex items-center justify-center font-display font-bold text-lg shadow-sm group-hover:rotate-6 transition-transform">
+                    N
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-base tracking-tight leading-none">NITISH-LABS</span>
+                    <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">Field Notes // Vol. 01</span>
+                </div>
+            </a>
+
+            <!-- Desktop Jump Links -->
+            <nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-zinc-600">
+                <a href="#the-shift" class="hover:text-ink transition-colors">The Realization</a>
+                <a href="#skill-mixer" class="hover:text-ink transition-colors">Skill Mixer</a>
+                <a href="#hidden-spots" class="hover:text-ink transition-colors">Hidden Spots</a>
+                <a href="#curiosity-vault" class="hover:text-ink transition-colors flex items-center space-x-1">
+                    <span>Locked Vault</span>
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                </a>
+            </nav>
+
+            <!-- Action CTA -->
+            <a href="#cheat-sheet" class="px-4 py-2 rounded-xl bg-ink text-white hover:bg-zinc-800 text-xs sm:text-sm font-medium transition-all shadow-sm">
+                Build Your Play &rarr;
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="lab-grid border-b border-zinc-200 pt-14 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto text-center space-y-6">
+            <!-- Playful Top Pill -->
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-zinc-200 shadow-sm text-xs font-mono text-zinc-700">
+                <span class="w-2 h-2 rounded-full bg-limeBright"></span>
+                <span>NITISH-LABS EXPERIMENT #01 • NO CORPORATE BUZZWORDS</span>
+            </div>
+
+            <!-- Punchy Headline -->
+            <h1 class="font-display font-bold text-4xl sm:text-6xl tracking-tight text-ink leading-[1.08]">
+                Stop going around <span class="underline decoration-limeBright decoration-4 underline-offset-4">begging for jobs.</span> That’s not how money works.
+            </h1>
+
+            <!-- Plain-English Hook -->
+            <p class="text-base sm:text-xl text-zinc-600 max-w-2xl mx-auto leading-relaxed">
+                Most people treat finding work like asking for a favor. Smart folks realize one silly, simple truth: <strong class="text-ink font-semibold">people only give you money when you solve a problem they’re tired of dealing with.</strong>
+            </p>
+
+            <!-- Interactive Mindset Switcher Toy -->
+            <div class="pt-6 max-w-2xl mx-auto">
+                <div class="bg-white rounded-2xl border border-zinc-200 p-4 sm:p-6 shadow-md text-left space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                        <span class="text-xs font-mono uppercase tracking-wider text-zinc-400">Interactive Reality Check</span>
+                        <!-- Toggle Buttons -->
+                        <div class="inline-flex rounded-xl bg-warmGray p-1 self-start sm:self-auto">
+                            <button onclick="setMindsetMode('old')" id="btnOldWay" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer text-zinc-600">
+                                😴 The Old Way
+                            </button>
+                            <button onclick="setMindsetMode('lab')" id="btnLabWay" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer bg-ink text-white shadow-sm">
+                                ⚡ The Nitish-Labs Way
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Content Box -->
+                    <div id="mindsetContent" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: THE 3 CORE REALIZATIONS -->
+    <section id="the-shift" class="py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto space-y-12">
+        <div class="max-w-2xl space-y-3">
+            <span class="font-mono text-xs uppercase tracking-wider text-electricBlue font-semibold">01 // Wake Up Your Brain</span>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-ink">
+                Opportunity is everywhere once you stop thinking in straight lines.
+            </h2>
+            <p class="text-zinc-600 text-sm sm:text-base leading-relaxed">
+                You don't have to hide in a cave just "upskilling" forever, and you don't have to spam 500 strangers with your resume. Both extremes leave massive money on the table.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="lab-card rounded-2xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-6">
+                <div class="space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-limePop flex items-center justify-center text-lg font-bold">🧲</div>
+                    <h3 class="font-display font-bold text-xl text-ink">Why pick Inbound OR Outbound? Run both.</h3>
+                    <p class="text-sm text-zinc-600 leading-relaxed">
+                        Posting cool projects online brings people to you (Inbound). Reaching out directly to founders who need help right now gets fast cash (Outbound). Together, they create an unfair advantage.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 text-xs font-mono text-zinc-500">
+                    Rule #1: Never rely on just one door.
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="lab-card rounded-2xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-6">
+                <div class="space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-lg font-bold">🧩</div>
+                    <h3 class="font-display font-bold text-xl text-ink">2–3 Big Skills + 7–8 Quick Tricks.</h3>
+                    <p class="text-sm text-zinc-600 leading-relaxed">
+                        Betting your whole life on "one skill, one portfolio, one job" is fragile. Combine 2–3 core strengths with 7–8 tiny, specific fix-it skills that someone will gladly pay you for this weekend.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 text-xs font-mono text-zinc-500">
+                    Rule #2: Big skills build trust. Tiny skills close deals.
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="lab-card rounded-2xl bg-white border border-zinc-200 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-6">
+                <div class="space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-lg font-bold">🥞</div>
+                    <h3 class="font-display font-bold text-xl text-ink">Stack your income like pancakes.</h3>
+                    <p class="text-sm text-zinc-600 leading-relaxed">
+                        Why pray to one employer when you can have a steady main gig, two quick freelance retainers on the side, and a small startup idea cooking in the background?
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 text-xs font-mono text-zinc-500">
+                    Rule #3: Multiple streams = zero panic.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE SKILL STACK MIXER -->
+    <section id="skill-mixer" class="py-16 sm:py-24 bg-warmGray border-y border-zinc-200 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto space-y-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div class="max-w-2xl space-y-2">
+                    <span class="font-mono text-xs uppercase tracking-wider text-electricBlue font-semibold">02 // Interactive Playground</span>
+                    <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-ink">
+                        The Nitish-Labs Skill Mixer
+                    </h2>
+                    <p class="text-zinc-600 text-sm sm:text-base">
+                        Tap a couple of <strong class="text-ink">Big Skills</strong> and a few <strong class="text-ink">Quick Tricks</strong> below to see how an everyday builder creates multiple ways to get paid at once.
+                    </p>
+                </div>
+                <button onclick="randomizeSkills()" class="self-start md:self-auto px-4 py-2.5 rounded-xl bg-white border border-zinc-300 hover:border-ink text-xs font-mono font-semibold text-ink shadow-sm transition-all cursor-pointer">
+                    🎲 Shuffle Combo
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Left Controls: Pick Skills -->
+                <div class="lg:col-span-7 space-y-6 bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+                    <!-- Macro Skills -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-mono uppercase tracking-wider font-semibold text-zinc-500">Step 1: Pick 2–3 Big Skills (Your Foundation)</label>
+                            <span id="macroCount" class="text-xs font-mono text-electricBlue">2 selected</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="macroButtons">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Micro Skills -->
+                    <div class="space-y-3 pt-4 border-t border-zinc-100">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-mono uppercase tracking-wider font-semibold text-zinc-500">Step 2: Pick 3–7 Quick Tricks (Fast Money Wedges)</label>
+                            <span id="microCount" class="text-xs font-mono text-limeBright font-semibold">4 selected</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="microButtons">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Output: Live Opportunity Recipe -->
+                <div class="lg:col-span-5 bg-darkLab text-white rounded-2xl p-6 sm:p-7 shadow-xl space-y-5 border border-zinc-800">
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                        <span class="font-mono text-xs text-limePop uppercase tracking-wider">Your Live Money Stack</span>
+                        <span class="px-2 py-0.5 rounded bg-zinc-800 font-mono text-[11px] text-zinc-300">3 Streams Active</span>
+                    </div>
+
+                    <div id="recipeOutput" class="space-y-4">
+                        <!-- Dynamically populated by JS -->
+                    </div>
+
+                    <div class="pt-3 border-t border-zinc-800">
+                        <p class="text-xs text-zinc-400 italic">
+                            "Notice how you didn't apply to a single job posting—yet you now have three different ways people can pay you this month."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: HIDDEN SPOTS (WHERE SMART FOLKS LOOK) -->
+    <section id="hidden-spots" class="py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto space-y-10">
+        <div class="max-w-2xl space-y-3">
+            <span class="font-mono text-xs uppercase tracking-wider text-electricBlue font-semibold">03 // Stop Looking Where Everyone Else Looks</span>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-ink">
+                4 Places Smart Folks Check Before a Job Is Ever Posted
+            </h2>
+            <p class="text-zinc-600 text-sm sm:text-base leading-relaxed">
+                By the time a role hits LinkedIn, 1,000 people have already clicked "Easy Apply." Here is where the quiet, high-paying stuff actually happens. Click any card to peek at a real example.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="hiddenSpotsGrid">
+            <!-- Rendered by JS for interactive toggle -->
+        </div>
+    </section>
+
+    <!-- SECTION 4: THE CURIOSITY VAULT (HANGING HOOKS) -->
+    <section id="curiosity-vault" class="py-16 sm:py-24 bg-darkLab text-white px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto space-y-12">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-zinc-800 pb-8">
+                <div class="max-w-2xl space-y-3">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-xs font-mono text-limePop">
+                        <span>🔒 NITISH-LABS SECRET VAULT</span>
+                    </div>
+                    <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight">
+                        Wait... How Do You Actually Reach Out Without Sounding Salesy?
+                    </h2>
+                    <p class="text-zinc-400 text-sm sm:text-base">
+                        Spotting opportunities is only half the game. Inside the lab, we’re testing three unfair plays for getting replies from busy founders. <span class="text-zinc-200">Tap "Peek Clue" on any card—we'll show you just enough to spark ideas.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3 Hanging Curiosity Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Hook 1 -->
+                <div class="rounded-2xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="text-limePop">PLAY #01</span>
+                            <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">98% Open Rate</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white">The 90-Second "Trojan Horse"</h3>
+                        <p class="text-sm text-zinc-400 leading-relaxed">
+                            Never send a message saying "Hi, are you hiring?" Instead, send something they literally cannot ignore...
+                        </p>
+                        <div class="p-3.5 rounded-xl bg-black/60 border border-zinc-800 text-xs text-zinc-300 leading-relaxed">
+                            <span class="font-mono text-[10px] uppercase text-amber-400 block mb-1">Clue Inside:</span>
+                            <p id="clue-1" class="curiosity-blur">
+                                Record your screen for 90 seconds fixing a tiny broken thing on their website or checkout page. Don't ask for a call—just hand them the fix for free. Watch what they reply within 2 hours...
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="toggleClue('clue-1', this)" class="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-mono font-semibold text-limePop transition-colors cursor-pointer">
+                        👁️ Peek Clue
+                    </button>
+                </div>
+
+                <!-- Hook 2 -->
+                <div class="rounded-2xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="text-limePop">PLAY #02</span>
+                            <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">1-to-50 Leverage</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white">The "One Person" Backdoor</h3>
+                        <p class="text-sm text-zinc-400 leading-relaxed">
+                            Messaging 50 founders takes forever. Smart operators message <em>one</em> specific person who drops their name to 50 founders at once...
+                        </p>
+                        <div class="p-3.5 rounded-xl bg-black/60 border border-zinc-800 text-xs text-zinc-300 leading-relaxed">
+                            <span class="font-mono text-[10px] uppercase text-amber-400 block mb-1">Clue Inside:</span>
+                            <p id="clue-2" class="curiosity-blur">
+                                Every startup investor group (like YC or a16z) has a "Talent Helper" whose entire job is helping their 50+ startups find good builders. Impress that ONE person, and you skip every line...
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="toggleClue('clue-2', this)" class="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-mono font-semibold text-limePop transition-colors cursor-pointer">
+                        👁️ Peek Clue
+                    </button>
+                </div>
+
+                <!-- Hook 3 -->
+                <div class="rounded-2xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="text-limePop">PLAY #03</span>
+                            <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">No More "No"</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white">The 3-Option Menu Trick</h3>
+                        <p class="text-sm text-zinc-400 leading-relaxed">
+                            When someone asks "How can we work together?", never give them a yes-or-no choice. Hand them a menu instead...
+                        </p>
+                        <div class="p-3.5 rounded-xl bg-black/60 border border-zinc-800 text-xs text-zinc-300 leading-relaxed">
+                            <span class="font-mono text-[10px] uppercase text-amber-400 block mb-1">Clue Inside:</span>
+                            <p id="clue-3" class="curiosity-blur">
+                                Offer Option A: A quick 2-week fix ($X). Option B: A few hours a week on retainer ($Y/mo). Option C: Full-time lead. Even if they can't hire full-time, they almost always pick A or B...
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="toggleClue('clue-3', this)" class="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-mono font-semibold text-limePop transition-colors cursor-pointer">
+                        👁️ Peek Clue
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Hanging Cliffhanger Banner -->
+            <div class="rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-800 border border-limePop/30 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-1.5 text-center md:text-left">
+                    <span class="font-mono text-xs text-limePop uppercase">Coming Soon to Nitish-Labs</span>
+                    <h4 class="font-display font-bold text-xl text-white">Want the live radar &amp; exact message scripts next?</h4>
+                    <p class="text-xs sm:text-sm text-zinc-400">We’re wiring up the interactive live trackers step by step. Grab your custom starter cheat sheet right below first.</p>
+                </div>
+                <a href="#cheat-sheet" class="shrink-0 px-5 py-3 rounded-xl bg-limePop hover:bg-lime-300 text-ink font-semibold text-xs sm:text-sm transition-all shadow-lg">
+                    Unlock Starter Cheat Sheet &darr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: PERSONALIZED ACTION CHEAT SHEET -->
+    <section id="cheat-sheet" class="py-16 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto">
+        <div class="rounded-3xl bg-white border border-zinc-200 p-6 sm:p-10 shadow-lg space-y-8">
+            <div class="text-center space-y-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-electricBlue font-semibold">04 // Your Next 48 Hours</span>
+                <h2 class="font-display font-bold text-2xl sm:text-4xl text-ink">
+                    Pick Your Current Situation
+                </h2>
+                <p class="text-sm text-zinc-600">Select where you are right now, and Nitish-Labs will hand you a simple 3-step game plan.</p>
+            </div>
+
+            <!-- Situation Selector Tabs -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button onclick="selectSituation('job')" id="sit-job" class="sit-btn p-4 rounded-2xl border-2 border-ink bg-limePop/30 text-left transition-all cursor-pointer">
+                    <div class="text-lg mb-1">💼</div>
+                    <div class="font-display font-bold text-sm text-ink">I have a job, want side cash</div>
+                    <div class="text-xs text-zinc-600 mt-0.5">Add weekend gigs safely</div>
+                </button>
+
+                <button onclick="selectSituation('hunting')" id="sit-hunting" class="sit-btn p-4 rounded-2xl border border-zinc-200 bg-paper hover:border-zinc-400 text-left transition-all cursor-pointer">
+                    <div class="text-lg mb-1">🎯</div>
+                    <div class="font-display font-bold text-sm text-ink">Tired of applying to jobs</div>
+                    <div class="text-xs text-zinc-600 mt-0.5">Skip the resume black hole</div>
+                </button>
+
+                <button onclick="selectSituation('builder')" id="sit-builder" class="sit-btn p-4 rounded-2xl border border-zinc-200 bg-paper hover:border-zinc-400 text-left transition-all cursor-pointer">
+                    <div class="text-lg mb-1">🛠️</div>
+                    <div class="font-display font-bold text-sm text-ink">I build things, need clients</div>
+                    <div class="text-xs text-zinc-600 mt-0.5">Turn random skills into retainers</div>
+                </button>
+            </div>
+
+            <!-- Generated 3-Step Plan -->
+            <div class="rounded-2xl bg-warmGray border border-zinc-200 p-6 space-y-5">
+                <div class="flex items-center justify-between">
+                    <span id="planBadge" class="font-mono text-xs font-semibold text-electricBlue uppercase">Plan: Side-Stack Mode</span>
+                    <button onclick="copyCheatSheet()" class="px-3 py-1.5 rounded-lg bg-white border border-zinc-300 hover:border-ink text-xs font-mono font-medium text-ink transition-colors cursor-pointer">
+                        📋 Copy Plan
+                    </button>
+                </div>
+
+                <div id="planSteps" class="space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-zinc-200 bg-white py-10 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-7 h-7 rounded-lg bg-ink text-limePop flex items-center justify-center font-display font-bold text-sm">
+                    N
+                </div>
+                <span class="font-display font-bold text-sm tracking-tight">NITISH-LABS</span>
+                <span class="text-zinc-300">|</span>
+                <span class="text-xs text-zinc-500">Playful experiments in work, leverage &amp; building.</span>
+            </div>
+            <div class="text-xs font-mono text-zinc-400">
+                Vol. 01 Locked • More Modules Loading...
+            </div>
+        </div>
+    </footer>
+
+    <!-- Non-blocking Toast Notification -->
+    <div id="toastBox" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="px-4 py-3 rounded-xl bg-ink text-white text-xs font-mono shadow-xl flex items-center space-x-2 border border-zinc-700">
+            <span class="w-2 h-2 rounded-full bg-limeBright"></span>
+            <span id="toastText">Copied!</span>
+        </div>
+    </div>
+
+    <script>
+        // 1. HERO MINDSET TOGGLE LOGIC
+        const mindsetData = {
+            old: {
+                badge: '❌ Why this feels exhausting',
+                title: 'Waiting in line with 1,000 other resumes',
+                points: [
+                    'You polish one resume and pray a recruiter notices you.',
+                    'You rely on ONE job for 100% of your rent and peace of mind.',
+                    'You either sit quietly hoping people find you, OR send 300 copy-paste cold emails.'
+                ]
+            },
+            lab: {
+                badge: '✅ How smart builders operate',
+                title: 'Spotting problems early & offering quick fixes',
+                points: [
+                    'You notice companies that just raised money or broke something—weeks before they post a job.',
+                    'You mix 2–3 big skills with 7–8 tiny fix-it tricks so people can hire you in 10 minutes.',
+                    'You combine steady income + small side gigs + your own projects at the exact same time.'
+                ]
+            }
+        };
+
+        function setMindsetMode(mode) {
+            const btnOld = document.getElementById('btnOldWay');
+            const btnLab = document.getElementById('btnLabWay');
+            const box = document.getElementById('mindsetContent');
+            const data = mindsetData[mode];
+
+            if (mode === 'old') {
+                btnOld.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer bg-ink text-white shadow-sm';
+                btnLab.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer text-zinc-600';
+            } else {
+                btnLab.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer bg-ink text-white shadow-sm';
+                btnOld.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer text-zinc-600';
+            }
+
+            box.innerHTML = `
+                <div class="text-xs font-mono font-semibold ${mode === 'lab' ? 'text-limeBright' : 'text-rose-500'}">${data.badge}</div>
+                <h3 class="font-display font-bold text-lg text-ink">${data.title}</h3>
+                <ul class="space-y-2 text-sm text-zinc-600">
+                    ${data.points.map(pt => `<li class="flex items-start space-x-2"><span class="text-ink font-bold">•</span><span>${pt}</span></li>`).join('')}
+                </ul>
+            `;
+        }
+
+        // 2. INTERACTIVE SKILL MIXER DATA & LOGIC
+        const macroSkillsList = [
+            'Web & App Building',
+            'Clear Writing & Copy',
+            'Data & Spreadsheets',
+            'Product Design (UI/UX)',
+            'Growth & Marketing',
+            'AI & Automation'
+        ];
+
+        const microSkillsList = [
+            'Fixing Stripe Checkouts',
+            'Speeding Up Slow Sites',
+            'Cleaning Messy CRM Data',
+            '90-Sec Product Teardowns',
+            'Connecting APIs / Zapier',
+            'Writing Onboarding Emails',
+            'Building Quick AI Bots',
+            'Fixing SEO Pages'
+        ];
+
+        let selectedMacros = ['Web & App Building', 'AI & Automation'];
+        let selectedMicros = ['Fixing Stripe Checkouts', 'Connecting APIs / Zapier', 'Building Quick AI Bots', '90-Sec Product Teardowns'];
+
+        function renderSkillButtons() {
+            const macroContainer = document.getElementById('macroButtons');
+            const microContainer = document.getElementById('microButtons');
+
+            macroContainer.innerHTML = macroSkillsList.map(skill => {
+                const active = selectedMacros.includes(skill);
+                return `
+                    <button onclick="toggleMacro('${skill}')" class="px-3.5 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                        active
+                            ? 'bg-ink text-white border-ink shadow-sm'
+                            : 'bg-paper text-zinc-700 border-zinc-200 hover:border-zinc-400'
+                    }">
+                        ${active ? '✓ ' : '+ '}${skill}
+                    </button>
+                `;
+            }).join('');
+
+            microContainer.innerHTML = microSkillsList.map(skill => {
+                const active = selectedMicros.includes(skill);
+                return `
+                    <button onclick="toggleMicro('${skill}')" class="px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                        active
+                            ? 'bg-limePop text-ink border-limeBright font-semibold shadow-sm'
+                            : 'bg-paper text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                    }">
+                        ${active ? '⚡ ' : '+ '}${skill}
+                    </button>
+                `;
+            }).join('');
+
+            document.getElementById('macroCount').textContent = `${selectedMacros.length} selected`;
+            document.getElementById('microCount').textContent = `${selectedMicros.length} selected`;
+
+            renderRecipeOutput();
+        }
+
+        function toggleMacro(skill) {
+            if (selectedMacros.includes(skill)) {
+                if (selectedMacros.length > 1) {
+                    selectedMacros = selectedMacros.filter(s => s !== skill);
+                } else {
+                    showToast('Keep at least 1 Big Skill selected!');
+                    return;
+                }
+            } else {
+                if (selectedMacros.length >= 3) {
+                    selectedMacros.shift();
+                }
+                selectedMacros.push(skill);
+            }
+            renderSkillButtons();
+        }
+
+        function toggleMicro(skill) {
+            if (selectedMicros.includes(skill)) {
+                if (selectedMicros.length > 1) {
+                    selectedMicros = selectedMicros.filter(s => s !== skill);
+                } else {
+                    showToast('Keep at least 1 Quick Trick selected!');
+                    return;
+                }
+            } else {
+                selectedMicros.push(skill);
+            }
+            renderSkillButtons();
+        }
+
+        function randomizeSkills() {
+            const shuffledMacros = [...macroSkillsList].sort(() => 0.5 - Math.random());
+            const shuffledMicros = [...microSkillsList].sort(() => 0.5 - Math.random());
+            selectedMacros = shuffledMacros.slice(0, 2);
+            selectedMicros = shuffledMicros.slice(0, 4);
+            renderSkillButtons();
+            showToast('New skill combo generated!');
+        }
+
+        function renderRecipeOutput() {
+            const container = document.getElementById('recipeOutput');
+            const mainMacro = selectedMacros[0] || 'Product Building';
+            const secondMacro = selectedMacros[1] || 'Clear Writing';
+            const firstMicro = selectedMicros[0] || 'Quick Audits';
+            const secondMicro = selectedMicros[1] || 'Workflow Setup';
+
+            container.innerHTML = `
+                <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1">
+                    <div class="text-[11px] font-mono text-limePop uppercase">Stream 01 // Steady Anchor</div>
+                    <div class="text-sm font-semibold text-white">Lead ${mainMacro} Role</div>
+                    <p class="text-xs text-zinc-400">Your core foundation (${selectedMacros.join(' + ')}) makes you an easy yes for a main role or big anchor client.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1">
+                    <div class="text-[11px] font-mono text-sky-400 uppercase">Stream 02 // Weekend Cash Wedges</div>
+                    <div class="text-sm font-semibold text-white">"${firstMicro}" &amp; "${secondMicro}" Sprints</div>
+                    <p class="text-xs text-zinc-400">Founders don't want a 6-month contract for this—they'll pay you fast to fix it by Monday.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1">
+                    <div class="text-[11px] font-mono text-amber-400 uppercase">Stream 03 // Lab Side Project</div>
+                    <div class="text-sm font-semibold text-white">Tiny Tool Using ${secondMacro}</div>
+                    <p class="text-xs text-zinc-400">Turn the repeatable scripts from your side gigs into a tiny product people pay for while you sleep.</p>
+                </div>
+            `;
+        }
+
+        // 3. HIDDEN SPOTS INTERACTIVE CARDS
+        const hiddenSpots = [
+            {
+                id: 'spot-1',
+                tag: '3–6 Weeks Early',
+                title: 'Quiet Funding Filings (SEC Form D)',
+                summary: 'When startups quietly raise money, they have to file a simple government form within 15 days—weeks before they announce it in the news or post jobs.',
+                example: 'Real Example: A 6-person AI startup quietly closes $4M. They have cash in the bank, zero HR team, and desperately need help right now. You message the founder before anyone else even knows they exist.'
+            },
+            {
+                id: 'spot-2',
+                tag: 'Tool Change Alerts',
+                title: 'New Software Spotted on Their Site (BuiltWith)',
+                summary: 'Free browser tools let you see whenever a company suddenly installs new software like HubSpot, Stripe, or Snowflake.',
+                example: 'Real Example: You see a growing store just installed a complex analytics tool yesterday. That means they are actively trying to set it up this week—and will gladly pay someone who already knows how.'
+            },
+            {
+                id: 'spot-3',
+                tag: 'Public Headaches',
+                title: 'GitHub Issues & Founder Posts',
+                summary: 'Founders and engineers complain in public every single day when something breaks or when they are drowning in messy work.',
+                example: 'Real Example: A founder tweets "Our onboarding flow is leaking users and nobody has time to fix it." Instead of sending a resume, you reply with a 60-second video showing the exact fix.'
+            },
+            {
+                id: 'spot-4',
+                tag: 'Direct Builder Lists',
+                title: 'YC Work at a Startup & Product Hunt',
+                summary: 'Skip giant corporate job portals. Go straight to places where founders personally read messages and hire builders directly.',
+                example: 'Real Example: A new tool launches on Product Hunt today. You test it, find two bugs, and message the maker directly. Makers remember helpful people forever.'
+            }
+        ];
+
+        function renderHiddenSpots() {
+            const grid = document.getElementById('hiddenSpotsGrid');
+            grid.innerHTML = hiddenSpots.map(spot => `
+                <div class="lab-card rounded-2xl bg-white border border-zinc-200 p-6 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-1 rounded-lg bg-warmGray font-mono text-xs font-semibold text-ink">${spot.tag}</span>
+                            <button onclick="toggleSpotExample('${spot.id}')" id="btn-${spot.id}" class="text-xs font-mono text-electricBlue hover:underline cursor-pointer">
+                                See Example +
+                            </button>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-ink">${spot.title}</h3>
+                        <p class="text-sm text-zinc-600 leading-relaxed">${spot.summary}</p>
+                    </div>
+                    <div id="${spot.id}" class="hidden p-4 rounded-xl bg-limePop/35 border border-limeBright/40 text-xs text-ink leading-relaxed">
+                        ${spot.example}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleSpotExample(id) {
+            const box = document.getElementById(id);
+            const btn = document.getElementById('btn-' + id);
+            const isHidden = box.classList.contains('hidden');
+            if (isHidden) {
+                box.classList.remove('hidden');
+                btn.textContent = 'Hide Example −';
+            } else {
+                box.classList.add('hidden');
+                btn.textContent = 'See Example +';
+            }
+        }
+
+        // 4. CURIOSITY VAULT BLUR PEEK
+        function toggleClue(clueId, btn) {
+            const el = document.getElementById(clueId);
+            const isPeeked = el.classList.contains('peeked');
+            if (isPeeked) {
+                el.classList.remove('peeked');
+                btn.textContent = '👁️ Peek Clue';
+            } else {
+                el.classList.add('peeked');
+                btn.textContent = '🙈 Hide Clue';
+            }
+        }
+
+        // 5. PERSONALIZED CHEAT SHEET SELECTOR
+        const situationPlans = {
+            job: {
+                badge: 'Plan: Safe Side-Stack Mode',
+                steps: [
+                    'Pick 2 tiny fix-it tricks from your daily work that take you under 4 hours to do.',
+                    'Spend 20 minutes this week spotting 5 freshly funded startups on Product Hunt or YC.',
+                    'Send 3 short, helpful 90-second screen recordings offering a quick weekend fix—no need to quit your main job.'
+                ]
+            },
+            hunting: {
+                badge: 'Plan: Skip-The-Line Mode',
+                steps: [
+                    'Pause applying on crowded job boards for 7 days—give your brain a break from the black hole.',
+                    'List your 2 Big Skills + 5 Quick Tricks on a clean 1-page note so people immediately see how you help.',
+                    'Reach out directly to 5 small founders (5–20 employees) with a real idea or mini-audit instead of a resume.'
+                ]
+            },
+            builder: {
+                badge: 'Plan: Retainer & Lab Mode',
+                steps: [
+                    'Package your fastest repeatable skill into a fixed-price "1-Week Fix" so clients can say yes easily.',
+                    'Share one behind-the-scenes breakdown publicly every week so inbound leads start finding you.',
+                    'Keep 2 small monthly retainers running to pay your bills while you build your own product on the side.'
+                ]
+            }
+        };
+
+        let currentSituation = 'job';
+
+        function selectSituation(key) {
+            currentSituation = key;
+            ['job', 'hunting', 'builder'].forEach(k => {
+                const btn = document.getElementById('sit-' + k);
+                if (k === key) {
+                    btn.className = 'sit-btn p-4 rounded-2xl border-2 border-ink bg-limePop/30 text-left transition-all cursor-pointer';
+                } else {
+                    btn.className = 'sit-btn p-4 rounded-2xl border border-zinc-200 bg-paper hover:border-zinc-400 text-left transition-all cursor-pointer';
+                }
+            });
+
+            const plan = situationPlans[key];
+            document.getElementById('planBadge').textContent = plan.badge;
+            document.getElementById('planSteps').innerHTML = plan.steps.map((step, idx) => `
+                <div class="flex items-start space-x-3 bg-white p-4 rounded-xl border border-zinc-200">
+                    <span class="w-6 h-6 rounded-full bg-ink text-limePop font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        ${idx + 1}
+                    </span>
+                    <p class="text-sm text-ink leading-relaxed">${step}</p>
+                </div>
+            `).join('');
+        }
+
+        function copyCheatSheet() {
+            const plan = situationPlans[currentSituation];
+            const text = `NITISH-LABS // ${plan.badge}\n\n` + plan.steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast('Your 3-step Nitish-Labs plan is copied!');
+        }
+
+        // Custom Toast Helper
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastText').textContent = msg;
+            box.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                box.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // Initialize all interactive sections on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setMindsetMode('lab');
+            renderSkillButtons();
+            renderHiddenSpots();
+            selectSituation('job');
+        });
+    </script>
+</body>
+</html>
