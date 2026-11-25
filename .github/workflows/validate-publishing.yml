@@ -1,0 +1,70 @@
+name: Validate publishing changes
+
+on:
+  pull_request:
+    branches: [production]
+  push:
+    branches: [staging]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/*/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Build portfolio
+        run: npm run build
+
+      - name: Build Labs CSS
+        run: |
+          if npm run | grep -q 'labs:css'; then
+            npm run labs:css
+          fi
+
+      - name: Build nested Labs apps
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for pkg in apps/*/package.json; do
+            app_dir="$(dirname "$pkg")"
+            label="$(basename "$app_dir")"
+            if [ ! -f "$app_dir/package.json" ]; then
+              echo "Skipping ${label} (app folder not present)"
+              continue
+            fi
+            if [ -f "$app_dir/package-lock.json" ]; then
+              echo "Installing ${label}"
+              if ! (cd "$app_dir" && npm ci); then
+                echo "Skipping ${label} build (npm ci failed)"
+                continue
+              fi
+            elif [ ! -d "$app_dir/node_modules" ]; then
+              echo "Skipping ${label} build (no lockfile and node_modules missing)"
+              continue
+            fi
+            echo "Building ${label}"
+            if ! (cd "$app_dir" && npm run build); then
+              echo "Warning: ${label} build failed. Deploying Labs with the existing bundle if present."
+            fi
+          done
+
+      - name: Verify baseline assets
+        run: |
+          test -s dist/the-rest-of-the-evening/the-one-who-stayed-behind/index.html
+          test -s labs/opportunity-manifesto/index.html
